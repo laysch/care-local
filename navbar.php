@@ -11,6 +11,7 @@
             <h3>Menu</h3>
             <ul>
                 <li><a href="index.php" onclick="setPage('Home')">Home</a></li>
+                <li><a href="calendar.php" onclick="setPage('My Calendar')">My Calendar</a></li>
                 <li><a href="cart.php" onclick="setPage('Cart')">Cart</a></li>
                 <li><a href="add-job.php" onclick="setPage('Add Job')">Add Job</a></li>
                 <li><a href="profile.php" onclick="setPage('Profile')">Profile</a></li>
