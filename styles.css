@@ -1,0 +1,159 @@
+body {
+  background-color: #5D674C; /* Olive green background */
+  font-family: Georgia, serif;
+  color: #FFFFFF; /* White text */
+  text-align: center;
+}
+
+header {
+  background-color: #FCEADE; /* Soft peach */
+  padding: 20px;
+  color: #5D674C; /* Olive green text */
+  border-bottom: 2px solid #D1D79D;
+}
+
+.logo-container .logo {
+  height: 50px;
+}
+
+nav, .categories {
+  margin-top: 20px;
+}
+
+nav button, .categories button {
+  background-color: #FCEADE;
+  color: #5D674C;
+  border: none;
+  padding: 10px 15px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+nav button.active, .categories button.active {
+  background-color: #F3E9B5; /* Light yellow */
+}
+
+nav button:hover, .categories button:hover {
+  background-color: #F3E9B5;
+}
+
+.search-bar input {
+  padding: 10px;
+  font-size: 16px;
+  width: 60%;
+  border: 2px solid #D1D79D;
+  border-radius: 5px;
+  background-color: #F3E9B5;
+  color: #5D674C;
+  margin-top: 10px;
+}
+
+.search-bar .filter-btn {
+  background-color: #FCEADE;
+  color: #5D674C;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.faq-item {
+  background-color: #F3E9B5;
+  color: #5D674C;
+  padding: 15px;
+  border-radius: 5px;
+  margin: 10px;
+  border: 2px solid #D1D79D;
+}
+
+.faq-item h3 {
+  cursor: pointer;
+}
+
+footer {
+  margin-top: 20px;
+}
+
+footer button {
+  background-color: #FCEADE;
+  color: #5D674C;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+footer button:hover {
+  background-color: #F3E9B5;
+}
+
+/* Top Navigation Bar */
+.top-nav {
+    background-color: #fff;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.menu-btn {
+    font-size: 18px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Fullscreen Menu */
+.fullscreen-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.menu-content {
+    display: flex;
+    width: 70%;
+    max-width: 600px;
+    justify-content: space-between;
+}
+
+.menu-left, .menu-right {
+    width: 45%;
+}
+
+.menu-left ul {
+    list-style: none;
+    padding: 0;
+}
+
+.menu-left li {
+    margin: 10px 0;
+}
+
+.menu-left a {
+    text-decoration: none;
+    font-size: 18px;
+    color: black;
+}
+
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
