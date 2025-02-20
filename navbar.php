@@ -16,6 +16,7 @@
                 <li><a href="add-job.php" onclick="setPage('Add Job')">Add Job</a></li>
                 <li><a href="profile.php" onclick="setPage('Profile')">Profile</a></li>
                 <li><a href="help-center.php" onclick="setPage('Help Center')">Help Center</a></li>
+                <li><a href="logout.php" onclick="setPage('Logout')">Log Out</a></li>
             </ul>
         </div>
         <div class="menu-right">
