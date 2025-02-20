@@ -7,6 +7,7 @@
     <title>CareLocal</title>
     <link rel="stylesheet" href="styles.css">
     <script src="script.js" defer></script>
+    <link rel="icon" type="image/x-icon" href="/img/favicon.png">
 </head>
 <body>
 
