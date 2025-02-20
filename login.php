@@ -45,9 +45,9 @@ if (isset($_POST['login'])) {
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; }
         .form-group input { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; }
-        .btn { width: 50%; padding: 8px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; display: block; margin: 10px auto; text-align: center; font-size: 18px; font-weight: bold; }
+        .btn { width: 50%; padding: 8px; background-color: #5d674c; color: white; border: none; border-radius: 5px; cursor: pointer; display: block; margin: 10px auto; text-align: center; font-size: 18px; font-weight: bold; }
         .register-link { margin-top: 15px; text-align: center; }
-        .register-link a { text-decoration: none; color: #28a745; font-weight: bold; }
+        .register-link a { text-decoration: none; color: #5d674c; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -72,7 +72,7 @@ if (isset($_POST['login'])) {
         </div>
         <div class="right">
             <h1>CareLocal</h1>
-            <p>Where Local Talent Meets Local Needs.</p>
+            <p>Where Local Talent Meets Local Needs</p>
         </div>
     </div>
 </body>
