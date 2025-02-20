@@ -1,4 +1,10 @@
 <!-- navbar.php -->
+<style>
+    .menu-content h1, .menu-content p {
+        color: black;
+    }
+</style>
+
 <nav class="top-nav">
     <button class="menu-btn" onclick="toggleMenu()">
         <span id="current-page"><?php echo isset($currentPage) ? $currentPage : 'Home'; ?></span> ☰
@@ -8,7 +14,7 @@
 <div class="fullscreen-menu" id="menu">
     <div class="menu-content">
         <div class="menu-left">
-            <h3>Menu</h3>
+            <h1>Menu</h1>
             <ul>
                 <li><a href="index.php" onclick="setPage('Home')">Home</a></li>
                 <li><a href="calendar.php" onclick="setPage('My Calendar')">My Calendar</a></li>
@@ -20,9 +26,9 @@
             </ul>
         </div>
         <div class="menu-right">
-            <h3>Contact Us</h3>
+            <h1>Contact Us</h1>
             <p>Email: <a href="mailto:support@carelocal.com">support@carelocal.com</a></p>
-            <p>Phone: <a href="tel:+1234567890">+1 (234) 567-890</a></p>
+            <p>Phone: <a href="tel:+12345678901">+1 (234) 567-8901</a></p>
         </div>
     </div>
     <button class="close-btn" onclick="toggleMenu()">✖</button>
