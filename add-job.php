@@ -123,7 +123,7 @@ $currentPage = 'Home';
         }
         /* Styles for the city dropdown */
         #city-dropdown {
-            height: 200px;
+            height: 100px;
             overflow-y: scroll;
         }
         #county {
