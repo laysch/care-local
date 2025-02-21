@@ -95,7 +95,7 @@ footer button:hover {
     background-color: #fff;
     padding: 10px 20px;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #ddd;
 }

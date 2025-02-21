@@ -1,8 +1,8 @@
 <?php
-$host = "localhost";
-$dbname = "job_postings";
-$username = "root";
-$password = "";  // No password
+$host = "sql107.infinityfree.com";
+$dbname = "if0_38360278_carelocal";
+$username = "if0_38360278";
+$password = "P0giRtiAC6eHo";
 
 // Create a connection
 $conn = new mysqli($host, $username, $password, $dbname);

@@ -10,7 +10,16 @@
         <span id="current-page"><?php echo isset($currentPage) ? $currentPage : 'Home'; ?></span> ☰
     </button>
     <button class="menu-btn">
-        <span id="login">Login</span>
+        <span id="login">
+            <?php
+                session_start();
+                if (!isset($_SESSION['username'])) {
+                    echo "<span onclick=\"location.href='login.php'\">Login</span";
+                } else {
+                    echo "<span onclick=\"location.href='logout.php'\">Logout : " . $_SESSION['username'] . "</span>";
+                }
+            ?>
+        </span>
     </button>
 </nav>
 
