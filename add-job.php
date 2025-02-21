@@ -1,4 +1,4 @@
-<?php  
+<?php   
 session_start();
 require_once 'inc/database.php';
 
@@ -121,19 +121,6 @@ $currentPage = 'Home';
         button:hover {
             background-color: #D1D79D;
         }
-        /* Styles for the city dropdown */
-        #city-dropdown {
-            height: 35px;
-            overflow-y: scroll;
-        }
-        #county {
-            background-color: #f0f0f0;
-            font-weight: bold;
-            padding: 8px;
-            border: 1px solid #D1D79D;
-            border-radius: 5px;
-            pointer-events: none; /* Makes it readonly */
-        }
     </style>
 </head>
 <body>
@@ -155,7 +142,7 @@ $currentPage = 'Home';
 
             <!-- City dropdown -->
             <label for="city">City:</label>
-            <select id="city-dropdown" name="city" required>
+            <select id="city-dropdown" name="city" required onchange="updateCounty()">
                 <option value="">Select a City</option>
                 <!-- List of cities from Nassau and Suffolk counties, combined alphabetically -->
                 <?php
@@ -198,194 +185,79 @@ $currentPage = 'Home';
                 <?php 
                 $available_skills = ['Communication', 'Teamwork', 'Problem-Solving', 'Leadership', 'Technical Skills', 'Time Management'];
                 $selected_skills = isset($_POST['skills']) ? $_POST['skills'] : [];
-
                 foreach ($available_skills as $skill) {
-                    $selected_class = in_array($skill, $selected_skills) ? 'selected' : '';
-                    echo "<div class='tag $selected_class' data-skill='$skill'>$skill</div>";
+                    $isSelected = in_array($skill, $selected_skills) ? 'selected' : '';
+                    echo "<button type='button' class='tag $isSelected' onclick='toggleSkillSelection(this, \"$skill\")'>$skill</button>";
                 }
                 ?>
             </div>
+
+            <input type="hidden" name="skills" id="skills-input">
 
             <button type="submit">Post Job</button>
         </form>
     </div>
     <script>
-    // JavaScript for county auto-population based on city selection
-    document.getElementById('city-dropdown').addEventListener('change', function () {
-        var city = this.value;
-        var county = "";
-
-        // Define county for each city
         const countyMapping = {
-            "Albertson": "Nassau",
-            "Amagansett": "Suffolk",
-            "Amityville": "Suffolk",
-            "Atlantic Beach": "Nassau",
-            "Baldwin": "Nassau",
-            "Bay Park": "Nassau",
-            "Bay Shore": "Suffolk",
-            "Bayville": "Nassau",
-            "Bellmore": "Nassau",
-            "Bellport": "Suffolk",
-            "Bellerose": "Queens",
-            "Bethpage": "Nassau",
-            "Blue Point": "Suffolk",
-            "Bohemia": "Suffolk",
-            "Brentwood": "Suffolk",
-            "Bridgehampton": "Suffolk",
-            "Brookhaven": "Suffolk",
-            "Brookville": "Nassau",
-            "Calverton": "Suffolk",
-            "Carle Place": "Nassau",
-            "Cedarhurst": "Nassau",
-            "Centre Island": "Nassau",
-            "Centreport": "Suffolk",
-            "Cove Neck": "Nassau",
-            "Deer Park": "Suffolk",
-            "East Hills": "Nassau",
-            "East Hampton": "Suffolk",
-            "East Meadow": "Nassau",
-            "East Moriches": "Suffolk",
-            "East Marion": "Suffolk",
-            "East Northport": "Suffolk",
-            "East Norwich": "Nassau",
-            "East Port": "Suffolk",
-            "East Quogue": "Suffolk",
-            "East Rockaway": "Nassau",
-            "East Setauket": "Suffolk",
-            "Elmont": "Nassau",
-            "Farmingdale": "Nassau",
-            "Farmingville": "Suffolk",
-            "Fishers Island": "Suffolk",
-            "Floral Park": "Queens",
-            "Flower Hill": "Nassau",
-            "Franklin Square": "Nassau",
-            "Freeport": "Nassau",
-            "Garden City": "Nassau",
-            "Glen Cove": "Nassau",
-            "Glen Head": "Nassau",
-            "Glenwood Landing": "Nassau",
-            "Great Neck": "Nassau",
-            "Great River": "Suffolk",
-            "Greenlawn": "Suffolk",
-            "Greenport": "Suffolk",
-            "Greenvale": "Nassau",
-            "Harbor Hills": "Nassau",
-            "Harbor Isle": "Nassau",
-            "Hampton Bays": "Suffolk",
-            "Hauppauge": "Suffolk",
-            "Hempstead": "Nassau",
-            "Herricks": "Nassau",
-            "Hewlett": "Nassau",
-            "Hicksville": "Nassau",
-            "Holbrook": "Suffolk",
-            "Holtsville": "Suffolk",
-            "Inwood": "Nassau",
-            "Island Park": "Nassau",
-            "Islandia": "Suffolk",
-            "Jericho": "Nassau",
-            "Kensington": "Queens",
-            "Kings Park": "Suffolk",
-            "Kings Point": "Nassau",
-            "Lake Grove": "Suffolk",
-            "Lake Success": "Nassau",
-            "Lakeview": "Nassau",
-            "Laurel": "Suffolk",
-            "Laurel Hollow": "Nassau",
-            "Lattingtown": "Nassau",
-            "Lawrence": "Nassau",
-            "Levittown": "Nassau",
-            "Lindenhurst": "Suffolk",
-            "Lido Beach": "Nassau",
-            "Locust Valley": "Nassau",
-            "Long Beach": "Nassau",
-            "Lynbrook": "Nassau",
-            "Malverne": "Nassau",
-            "Manorhaven": "Nassau",
-            "Manorville": "Suffolk",
-            "Massapequa": "Nassau",
-            "Massapequa Park": "Nassau",
-            "Matinecock": "Nassau",
-            "Mastic": "Suffolk",
-            "Mastic Beach": "Suffolk",
-            "Melville": "Suffolk",
-            "Merrick": "Nassau",
-            "Miller Place": "Suffolk",
-            "Mineola": "Nassau",
-            "Montauk": "Suffolk",
-            "Moriches": "Suffolk",
-            "Middle Island": "Suffolk",
-            "Muttontown": "Nassau",
-            "New Cassel": "Nassau",
-            "New Hyde Park": "Nassau",
-            "New Suffolk": "Suffolk",
-            "North Babylon": "Suffolk",
-            "North Hills": "Nassau",
-            "Northport": "Suffolk",
-            "Oakdale": "Suffolk",
-            "Oceanside": "Nassau",
-            "Old Bethpage": "Nassau",
-            "Old Brookville": "Nassau",
-            "Old Westbury": "Nassau",
-            "Orient": "Suffolk",
-            "Oyster Bay": "Nassau",
-            "Patchogue": "Suffolk",
-            "Peconic": "Suffolk",
-            "Plainedge": "Nassau",
-            "Plainview": "Nassau",
-            "Port Jefferson": "Suffolk",
-            "Port Jefferson Station": "Suffolk",
-            "Point Lookout": "Nassau",
-            "Port Washington": "Nassau",
-            "Quogue": "Suffolk",
-            "Remsenburg": "Suffolk",
-            "Riverhead": "Suffolk",
-            "Rockville Centre": "Nassau",
-            "Roosevelt": "Nassau",
-            "Roslyn": "Nassau",
-            "Sag Harbor": "Suffolk",
-            "Sagaponack": "Suffolk",
-            "Saint James": "Suffolk",
-            "Salisbury": "Nassau",
-            "Sands Point": "Nassau",
-            "Sea Cliff": "Nassau",
-            "Seaford": "Nassau",
-            "Searingtown": "Nassau",
-            "Selden": "Suffolk",
-            "Shelter Island": "Suffolk",
-            "Shelter Island Heights": "Suffolk",
-            "Shirley": "Suffolk",
-            "Shoreham": "Suffolk",
-            "Smithtown": "Suffolk",
-            "Sound Beach": "Suffolk",
-            "South Jamesport": "Suffolk",
-            "Southampton": "Suffolk",
-            "Southold": "Suffolk",
-            "Speonk": "Suffolk",
-            "Stony Brook": "Suffolk",
-            "Strathmore": "Suffolk",
-            "Syosset": "Nassau",
-            "Thomaston": "Nassau",
-            "Uniondale": "Nassau",
-            "Valley Stream": "Nassau",
-            "Wading River": "Suffolk",
-            "Wantagh": "Nassau",
-            "Wainscott": "Suffolk",
-            "Water Mill": "Suffolk",
-            "West Babylon": "Suffolk",
-            "West Hempstead": "Nassau",
-            "West Islip": "Suffolk",
-            "Westbury": "Nassau",
-            "Wyandanch": "Suffolk",
-            "Woodbury": "Nassau",
-            "Woodmere": "Nassau",
-            "Woodsburgh": "Nassau",
-            "Yaphank": "Suffolk"
-        };
+    "Albertson": "Nassau", "Amagansett": "Suffolk", "Amityville": "Suffolk", "Atlantic Beach": "Nassau", "Baldwin": "Nassau", 
+    "Bay Park": "Nassau", "Bay Shore": "Suffolk", "Bayville": "Nassau", "Bellmore": "Nassau", "Bellport": "Suffolk", 
+    "Bellerose": "Queens", "Bethpage": "Nassau", "Blue Point": "Suffolk", "Bohemia": "Suffolk", "Brentwood": "Suffolk", 
+    "Bridgehampton": "Suffolk", "Brookhaven": "Suffolk", "Brookville": "Nassau", "Calverton": "Suffolk", "Carle Place": "Nassau",
+    "Cedarhurst": "Nassau", "Centre Island": "Nassau", "Centreport": "Suffolk", "Cove Neck": "Nassau", "Deer Park": "Suffolk", 
+    "East Hills": "Nassau", "East Hampton": "Suffolk", "East Meadow": "Nassau", "East Moriches": "Suffolk", "East Marion": "Suffolk", 
+    "East Northport": "Suffolk", "East Norwich": "Nassau", "East Port": "Suffolk", "East Quogue": "Suffolk", "East Rockaway": "Nassau", 
+    "East Setauket": "Suffolk", "Elmont": "Nassau", "Farmingdale": "Nassau", "Farmingville": "Suffolk", "Fishers Island": "Suffolk", 
+    "Floral Park": "Queens", "Flower Hill": "Nassau", "Franklin Square": "Nassau", "Freeport": "Nassau", "Garden City": "Nassau", 
+    "Glen Cove": "Nassau", "Glen Head": "Nassau", "Glenwood Landing": "Nassau", "Great Neck": "Nassau", "Great River": "Suffolk", 
+    "Greenlawn": "Suffolk", "Greenport": "Suffolk", "Greenvale": "Nassau", "Harbor Hills": "Nassau", "Harbor Isle": "Nassau", 
+    "Hampton Bays": "Suffolk", "Hauppauge": "Suffolk", "Hempstead": "Nassau", "Herricks": "Nassau", "Hewlett": "Nassau", 
+    "Hicksville": "Nassau", "Holbrook": "Suffolk", "Holtsville": "Suffolk", "Inwood": "Nassau", "Island Park": "Nassau", "Islandia": "Suffolk", 
+    "Jericho": "Nassau", "Kensington": "Nassau", "Kings Park": "Suffolk", "Kings Point": "Nassau", "Lake Grove": "Suffolk", 
+    "Lake Success": "Nassau", "Lakeview": "Nassau", "Laurel": "Suffolk", "Laurel Hollow": "Nassau", "Lattingtown": "Nassau", 
+    "Lawrence": "Nassau", "Levittown": "Nassau", "Lindenhurst": "Suffolk", "Lido Beach": "Nassau", "Locust Valley": "Nassau", 
+    "Long Beach": "Nassau", "Lynbrook": "Nassau", "Malverne": "Nassau", "Manorhaven": "Nassau", "Manorville": "Suffolk", 
+    "Massapequa": "Nassau", "Massapequa Park": "Nassau", "Matinecock": "Nassau", "Mastic": "Suffolk", "Mastic Beach": "Suffolk", 
+    "Melville": "Suffolk", "Merrick": "Nassau", "Miller Place": "Suffolk", "Mineola": "Nassau", "Montauk": "Suffolk", 
+    "Moriches": "Suffolk", "Middle Island": "Suffolk", "Muttontown": "Nassau", "New Cassel": "Nassau", "New Hyde Park": "Nassau", 
+    "New Suffolk": "Suffolk", "North Babylon": "Suffolk", "North Hills": "Nassau", "Northport": "Suffolk", "Oakdale": "Suffolk", 
+    "Oceanside": "Nassau", "Old Bethpage": "Nassau", "Old Brookville": "Nassau", "Old Westbury": "Nassau", "Orient": "Suffolk", 
+    "Oyster Bay": "Nassau", "Patchogue": "Suffolk", "Peconic": "Suffolk", "Plainedge": "Nassau", "Plainview": "Nassau", 
+    "Port Jefferson": "Suffolk", "Port Jefferson Station": "Suffolk", "Point Lookout": "Nassau", "Port Washington": "Nassau", 
+    "Quogue": "Suffolk", "Remsenburg": "Suffolk", "Riverhead": "Suffolk", "Rockville Centre": "Nassau", "Roosevelt": "Nassau", "Roslyn": "Nassau", 
+    "Sag Harbor": "Suffolk", "Sagaponack": "Suffolk", "Saint James": "Suffolk", "Salisbury": "Nassau", "Sands Point": "Nassau", 
+    "Sea Cliff": "Nassau", "Seaford": "Nassau", "Searingtown": "Nassau", "Selden": "Suffolk", "Shelter Island": "Suffolk", 
+    "Shelter Island Heights": "Suffolk", "Shirley": "Suffolk", "Shoreham": "Suffolk", "Smithtown": "Suffolk", "Sound Beach": "Suffolk", 
+    "South Jamesport": "Suffolk", "Southampton": "Suffolk", "Southold": "Suffolk", "Speonk": "Suffolk", "Stony Brook": "Suffolk", 
+    "Strathmore": "Nassau", "Syosset": "Nassau", "Thomaston": "Nassau", "Uniondale": "Nassau", "Valley Stream": "Nassau", "Wading River": "Suffolk", 
+    "Wantagh": "Nassau", "Wainscott": "Suffolk", "Water Mill": "Suffolk", "West Babylon": "Suffolk", "West Hempstead": "Nassau", 
+    "West Islip": "Suffolk", "Westbury": "Nassau", "Wyandanch": "Suffolk", "Woodbury": "Nassau", "Woodmere": "Nassau", "Woodsburgh": "Nassau", 
+    "Yaphank": "Suffolk"
+};
+function updateCounty() {
+            const city = document.getElementById('city-dropdown').value;
+            const countyInput = document.getElementById('county');
+            
+            if (city && countyMapping[city]) {
+                countyInput.value = countyMapping[city];
+            } else {
+                countyInput.value = '';
+            }
+        }
 
-        county = countyMapping[city] || "";  // Default to empty string if no county found
-        document.getElementById('county').value = county;
-    });
-</script>
+        function toggleSkillSelection(button, skill) {
+            button.classList.toggle('selected');
+            let skillsInput = document.getElementById('skills-input');
+            let selectedSkills = skillsInput.value.split(', ').filter(Boolean);
+
+            if (button.classList.contains('selected')) {
+                selectedSkills.push(skill);
+            } else {
+                selectedSkills = selectedSkills.filter(item => item !== skill);
+            }
+
+            skillsInput.value = selectedSkills.join(', ');
+        }
+    </script>
+
 </body>
 </html>
