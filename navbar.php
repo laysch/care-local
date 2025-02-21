@@ -37,7 +37,7 @@
                 <li>
                     <?php
                         if (!isset($_SESSION['username'])) {
-                            echo "<a href=\"logout.php\" onclick=\"setPage('Login'\")>Login</a>";
+                            echo "<a href=\"login.php\" onclick=\"setPage('Login'\")>Login</a>";
                         } else {
                             echo "<a href=\"logout.php\" onclick=\"setPage('Logout')\">Logout : " . $_SESSION['username'] . "</a>";
                         }
