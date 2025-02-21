@@ -18,6 +18,7 @@
                         )"
                 );
                 echo "Table '<b>users</b>' created successfully.<br>";
+                }
                 catch (Exception $e) { // CREATE users EXCEPT
                     echo $e->getMessage();
                 }
