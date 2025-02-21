@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($stmt->execute()) {
         $success_message = "Job posted successfully!";
         $jobID = $stmt->insert_id;
-        header("Location: jobsearch.php");
+        header("Location: search-jobs.php");
         exit; // Ensure no further code is executed
     } else {
         echo "Error: " . $stmt->error;
@@ -146,7 +146,7 @@ $currentPage = 'Home';
 
         <?php if ($success_message != "") { echo "<p>$success_message</p>"; } ?>
 
-        <form action="JobPost.php" method="POST">
+        <form action="add-job.php" method="POST">
             <label for="jobtitle">Job Title:</label>
             <input type="text" id="jobtitle" name="jobtitle" required>
 
