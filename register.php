@@ -29,6 +29,7 @@ if (isset($_POST['register'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register | CareLocal</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.png">
     <style>
         body { display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f4; }
         .container { display: flex; width: 70%; background: white; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); }
