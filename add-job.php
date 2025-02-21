@@ -1,15 +1,6 @@
 <?php 
 session_start();
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "job_postings";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+require_once 'inc/database.php';
 
 $success_message = "";
 $jobID = ""; // Initialize jobID variable
