@@ -9,6 +9,9 @@
     <button class="menu-btn" onclick="toggleMenu()">
         <span id="current-page"><?php echo isset($currentPage) ? $currentPage : 'Home'; ?></span> ☰
     </button>
+    <button class="menu-btn">
+        <span id="login">Login</span>
+    </button>
 </nav>
 
 <div class="fullscreen-menu" id="menu">
