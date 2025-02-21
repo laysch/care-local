@@ -4,15 +4,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CareLocal</title>
+    <title>CareLocal - Home</title>
     <link rel="stylesheet" href="styles.css">
     <script src="script.js" defer></script>
     <link rel="icon" type="image/x-icon" href="/img/favicon.png">
+    <style>
+        .hero-section {
+            background-color: #FCEADE;
+            padding: 60px 20px;
+            text-align: center;
+            color: #5D674C;
+        }
+
+        .hero-section h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background-color: #F3E9B5;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            color: #5D674C;
+        }
+
+        .cta-section {
+            background-color: #D1D79D;
+            padding: 40px 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .cta-button {
+            background-color: #5D674C;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        .cta-button:hover {
+            background-color: #4a5339;
+        }
+    </style>
 </head>
 <body>
-
-    <!-- Include the Navbar -->
     <?php include 'navbar.php'; ?>
+
+    <div class="hero-section">
+        <h1>Welcome to CareLocal</h1>
+        <p>Where Local Talent Meets Local Needs</p>
+    </div>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <h2>Find Jobs</h2>
+            <p>Discover opportunities in your local community</p>
+        </div>
+        <div class="feature-card">
+            <h2>Post Jobs</h2>
+            <p>Share tasks and find skilled helpers nearby</p>
+        </div>
+        <div class="feature-card">
+            <h2>Build Community</h2>
+            <p>Connect with neighbors and make a difference</p>
+        </div>
+    </div>
+
+    <div class="cta-section">
+        <h2>Ready to Get Started?</h2>
+        <p>Join our community today and start making a difference in your neighborhood</p>
+        <a href="add-job.php" class="cta-button">Post a Job</a>
+    </div>
 
 </body>
 </html>
