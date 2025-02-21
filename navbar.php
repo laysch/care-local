@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!-- navbar.php -->
 <style>
     .menu-content h1, .menu-content p {
@@ -12,7 +13,6 @@
     <button class="menu-btn">
         <span id="login">
             <?php
-                session_start();
                 if (!isset($_SESSION['username'])) {
                     echo "<span onclick=\"location.href='login.php'\">Login</span";
                 } else {
@@ -34,7 +34,15 @@
                 <li><a href="add-job.php" onclick="setPage('Add Job')">Add Job</a></li>
                 <li><a href="profile.php" onclick="setPage('Profile')">Profile</a></li>
                 <li><a href="help-center.php" onclick="setPage('Help Center')">Help Center</a></li>
-                <li><a href="logout.php" onclick="setPage('Logout')">Log Out</a></li>
+                <li>
+                    <?php
+                        if (!isset($_SESSION['username'])) {
+                            echo "<a href=\"logout.php\" onclick=\"setPage('Login'\")>Login</a>";
+                        } else {
+                            echo "<a href=\"logout.php\" onclick=\"setPage('Logout')\">Logout : " . $_SESSION['username'] . "</a>";
+                        }
+                    ?>
+                </li>
             </ul>
         </div>
         <div class="menu-right">
