@@ -8,18 +8,33 @@
 
             try {  // LOGIN
                 $pdo = new PDO($attr, $user, $pass, $opts);
-                try { // CREATE USERS
+                try { // CREATE users EXCEPT
                     $pdo->exec("
                         CREATE TABLE IF NOT EXISTS users (
-                            username VARCHAR(255) NOT NULL UNIQUE,
-                            email VARCHAR(255) NOT NULL,
-                            password_hash VARCHAR(255) NOT NULL,
-                            PRIMARY KEY (username)
+                            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                            email VARCHAR(100) NOT NULL,
+                            username VARCHAR(32) NOT NULL,
+                            password VARCHAR(255) NOT NULL
+                        )"
+                );
+                echo "Table '<b>users</b>' created successfully.<br>";
+                catch (Exception $e) { // CREATE users EXCEPT
+                    echo $e->getMessage();
+                }
+                try { // CREATE jobs
+                    $pdo->exec("
+                        CREATE TABLE IF NOT EXISTS jobs (
+                            id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                            jobtitle VARCHAR(255) NOT NULL,
+                            description TEXT NOT NULL,
+                            location VARCHAR(255) NOT NULL,
+                            skills TEXT,
+                            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                         )"
                     );
-                    echo "Table '<b>users</b>' created successfully.<br>";
+                    echo "Table '<b>jobs</b>' created successfully.<br>";
                 }
-                catch (Exception $e) { // CREATE USER EXCEPT
+                catch (Exception $e) { // CREATE jobs EXCEPT
                     echo $e->getMessage();
                 }
             }
