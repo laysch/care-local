@@ -14,6 +14,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $city = sanitizeInput($_POST['city']);
     $location = $city;  // Only the city is needed now
 
+    // Get county based on city
+    $county = isset($countyMapping[$city]) ? $countyMapping[$city] : "Unknown";
+
     // Check if any skills are selected (multiple selection)
     if (isset($_POST['skills']) && !empty($_POST['skills'])) {
         $skills = sanitizeInput($_POST['skills']);
@@ -22,8 +25,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Prepare and bind SQL statement
-    $stmt = $conn->prepare("INSERT INTO jobs (jobtitle, description, location, skills) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $jobtitle, $description, $location, $skills);
+    $stmt = $conn->prepare("INSERT INTO jobs (jobtitle, description, location, county, skills) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssss", $jobtitle, $description, $location, $county, $skills);
 
     // Execute the statement
     if ($stmt->execute()) {
@@ -260,9 +263,9 @@ function updateCounty() {
             skillsInput.value = selectedSkills.join(', ');
         }
         document.querySelector("form").addEventListener("submit", function () {
-        let selectedButtons = document.querySelectorAll(".tag.selected");
-        let skillsArray = Array.from(selectedButtons).map(btn => btn.textContent);
-        document.getElementById("skills-input").value = skillsArray.join(', ');
+            let selectedButtons = document.querySelectorAll(".tag.selected");
+            let skillsArray = Array.from(selectedButtons).map(btn => btn.textContent);
+            document.getElementById("skills-input").value = skillsArray.join(', ');
         });
     </script>
 

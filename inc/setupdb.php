@@ -13,6 +13,7 @@
                     jobtitle VARCHAR(255) NOT NULL,
                     description TEXT NOT NULL,
                     location VARCHAR(255) NOT NULL,
+                    county VARCHAR(255) NOT NULL,
                     skills TEXT,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )";
