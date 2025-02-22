@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $location = $city;  // Only the city is needed now
 
     // Get county based on city
-    $county = isset($countyMapping[$city]) ? $countyMapping[$city] : "Unknown";
+    $county = sanitizeInput($_POST['county']);
 
     // Check if any skills are selected (multiple selection)
     if (isset($_POST['skills']) && !empty($_POST['skills'])) {
