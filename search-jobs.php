@@ -1,4 +1,3 @@
-
 <?php   
 // Start session
 session_start();
@@ -35,8 +34,8 @@ if (!$result) {
     <link rel="stylesheet" href="styles.css">
     <style>
         .job-box {
-            background-color: #F3E9B5;
-            color: #5D674C;
+            background-color: #F3E9B5; /* Light yellow background */
+            color: #5D674C; /* Olive green text */
             padding: 15px;
             border-radius: 5px;
             margin: 10px;
@@ -47,61 +46,60 @@ if (!$result) {
         }
 
         .job-box:hover {
-            background-color: #FCEADE;
+            background-color: #FCEADE; /* Soft peach on hover */
         }
 
         .job-box a {
             text-decoration: none;
-            color: #5D674C;
+            color: #5D674C; /* Olive green text */
             font-weight: bold;
         }
 
         .job-box a:hover {
-            color: #FCEADE;
+            color: #FCEADE; /* Soft peach on hover for contrast */
         }
 
-        /* Dropdown styling */
+        /* Dropdown styles */
         .dropdown {
             position: relative;
             display: inline-block;
+            width: 200px;
         }
 
-        .dropdown-btn {
-            background-color: #D1D79D;
-            color: #5D674C;
+        .dropdown-toggle {
+            background-color: #f3e9b5;
+            border: 1px solid #D1D79D;
             padding: 10px;
-            border: none;
+            width: 100%;
+            text-align: left;
             cursor: pointer;
-            border-radius: 5px;
         }
 
-        .dropdown-content {
+        .dropdown-menu {
             display: none;
             position: absolute;
-            background-color: #f9f9f9;
-            min-width: 200px;
-            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-            padding: 10px;
-            z-index: 1;
+            background-color: white;
+            border: 1px solid #D1D79D;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
         }
 
-        .dropdown-content label {
+        .dropdown-menu label {
             display: block;
-        }
-
-        .dropdown.active .dropdown-content {
-            display: block;
-        }
-
-        .btn {
-            padding: 8px 12px;
-            margin-top: 10px;
-            background-color: #5D674C;
-            color: white;
-            border: none;
+            padding: 5px;
             cursor: pointer;
-            border-radius: 5px;
         }
+
+        .dropdown-menu label:hover {
+            background-color: #f3e9b5;
+        }
+
+        .show {
+            display: block;
+        }
+
     </style>
 </head>
 <body>
@@ -110,20 +108,22 @@ if (!$result) {
 
         <div class="filter-section">
             <form action="search-jobs.php" method="GET">
+                <label for="skills">Filter by Skills:</label><br>
+
                 <div class="dropdown">
-                    <button type="button" class="dropdown-btn" onclick="toggleDropdown()">Filter by Skills ▼</button>
-                    <div class="dropdown-content" id="dropdownMenu">
-                        <label><input type="checkbox" name="skills[]" value="Communication" <?php if (isset($_GET['skills']) && in_array("Communication", $_GET['skills'])) echo "checked"; ?>> Communication</label>
-                        <label><input type="checkbox" name="skills[]" value="Teamwork" <?php if (isset($_GET['skills']) && in_array("Teamwork", $_GET['skills'])) echo "checked"; ?>> Teamwork</label>
-                        <label><input type="checkbox" name="skills[]" value="Problem-Solving" <?php if (isset($_GET['skills']) && in_array("Problem-Solving", $_GET['skills'])) echo "checked"; ?>> Problem-Solving</label>
-                        <label><input type="checkbox" name="skills[]" value="Leadership" <?php if (isset($_GET['skills']) && in_array("Leadership", $_GET['skills'])) echo "checked"; ?>> Leadership</label>
-                        <label><input type="checkbox" name="skills[]" value="Technical Skills" <?php if (isset($_GET['skills']) && in_array("Technical Skills", $_GET['skills'])) echo "checked"; ?>> Technical Skills</label>
-                        <label><input type="checkbox" name="skills[]" value="Time Management" <?php if (isset($_GET['skills']) && in_array("Time Management", $_GET['skills'])) echo "checked"; ?>> Time Management</label>
+                    <div class="dropdown-toggle" onclick="toggleDropdown()">Select Skills</div>
+                    <div class="dropdown-menu" id="dropdown-menu">
+                        <label><input type="checkbox" name="skills[]" value="Communication"> Communication</label>
+                        <label><input type="checkbox" name="skills[]" value="Teamwork"> Teamwork</label>
+                        <label><input type="checkbox" name="skills[]" value="Problem-Solving"> Problem-Solving</label>
+                        <label><input type="checkbox" name="skills[]" value="Leadership"> Leadership</label>
+                        <label><input type="checkbox" name="skills[]" value="Technical Skills"> Technical Skills</label>
+                        <label><input type="checkbox" name="skills[]" value="Time Management"> Time Management</label>
                     </div>
                 </div>
 
                 <br>
-                <input type="submit" value="Apply Filters" class="btn">
+                <input type="submit" value="Filter" class="btn">
                 <button type="button" class="btn" onclick="removeFilters()">Remove Filters</button>
             </form>
         </div>
@@ -147,21 +147,23 @@ if (!$result) {
 
     <script>
         function toggleDropdown() {
-            document.getElementById("dropdownMenu").classList.toggle("active");
+            var dropdown = document.getElementById("dropdown-menu");
+            dropdown.classList.toggle("show");
         }
 
         function removeFilters() {
             window.location.href = "search-jobs.php"; // Reload page to reset filters
         }
 
-        // Close dropdown when clicking outside
-        document.addEventListener("click", function(event) {
-            var dropdown = document.getElementById("dropdownMenu");
-            var button = document.querySelector(".dropdown-btn");
-            if (!button.contains(event.target) && !dropdown.contains(event.target)) {
-                dropdown.classList.remove("active");
+        // Close dropdown if user clicks outside
+        window.onclick = function(event) {
+            if (!event.target.matches('.dropdown-toggle')) {
+                var dropdown = document.getElementById("dropdown-menu");
+                if (dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                }
             }
-        });
+        }
     </script>
 </body>
 </html>
