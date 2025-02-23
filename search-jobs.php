@@ -59,20 +59,26 @@ if (!$result) {
             color: #FCEADE; /* Soft peach on hover for contrast */
         }
 
-        /* Dropdown styles */
         .dropdown {
             position: relative;
             display: inline-block;
-            width: 200px;
+            width: 250px; /* Increased width for better readability */
         }
 
         .dropdown-toggle {
-            background-color: #f3e9b5;
+            background-color: #f8f9fa;
             border: 1px solid #D1D79D;
-            padding: 10px;
+            padding: 12px;
             width: 100%;
             text-align: left;
             cursor: pointer;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-toggle:hover {
+            background-color: #e2e6ea;
         }
 
         .dropdown-menu {
@@ -81,23 +87,35 @@ if (!$result) {
             background-color: white;
             border: 1px solid #D1D79D;
             width: 100%;
-            max-height: 200px;
+            max-height: 220px;
             overflow-y: auto;
-            z-index: 1000;
+            border-radius: 6px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            transition: opacity 0.3s ease-in-out;
+            padding: 8px;
         }
 
         .dropdown-menu label {
-            display: block;
-            padding: 5px;
+            display: flex;
+            align-items: center;
+            padding: 8px;
             cursor: pointer;
+            font-size: 14px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
         }
 
         .dropdown-menu label:hover {
             background-color: #f3e9b5;
         }
 
+        .dropdown-menu input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
         .show {
             display: block;
+            opacity: 1;
         }
 
     </style>
@@ -146,7 +164,7 @@ if (!$result) {
     </div>
 
     <script>
-        function toggleDropdown() {
+             function toggleDropdown() {
             var dropdown = document.getElementById("dropdown-menu");
             dropdown.classList.toggle("show");
         }
@@ -156,14 +174,14 @@ if (!$result) {
         }
 
         // Close dropdown if user clicks outside
-        window.onclick = function(event) {
-            if (!event.target.matches('.dropdown-toggle')) {
+        window.addEventListener("click", function (event) {
+            if (!event.target.closest(".dropdown")) {
                 var dropdown = document.getElementById("dropdown-menu");
-                if (dropdown.classList.contains('show')) {
-                    dropdown.classList.remove('show');
+                if (dropdown.classList.contains("show")) {
+                    dropdown.classList.remove("show");
                 }
             }
-        }
+        });
     </script>
 </body>
 </html>
