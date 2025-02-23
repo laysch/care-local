@@ -19,7 +19,7 @@ if (isset($_GET['skills']) && !empty($_GET['skills'])) {
 }
 
 // Execute the query
-$result = $db->query($query);
+$result = $conn->query($query);
 if (!$result) {
     die("Query failed: " . $db->error);
 }

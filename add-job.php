@@ -14,16 +14,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $city = sanitizeInput($_POST['city']);
     $location = $city;  // Only the city is needed now
 
+    // Get county based on city
+    $county = sanitizeInput($_POST['county']);
+
     // Check if any skills are selected (multiple selection)
-    if (isset($_POST['skills']) && is_array($_POST['skills'])) {
-        $skills = implode(", ", $_POST['skills']);
+    if (isset($_POST['skills']) && !empty($_POST['skills'])) {
+        $skills = sanitizeInput($_POST['skills']);
     } else {
         $skills = "";
     }
 
     // Prepare and bind SQL statement
-    $stmt = $conn->prepare("INSERT INTO jobs (jobtitle, description, location, skills) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $jobtitle, $description, $location, $skills);
+    $stmt = $conn->prepare("INSERT INTO jobs (jobtitle, description, location, county, skills) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssss", $jobtitle, $description, $location, $county, $skills);
 
     // Execute the statement
     if ($stmt->execute()) {
@@ -247,16 +250,23 @@ function updateCounty() {
         function toggleSkillSelection(button, skill) {
             button.classList.toggle('selected');
             let skillsInput = document.getElementById('skills-input');
-            let selectedSkills = skillsInput.value.split(', ').filter(Boolean);
+            let selectedSkills = skillsInput.value ? skillsInput.value.split(', ') : [];
 
             if (button.classList.contains('selected')) {
-                selectedSkills.push(skill);
+                if (!selectedSkills.includes(skill)) {
+                    selectedSkills.push(skill);
+                }
             } else {
                 selectedSkills = selectedSkills.filter(item => item !== skill);
             }
 
             skillsInput.value = selectedSkills.join(', ');
         }
+        document.querySelector("form").addEventListener("submit", function () {
+            let selectedButtons = document.querySelectorAll(".tag.selected");
+            let skillsArray = Array.from(selectedButtons).map(btn => btn.textContent);
+            document.getElementById("skills-input").value = skillsArray.join(', ');
+        });
     </script>
 
 </body>

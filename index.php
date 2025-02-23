@@ -8,36 +8,7 @@
     <link rel="stylesheet" href="styles.css">
     <script src="script.js" defer></script>
     <link rel="icon" type="image/x-icon" href="/img/favicon.png">
-    <style>
-        .hero-section {
-            background-color: #FCEADE;
-            padding: 60px 20px;
-            text-align: center;
-            color: #5D674C;
-        }
-
-        .hero-section h1 {
-            font-size: 2.5em;
-            margin-bottom: 20px;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            padding: 40px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .feature-card {
-            background-color: #F3E9B5;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            color: #5D674C;
-        }
-
+    <style>    
         .cta-section {
             background-color: #D1D79D;
             padding: 40px 20px;
