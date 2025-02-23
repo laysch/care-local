@@ -6,7 +6,7 @@
         <?php
             require_once 'database.php';
 
-            // Create 'jobs' table if it doesn't exist
+            // Create jobs
             try {
                 $query = "CREATE TABLE IF NOT EXISTS jobs (
                     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -23,6 +23,7 @@
                 echo $e->getMessage();
             }
 
+            // Create users
             try {
                 $query = "CREATE TABLE IF NOT EXISTS users (
                     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -31,7 +32,23 @@
                     password VARCHAR(255) NOT NULL
                 )";
                 $conn->query($query);
-                echo "Table '<b>users</b>' created successfully";
+                echo "Table '<b>users</b>' created successfully<br>";
+            } catch (Exception $e) {
+                echo $e->getMessage();
+            }
+
+            // Create events
+            try {
+                $query = "CREATE TABLE IF NOT EXISTS events(
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    title VARCHAR(255) NOT NULL,
+                    description TEXT,
+                    datetime DATETIME NOT NULL,
+                    location VARCHAR(255),
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );";
+                $conn->query($query);
+                echo "Table '<b>events</b>' created successfully";
             } catch (Exception $e) {
                 echo $e->getMessage();
             }

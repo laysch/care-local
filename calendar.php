@@ -1,10 +1,27 @@
 <?php
 $currentPage = "Calendar";
+require_once 'inc/database.php';
 
 $year = date('Y');
 $monthNum = date('n');
 $monthName = date('F');
 $monthDays = cal_days_in_month(CAL_GREGORIAN, $monthNum, $year);
+$firstDate = "$year-$monthNum-01";
+$lastDate = "$year-$monthNum-$monthDays";
+$firstDay = date('w', strtotime($firstDate));
+
+$stmt = $conn->prepare("SELECT * FROM events WHERE DATE(datetime) BETWEEN ? AND ?");
+$stmt->bind_param("ss", $firstDate, $lastDate);
+$stmt->execute();
+$result = $stmt->get_result();
+$events = $result->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
+
+$eventsByDay = [];
+foreach ($events as $event) {
+    $day = date('j', strtotime($event['datetime']));
+    $eventsByDay[$day][] = $event;
+}
 
 ?>
 
@@ -21,10 +38,13 @@ $monthDays = cal_days_in_month(CAL_GREGORIAN, $monthNum, $year);
             border-collapse: collapse;
         }
         tr {
-            line-height: 100px;
+            height: 100px;
         }
         th {
             border-bottom:2px dashed;
+        }
+        .dayNumber {
+            font-weight: bold;
         }
     </style>
 </head>
@@ -45,8 +65,7 @@ $monthDays = cal_days_in_month(CAL_GREGORIAN, $monthNum, $year);
                     <th>Friday</th>
                     <th>Saturday</th>
                 </tr>
-                <?php
-                $firstDay = date('w', strtotime("$year-$monthNum-01"));
+                <?php                
                 $totalCells = ceil(($firstDay + $monthDays) / 7) * 7;
                 $counter = 1;
                 echo "<tr>";
@@ -54,7 +73,13 @@ $monthDays = cal_days_in_month(CAL_GREGORIAN, $monthNum, $year);
                     if ($i < $firstDay || $counter > $monthDays) {
                         echo "<td></td>";
                     } else {
-                        echo "<td>" . $counter . "</td>";
+                        echo "<td><div class='dayNumber'>" . $counter . "</div>";
+                        if (isset($eventsByDay[$counter])) {
+                            foreach ($eventsByDay[$counter] as $event) {
+                                echo "<div>" . htmlspecialchars($event['title']) . "<div>";
+                            }
+                        }
+                        echo "</td>";
                         $counter++;
                     }
                     if (($i + 1) % 7 ==0) {
