@@ -1,5 +1,5 @@
 <?php   
-
+$currentPage = "Add Job";
 require_once 'inc/database.php';
 
 $success_message = "";
@@ -59,7 +59,7 @@ $currentPage = 'Home';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CareLocal</title>
+    <title>Add Job | CareLocal</title>
     <link rel="stylesheet" href="styles.css">
     <script src="script.js" defer></script>
     <link rel="icon" type="image/x-icon" href="/img/favicon.png">
