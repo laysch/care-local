@@ -68,13 +68,13 @@ if (!$result) {
         .dropdown-toggle {
             background-color: #5D674C;
             border: 1px solid #D1D79D;
-            padding: 16px;
+            padding: 12px;
             width: 100%;
             text-align: left;
             cursor: pointer;
             border-radius: 6px;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 12px;
             transition: background-color 0.3s;
         }
 
@@ -93,15 +93,15 @@ if (!$result) {
             border-radius: 6px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
             transition: opacity 0.3s ease-in-out;
-            padding: 16px;
+            padding: 8px;
         }
 
         .dropdown-menu label {
             display: flex;
             align-items: center;
-            padding: 16px;
+            padding: 12px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 12px;
             border-radius: 4px;
             transition: background-color 0.2s;
         }
