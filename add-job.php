@@ -102,7 +102,7 @@ $currentPage = 'Home';
     <?php include 'navbar.php'; ?>
 
     <div class="hero-section">
-        <h2>Create a Job Posting</h2>
+        <h1>Create a Job Posting</h1>
     </div>
     <div class="features-grid">
         <div class="feature-card">
