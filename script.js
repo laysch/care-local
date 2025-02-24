@@ -69,6 +69,12 @@ function toggleMenu() {
     menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
 }
 
+// Toggle the fullscreen login visibility
+function toggleLogin() {
+    const menu = document.getElementById('login');
+    menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+}
+
 // Dynamically set the page name and close the menu when navigating
 function setPage(pageName) {
     document.getElementById('current-page').innerText = pageName;

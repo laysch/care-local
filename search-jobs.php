@@ -1,6 +1,10 @@
 <?php   
-// Start session
-session_start();
+$currentPage = 'Search Jobs';
+
+if (!isset($_SESSION['username'])) {
+    header('Location: /login.php');
+    exit;
+}
 
 // Connect to the database
 require_once 'inc/database.php';
@@ -30,8 +34,11 @@ if (!$result) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Job Search</title>
+    <title>Job Search | CareLocal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+    <link rel="icon" type="image/x-icon" href="/img/favicon.png">
     <style>
         .job-box {
             background-color: #F3E9B5; /* Light yellow background */
@@ -121,6 +128,7 @@ if (!$result) {
     </style>
 </head>
 <body>
+    <?php include 'navbar.php'; ?>
     <fieldset>
         <legend>Job Listings</legend>
 

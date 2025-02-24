@@ -2,6 +2,11 @@
 $currentPage = "Calendar";
 require_once 'inc/database.php';
 
+if (!isset($_SESSION['username'])) {
+    header('Location: /login.php');
+    exit;
+}
+
 $year = date('Y');
 $monthNum = date('n');
 $monthName = date('F');

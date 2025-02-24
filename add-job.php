@@ -2,6 +2,11 @@
 $currentPage = "Add Job";
 require_once 'inc/database.php';
 
+if (!isset($_SESSION['username'])) {
+    header('Location: /login.php');
+    exit;
+}
+
 $success_message = "";
 $jobID = ""; // Initialize jobID variable
 

@@ -10,6 +10,16 @@
     <button class="menu-btn" onclick="toggleMenu()">
         <span id="current-page"><?php echo isset($currentPage) ? $currentPage : 'Home'; ?></span> ☰
     </button>
+    
+    <?php
+        if (!isset($_SESSION['username'])) {
+            echo "<button class=\"menu-btn\" onclick=\"toggleLogin()\"><span>Login</span></button>";
+        } else {
+            echo "<span onclick=\"location.href='logout.php'\">Logout : " . $_SESSION['username'] . "</span>";
+        }
+    ?>
+    
+    <!--
     <button class="menu-btn">
         <span id="login">
             <?php
@@ -21,6 +31,7 @@
             ?>
         </span>
     </button>
+    -->
 </nav>
 
 <div class="fullscreen-menu" id="menu">
@@ -51,4 +62,9 @@
         </div>
     </div>
     <button class="close-btn" onclick="toggleMenu()">✖</button>
+</div>
+
+<div class="fullscreen-menu" id="login">
+    <embed style="height: 100%; width: 100%" src="login.php" ></embed>
+    <button class="close-btn" onclick="toggleLogin()">✖</button>
 </div>
