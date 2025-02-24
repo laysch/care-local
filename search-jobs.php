@@ -74,7 +74,6 @@ if (!$result) {
             cursor: pointer;
             border-radius: 6px;
             font-weight: bold;
-            font-size: 12px;
             transition: background-color 0.3s;
         }
 
@@ -99,9 +98,9 @@ if (!$result) {
         .dropdown-menu label {
             display: flex;
             align-items: center;
-            padding: 12px;
+            padding: 8px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 14px;
             border-radius: 4px;
             transition: background-color 0.2s;
         }
@@ -127,7 +126,7 @@ if (!$result) {
 
         <div class="filter-section">
             <form action="search-jobs.php" method="GET">
-            
+                
 
                 <div class="dropdown">
                     <div class="dropdown-toggle" onclick="toggleDropdown()">Filter By Skills</div>
