@@ -4,28 +4,39 @@ ini_set('display_errors', 1);
 session_start();
 require_once 'inc/database.php';
 
+if (isset($_SESSION['user_id'])) {
+    header("Location: index.php");
+    exit();
+}
+
 if (isset($_POST['login'])) {
-    $email = trim($_POST['email']);
+    $email = filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL);
     $password = trim($_POST['password']);
-    
-    $stmt = $conn->prepare("SELECT id, password, username FROM users WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    if ($result->num_rows === 1) {
-        $row = $result->fetch_assoc();
-        if (password_verify($password, $row['password'])) {
-            $_SESSION['user_id'] = $row['id'];
-            $_SESSION['username'] = $row['username'];
-            
-            echo "<body onload=\"window.top.location.reload();\">";
-            exit();
+
+    if (!$email) {
+        $error = "Invalid email format.";
+    } else {    
+        $stmt = $conn->prepare("SELECT id, password, username FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows === 1) {
+            $row = $result->fetch_assoc();
+            if (password_verify($password, $row['password'])) {
+                session_regenerate_id(true);
+                $_SESSION['user_id'] = $row['id'];
+                $_SESSION['username'] = $row['username'];
+                
+                header("refresh:0;url=index.php");
+                exit();
+            } else {
+                $error = "Invalid email or password. Please try again.";
+            }
         } else {
             $error = "Invalid email or password. Please try again.";
         }
-    } else {
-        $error = "Invalid email or password. Please try again.";
+        $stmt->close();
     }
 }
 ?>
@@ -57,7 +68,7 @@ if (isset($_POST['login'])) {
     <div class="container">
         <div class="left">
             <h2>Sign in to CareLocal</h2>
-            <?php if (isset($error)) echo "<p style='color:red;'>$error</p>"; ?>
+            <?php if (isset($error)) echo "<p style='color:red;'>htmlspecialchars($error)</p>"; ?>
             <form method="post">
                 <div class="form-group">
                     <label for="email">Email:</label>
