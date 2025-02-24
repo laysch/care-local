@@ -100,7 +100,7 @@ if (!$result) {
             align-items: center;
             padding: 8px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 10px;
             border-radius: 4px;
             transition: background-color 0.2s;
         }
