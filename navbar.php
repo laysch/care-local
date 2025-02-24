@@ -65,6 +65,6 @@
 </div>
 
 <div class="fullscreen-menu" id="login">
-    <iframe src="login.php" style="height: 100%; width: 100%;" frameborder="0"></iframe>
+    <iframe src="login.php" style="height: 100vh; width: 100vw;" frameborder="0"></iframe>
     <button class="close-btn" onclick="toggleLogin()">✖</button>
 </div>
