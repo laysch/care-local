@@ -22,13 +22,13 @@
     <!--
     <button class="menu-btn">
         <span id="login">
-            <?php
-                if (!isset($_SESSION['username'])) {
-                    echo "<span onclick=\"location.href='login.php'\">Login</span";
-                } else {
-                    echo "<span onclick=\"location.href='logout.php'\">Logout : " . $_SESSION['username'] . "</span>";
-                }
-            ?>
+            #<?php
+            #    if (!isset($_SESSION['username'])) {
+            #         echo "<span onclick=\"location.href='login.php'\">Login</span";
+            #     } else {
+            #        echo "<span onclick=\"location.href='logout.php'\">Logout : " . $_SESSION['username'] . "</span>";
+            #    }
+            #?>
         </span>
     </button>
     -->
@@ -48,9 +48,9 @@
                 <li>
                     <?php
                         if (!isset($_SESSION['username'])) {
-                            echo "<a href=\"login.php\" onclick=\"setPage('Login'\")>Login</a>";
+                            echo "<a href=\"#\" onclick=\"toggleMenu();toggleLogin();return false;\">Login</a></span>";
                         } else {
-                            echo "<a href=\"logout.php\" onclick=\"setPage('Logout')\">Logout : " . $_SESSION['username'] . "</a>";
+                            echo "<a href=\"logout.php\">Logout : " . $_SESSION['username'] . "</a>";
                         }
                     ?>
                 </li>
