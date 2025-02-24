@@ -73,7 +73,7 @@ if (!$result) {
         }
 
         .dropdown-toggle {
-            background-color: #5D674C;
+            /*background-color: #5D674C; */
             border: 1px solid #D1D79D;
             padding: 12px;
             width: 100%;
@@ -129,42 +129,44 @@ if (!$result) {
 </head>
 <body>
     <?php include 'navbar.php'; ?>
-    <fieldset>
-        <legend>Job Listings</legend>
+    <div class="features-grid">
+        <div class="feature-card">
+            <fieldset>
+                <legend>Job Listings</legend>
 
-        <div class="filter-section">
-            <form action="search-jobs.php" method="GET">
-                
+                <div class="filter-section">
+                    <form action="search-jobs.php" method="GET">      
+                        <div class="dropdown">
+                            <div class="dropdown-toggle" onclick="toggleDropdown()">Filter By Skills</div>
+                            <div class="dropdown-menu" id="dropdown-menu">
+                                <label><input type="checkbox" name="skills[]" value="Communication"> Communication</label>
+                                <label><input type="checkbox" name="skills[]" value="Teamwork"> Teamwork</label>
+                                <label><input type="checkbox" name="skills[]" value="Problem-Solving"> Problem-Solving</label>
+                                <label><input type="checkbox" name="skills[]" value="Leadership"> Leadership</label>
+                                <label><input type="checkbox" name="skills[]" value="Technical Skills"> Technical Skills</label>
+                                <label><input type="checkbox" name="skills[]" value="Time Management"> Time Management</label>
+                            </div>
+                        </div>
 
-                <div class="dropdown">
-                    <div class="dropdown-toggle" onclick="toggleDropdown()">Filter By Skills</div>
-                    <div class="dropdown-menu" id="dropdown-menu">
-                        <label><input type="checkbox" name="skills[]" value="Communication"> Communication</label>
-                        <label><input type="checkbox" name="skills[]" value="Teamwork"> Teamwork</label>
-                        <label><input type="checkbox" name="skills[]" value="Problem-Solving"> Problem-Solving</label>
-                        <label><input type="checkbox" name="skills[]" value="Leadership"> Leadership</label>
-                        <label><input type="checkbox" name="skills[]" value="Technical Skills"> Technical Skills</label>
-                        <label><input type="checkbox" name="skills[]" value="Time Management"> Time Management</label>
-                    </div>
+                        <br>
+                        <input type="submit" value="Filter" class="btn">
+                        <button type="button" class="btn" onclick="removeFilters()">Remove Filters</button>
+                    </form>
                 </div>
 
-                <br>
-                <input type="submit" value="Filter" class="btn">
-                <button type="button" class="btn" onclick="removeFilters()">Remove Filters</button>
-            </form>
+                <div class="job-listings">
+                    <?php
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<div class='job-box' onclick='window.location.href=\"jobdetails.php?id=" . $row['id'] . "\"'>";
+                        echo "<a href='jobdetails.php?id=" . $row['id'] . "'>" . htmlspecialchars($row['jobtitle']) . "</a><br>";
+                        echo htmlspecialchars($row['location']);
+                        echo "</div>";
+                    }
+                    ?>
+                </div>
+            </fieldset>
         </div>
-
-        <div class="job-listings">
-            <?php
-            while ($row = $result->fetch_assoc()) {
-                echo "<div class='job-box' onclick='window.location.href=\"jobdetails.php?id=" . $row['id'] . "\"'>";
-                echo "<a href='jobdetails.php?id=" . $row['id'] . "'>" . htmlspecialchars($row['jobtitle']) . "</a><br>";
-                echo htmlspecialchars($row['location']);
-                echo "</div>";
-            }
-            ?>
-        </div>
-    </fieldset>
+    </div>
 
     <div style="text-align: center; margin-top: 20px;">
         <a href="add-job.php" class="btn">Post a Job</a>
@@ -172,7 +174,7 @@ if (!$result) {
     </div>
 
     <script>
-             function toggleDropdown() {
+        function toggleDropdown() {
             var dropdown = document.getElementById("dropdown-menu");
             dropdown.classList.toggle("show");
         }

@@ -18,7 +18,8 @@ if (isset($_POST['login'])) {
         if (password_verify($password, $row['password'])) {
             $_SESSION['user_id'] = $row['id'];
             $_SESSION['username'] = $row['username'];
-            header("Location: index.php");
+            
+            echo "<body onload=\"window.top.location.reload();\">";
             exit();
         } else {
             $error = "Invalid email or password. Please try again.";
