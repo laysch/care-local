@@ -65,6 +65,8 @@
 </div>
 
 <div class="fullscreen-menu" id="login">
+    <div class="menu-content">
     <embed src="login.php" style="height: 100vh; width: 100vw; display:flex;" frameborder="0"></embed>
+                    </div>
     <button class="close-btn" onclick="toggleLogin()">✖</button>
 </div>
