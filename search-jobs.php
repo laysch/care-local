@@ -74,6 +74,7 @@ if (!$result) {
             cursor: pointer;
             border-radius: 6px;
             font-weight: bold;
+            font-size: 12px;
             transition: background-color 0.3s;
         }
 
@@ -98,9 +99,9 @@ if (!$result) {
         .dropdown-menu label {
             display: flex;
             align-items: center;
-            padding: 8px;
+            padding: 12px;
             cursor: pointer;
-            font-size: 10px;
+            font-size: 12px;
             border-radius: 4px;
             transition: background-color 0.2s;
         }
