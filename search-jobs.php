@@ -10,23 +10,44 @@ if (!isset($_SESSION['username'])) {
 require_once 'inc/database.php';
 
 // Initialize query to get all jobs by default
-$query = "SELECT * FROM jobs";
+$query = "SELECT * FROM jobs WHERE 1=1";
+$params = [];
+$types = "";
 
-// Check if there are skills selected for filtering
-if (isset($_GET['skills']) && !empty($_GET['skills'])) {
-    $skills = $_GET['skills'];
-    $skillFilter = implode("','", $skills); // Convert array to a comma-separated string for SQL query
-    // Modify query to filter by selected skills
-    $query = "SELECT * FROM jobs WHERE skills LIKE '%" . $skills[0] . "%'"; // Start with the first skill
-    for ($i = 1; $i < count($skills); $i++) {
-        $query .= " OR skills LIKE '%" . $skills[$i] . "%'"; // Add more skills as OR conditions
+if (isset($_GET['county']) && is_array($_GET['county']) && !empty($_GET['county'])) {
+    $countyFilters = [];
+    foreach ($_GET['county'] as $county) {
+        $countyFilters[] = "county = ?";
+        $params[] = $county;
+        $types .= "s";
     }
+    $query .= " AND (" . implode(" OR ", $countyFilters) . ")";
 }
 
-// Execute the query
-$result = $conn->query($query);
+// Check if there are skills selected for filtering
+if (isset($_GET['skills']) && is_array($_GET['skills']) && !empty($_GET['skills'])) {
+    $skillFilters = [];
+    foreach ($_GET['skills'] as $skill) {
+        $skillFilters[] = "skills LIKE ?";
+        $params[] = "%".$skill."%";
+        $types .= "s";
+    }
+    $query .= " AND (" . implode(" OR ", $skillFilters) . ")";
+}
+
+$stmt = $conn->prepare($query);
+if ($stmt === false) {
+    die("Statement preparation failed: " . $conn->error);
+}
+if (!empty($params)) {
+    $stmt->bind_param($types, ...$params);
+}
+if (!$stmt->execute()) {
+    die("Query execution failed: " . $stmt->error);
+}
+$result = $stmt->get_result();
 if (!$result) {
-    die("Query failed: " . $conn->error);
+    die("Query result retrieval failed: " . $stmt->error);
 }
 ?>
 
@@ -135,10 +156,11 @@ if (!$result) {
                 <legend>Job Listings</legend>
 
                 <div class="filter-section">
-                    <form action="search-jobs.php" method="GET">      
+                    <form action="search-jobs.php" method="GET">    
+                        <b>Filter:</b>
                         <div class="dropdown">
-                            <div class="dropdown-toggle" onclick="toggleDropdown()">Filter By Skills</div>
-                            <div class="dropdown-menu" id="dropdown-menu">
+                            <div class="dropdown-toggle" onclick="toggleSkills()">Skills</div>
+                            <div class="dropdown-menu" id="dropdown-skills">
                                 <label><input type="checkbox" name="skills[]" value="Communication"> Communication</label>
                                 <label><input type="checkbox" name="skills[]" value="Teamwork"> Teamwork</label>
                                 <label><input type="checkbox" name="skills[]" value="Problem-Solving"> Problem-Solving</label>
@@ -146,6 +168,13 @@ if (!$result) {
                                 <label><input type="checkbox" name="skills[]" value="Technical Skills"> Technical Skills</label>
                                 <label><input type="checkbox" name="skills[]" value="Time Management"> Time Management</label>
                             </div>
+                        </div>
+                        <div class="dropdown">
+                            <div class="dropdown-toggle" onclick="toggleCounty()"><label for="county">County:</label></div>
+                            <div class="dropdown-menu" id="dropdown-county">
+                                <label><input type="checkbox" name="county[]" value="Nassau">Nassau</label>
+                                <label><input type="checkbox" name="county[]" value="Suffolk">Suffolk</label>
+                            </div>                             
                         </div>
 
                         <br>
@@ -174,8 +203,12 @@ if (!$result) {
     </div>
 
     <script>
-        function toggleDropdown() {
-            var dropdown = document.getElementById("dropdown-menu");
+        function toggleSkills() {
+            var dropdown = document.getElementById("dropdown-skills");
+            dropdown.classList.toggle("show");
+        }
+        function toggleCounty() {
+            var dropdown = document.getElementById("dropdown-county");
             dropdown.classList.toggle("show");
         }
 
@@ -186,7 +219,7 @@ if (!$result) {
         // Close dropdown if user clicks outside
         window.addEventListener("click", function (event) {
             if (!event.target.closest(".dropdown")) {
-                var dropdown = document.getElementById("dropdown-menu");
+                var dropdown = document.getElementById("dropdown-skills");
                 if (dropdown.classList.contains("show")) {
                     dropdown.classList.remove("show");
                 }
