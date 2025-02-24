@@ -186,3 +186,26 @@ footer button:hover {
   text-align: center;
   color: #5D674C;
 }
+.cta-section {
+  background-color: #D1D79D;
+  padding: 40px 20px;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.cta-button {
+  background-color: #5D674C;
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 25px;
+  font-size: 1.1em;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  margin-top: 20px;
+}
+
+.cta-button:hover {
+  background-color: #4a5339;
+}

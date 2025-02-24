@@ -8,31 +8,6 @@
     <link rel="stylesheet" href="styles.css">
     <script src="script.js" defer></script>
     <link rel="icon" type="image/x-icon" href="/img/favicon.png">
-    <style>    
-        .cta-section {
-            background-color: #D1D79D;
-            padding: 40px 20px;
-            text-align: center;
-            margin-top: 40px;
-        }
-
-        .cta-button {
-            background-color: #5D674C;
-            color: white;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 25px;
-            font-size: 1.1em;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 20px;
-        }
-
-        .cta-button:hover {
-            background-color: #4a5339;
-        }
-    </style>
 </head>
 <body>
     <?php include 'navbar.php'; ?>
@@ -61,6 +36,7 @@
         <h2>Ready to Get Started?</h2>
         <p>Join our community today and start making a difference in your neighborhood</p>
         <a href="add-job.php" class="cta-button">Post a Job</a>
+        <a href="search-jobs.php" class="cta-button">Search for Jobs</a>
     </div>
 
 </body>

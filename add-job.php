@@ -1,5 +1,5 @@
 <?php   
-session_start();
+
 require_once 'inc/database.php';
 
 $success_message = "";
@@ -64,28 +64,6 @@ $currentPage = 'Home';
     <script src="script.js" defer></script>
     <link rel="icon" type="image/x-icon" href="/img/favicon.png">
     <style>
-        body {
-            background-color: #FFFFFF;
-            font-family: Arial, sans-serif;
-            color: #5D674C;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .container {
-            width: 80%;
-            background-color: #FCEADE;
-            padding: 20px;
-            border-radius: 10px;
-            overflow-y: auto;
-        }
-        h2 {
-            text-align: center;
-            color: #5D674C;
-        }
         label {
             font-weight: bold;
         }
@@ -99,6 +77,8 @@ $currentPage = 'Home';
         .tags-container {
             display: flex;
             flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
             margin-bottom: 15px;
         }
         .tag {
@@ -113,17 +93,7 @@ $currentPage = 'Home';
         .tag.selected {
             background-color: #5D674C;
         }
-        button {
-            background-color: #F3E9B5;
-            color: #5D674C;
-            padding: 10px;
-            border: none;
-            width: 100%;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #D1D79D;
-        }
+
     </style>
 </head>
 <body>
@@ -131,74 +101,78 @@ $currentPage = 'Home';
     <!-- Include the Navbar at the very top -->
     <?php include 'navbar.php'; ?>
 
-    <div class="container">
+    <div class="hero-section">
         <h2>Create a Job Posting</h2>
+    </div>
+    <div class="features-grid">
+        <div class="feature-card">
 
-        <?php if ($success_message != "") { echo "<p>$success_message</p>"; } ?>
+            <?php if ($success_message != "") { echo "<p>$success_message</p>"; } ?>
 
-        <form action="add-job.php" method="POST">
-            <label for="jobtitle">Job Title:</label>
-            <input type="text" id="jobtitle" name="jobtitle" required>
+            <form action="add-job.php" method="POST">
+                <label for="jobtitle">Job Title:</label>
+                <input type="text" id="jobtitle" name="jobtitle" required>
 
-            <label for="description">Job Description:</label>
-            <textarea id="description" name="description" rows="4" required></textarea>
+                <label for="description">Job Description:</label>
+                <textarea id="description" name="description" rows="4" required></textarea>
 
-            <!-- City dropdown -->
-            <label for="city">City:</label>
-            <select id="city-dropdown" name="city" required onchange="updateCounty()">
-                <option value="">Select a City</option>
-                <!-- List of cities from Nassau and Suffolk counties, combined alphabetically -->
-                <?php
-                    $cities = array(
-                        "Albertson", "Amagansett", "Amityville", "Atlantic Beach", "Baldwin", "Bay Park", "Bay Shore", "Bayville", 
-                        "Bellmore", "Bellport", "Bellerose", "Bethpage", "Blue Point", "Bohemia", "Brentwood", "Bridgehampton", 
-                        "Brookhaven", "Brookville", "Calverton", "Carle Place", "Cedarhurst", "Centre Island", "Centreport", "Cove Neck",
-                        "Deer Park", "East Hills", "East Hampton", "East Meadow", "East Moriches", "East Marion", "East Northport", 
-                        "East Norwich", "East Port", "East Quogue", "East Rockaway", "East Setauket", "Elmont", "Farmingdale", "Farmingville", 
-                        "Fishers Island", "Floral Park", "Flower Hill", "Franklin Square", "Freeport", "Garden City", "Glen Cove", 
-                        "Glen Head", "Glenwood Landing", "Great Neck", "Great River", "Greenlawn", "Greenport", "Greenvale", "Harbor Hills", 
-                        "Harbor Isle", "Hampton Bays", "Hauppauge", "Hempstead", "Herricks", "Hewlett", "Hicksville", "Holbrook", 
-                        "Holtsville", "Inwood", "Island Park", "Islandia", "Jericho", "Kensington", "Kings Park", "Kings Point", 
-                        "Lake Grove", "Lake Success", "Lakeview", "Laurel", "Laurel Hollow", "Lattingtown", "Lawrence", "Levittown", 
-                        "Lindenhurst", "Lido Beach", "Locust Valley", "Long Beach", "Lynbrook", "Malverne", "Manorhaven", "Manorville", 
-                        "Massapequa", "Massapequa Park", "Matinecock", "Mastic", "Mastic Beach", "Melville", "Merrick", "Miller Place", 
-                        "Mineola", "Montauk", "Moriches", "Middle Island", "Muttontown", "New Cassel", "New Hyde Park", "New Suffolk", 
-                        "North Babylon", "North Hills", "Northport", "Oakdale", "Oceanside", "Old Bethpage", "Old Brookville", "Old Westbury", 
-                        "Orient", "Oyster Bay", "Patchogue", "Peconic", "Plainedge", "Plainview", "Port Jefferson", "Port Jefferson Station", 
-                        "Point Lookout", "Port Washington", "Quogue", "Remsenburg", "Riverhead", "Rockville Centre", "Roosevelt", "Roslyn", 
-                        "Sag Harbor", "Sagaponack", "Saint James", "Salisbury", "Sands Point", "Sea Cliff", "Seaford", "Searingtown", 
-                        "Selden", "Shelter Island", "Shelter Island Heights", "Shirley", "Shoreham", "Smithtown", "Sound Beach", "South Jamesport", 
-                        "Southampton", "Southold", "Speonk", "Stony Brook", "Strathmore", "Syosset", "Thomaston", "Uniondale", "Valley Stream", 
-                        "Wading River", "Wantagh", "Wainscott", "Water Mill", "West Babylon", "West Hempstead", "West Islip", "Westbury", 
-                        "Wyandanch", "Woodbury", "Woodmere", "Woodsburgh", "Yaphank"
-                    );
+                <!-- City dropdown -->
+                <label for="city">City:</label>
+                <select id="city-dropdown" name="city" required onchange="updateCounty()">
+                    <option value="">Select a City</option>
+                    <!-- List of cities from Nassau and Suffolk counties, combined alphabetically -->
+                    <?php
+                        $cities = array(
+                            "Albertson", "Amagansett", "Amityville", "Atlantic Beach", "Baldwin", "Bay Park", "Bay Shore", "Bayville", 
+                            "Bellmore", "Bellport", "Bellerose", "Bethpage", "Blue Point", "Bohemia", "Brentwood", "Bridgehampton", 
+                            "Brookhaven", "Brookville", "Calverton", "Carle Place", "Cedarhurst", "Centre Island", "Centreport", "Cove Neck",
+                            "Deer Park", "East Hills", "East Hampton", "East Meadow", "East Moriches", "East Marion", "East Northport", 
+                            "East Norwich", "East Port", "East Quogue", "East Rockaway", "East Setauket", "Elmont", "Farmingdale", "Farmingville", 
+                            "Fishers Island", "Floral Park", "Flower Hill", "Franklin Square", "Freeport", "Garden City", "Glen Cove", 
+                            "Glen Head", "Glenwood Landing", "Great Neck", "Great River", "Greenlawn", "Greenport", "Greenvale", "Harbor Hills", 
+                            "Harbor Isle", "Hampton Bays", "Hauppauge", "Hempstead", "Herricks", "Hewlett", "Hicksville", "Holbrook", 
+                            "Holtsville", "Inwood", "Island Park", "Islandia", "Jericho", "Kensington", "Kings Park", "Kings Point", 
+                            "Lake Grove", "Lake Success", "Lakeview", "Laurel", "Laurel Hollow", "Lattingtown", "Lawrence", "Levittown", 
+                            "Lindenhurst", "Lido Beach", "Locust Valley", "Long Beach", "Lynbrook", "Malverne", "Manorhaven", "Manorville", 
+                            "Massapequa", "Massapequa Park", "Matinecock", "Mastic", "Mastic Beach", "Melville", "Merrick", "Miller Place", 
+                            "Mineola", "Montauk", "Moriches", "Middle Island", "Muttontown", "New Cassel", "New Hyde Park", "New Suffolk", 
+                            "North Babylon", "North Hills", "Northport", "Oakdale", "Oceanside", "Old Bethpage", "Old Brookville", "Old Westbury", 
+                            "Orient", "Oyster Bay", "Patchogue", "Peconic", "Plainedge", "Plainview", "Port Jefferson", "Port Jefferson Station", 
+                            "Point Lookout", "Port Washington", "Quogue", "Remsenburg", "Riverhead", "Rockville Centre", "Roosevelt", "Roslyn", 
+                            "Sag Harbor", "Sagaponack", "Saint James", "Salisbury", "Sands Point", "Sea Cliff", "Seaford", "Searingtown", 
+                            "Selden", "Shelter Island", "Shelter Island Heights", "Shirley", "Shoreham", "Smithtown", "Sound Beach", "South Jamesport", 
+                            "Southampton", "Southold", "Speonk", "Stony Brook", "Strathmore", "Syosset", "Thomaston", "Uniondale", "Valley Stream", 
+                            "Wading River", "Wantagh", "Wainscott", "Water Mill", "West Babylon", "West Hempstead", "West Islip", "Westbury", 
+                            "Wyandanch", "Woodbury", "Woodmere", "Woodsburgh", "Yaphank"
+                        );
 
-                    sort($cities);
-                    foreach ($cities as $city) {
-                        echo "<option value='$city'>$city</option>";
+                        sort($cities);
+                        foreach ($cities as $city) {
+                            echo "<option value='$city'>$city</option>";
+                        }
+                    ?>
+                </select>
+
+                <label for="county">County:</label>
+                <input type="text" id="county" name="county" readonly>
+
+                <label for="skills">Required Skills:</label>
+                <div class="tags-container">
+                    <?php 
+                    $available_skills = ['Communication', 'Teamwork', 'Problem-Solving', 'Leadership', 'Technical Skills', 'Time Management'];
+                    $selected_skills = isset($_POST['skills']) ? $_POST['skills'] : [];
+                    foreach ($available_skills as $skill) {
+                        $isSelected = in_array($skill, $selected_skills) ? 'selected' : '';
+                        echo "<button type='button' class='tag $isSelected' onclick='toggleSkillSelection(this, \"$skill\")'>$skill</button>";
                     }
-                ?>
-            </select>
+                    ?>
+                </div>
 
-            <label for="county">County:</label>
-            <input type="text" id="county" name="county" readonly>
+                <input type="hidden" name="skills" id="skills-input">
 
-            <label for="skills">Required Skills:</label>
-            <div class="tags-container">
-                <?php 
-                $available_skills = ['Communication', 'Teamwork', 'Problem-Solving', 'Leadership', 'Technical Skills', 'Time Management'];
-                $selected_skills = isset($_POST['skills']) ? $_POST['skills'] : [];
-                foreach ($available_skills as $skill) {
-                    $isSelected = in_array($skill, $selected_skills) ? 'selected' : '';
-                    echo "<button type='button' class='tag $isSelected' onclick='toggleSkillSelection(this, \"$skill\")'>$skill</button>";
-                }
-                ?>
-            </div>
-
-            <input type="hidden" name="skills" id="skills-input">
-
-            <button type="submit">Post Job</button>
-        </form>
+                <button type="submit" class="cta-button">Post Job</button>
+            </form>
+        </div>
     </div>
     <script>
         const countyMapping = {
