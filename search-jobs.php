@@ -62,11 +62,11 @@ if (!$result) {
         .dropdown {
             position: relative;
             display: inline-block;
-            width: 250px; /* Increased width for better readability */
+            width: 100px; 
         }
 
         .dropdown-toggle {
-            background-color: #f8f9fa;
+            background-color: #5D674C;
             border: 1px solid #D1D79D;
             padding: 12px;
             width: 100%;
@@ -84,8 +84,8 @@ if (!$result) {
         .dropdown-menu {
             display: none;
             position: absolute;
-            background-color: white;
-            border: 1px solid #D1D79D;
+            background-color: #D1D79D;
+            border: 1px solidrgb(103, 161, 137);
             width: 100%;
             max-height: 220px;
             overflow-y: auto;
