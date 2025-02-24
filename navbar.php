@@ -15,7 +15,7 @@
         if (!isset($_SESSION['username'])) {
             echo "<button class=\"menu-btn\" onclick=\"toggleLogin()\"><span>Login</span></button>";
         } else {
-            echo "<span onclick=\"location.href='logout.php'\">Logout : " . $_SESSION['username'] . "</span>";
+            echo "<button class=\"menu-btn\" ><span onclick=\"location.href='logout.php'\">Logout : " . $_SESSION['username'] . "</span></button>";
         }
     ?>
     
