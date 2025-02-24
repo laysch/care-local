@@ -223,6 +223,10 @@ if (!$result) {
                 if (dropdown.classList.contains("show")) {
                     dropdown.classList.remove("show");
                 }
+                var dropdown = document.getElementById("dropdown-county");
+                if (dropdown.classList.contains("show")) {
+                    dropdown.classList.remove("show");
+                }
             }
         });
     </script>
