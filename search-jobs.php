@@ -126,10 +126,10 @@ if (!$result) {
 
         <div class="filter-section">
             <form action="search-jobs.php" method="GET">
-                <label for="skills">Filter by Skills:</label><br>
+            
 
                 <div class="dropdown">
-                    <div class="dropdown-toggle" onclick="toggleDropdown()">Select Skills</div>
+                    <div class="dropdown-toggle" onclick="toggleDropdown()">Filter By Skills</div>
                     <div class="dropdown-menu" id="dropdown-menu">
                         <label><input type="checkbox" name="skills[]" value="Communication"> Communication</label>
                         <label><input type="checkbox" name="skills[]" value="Teamwork"> Teamwork</label>
