@@ -40,9 +40,9 @@
             <h1>Menu</h1>
             <ul>
                 <li><a href="index.php" onclick="setPage('Home')">Home</a></li>
-                <li><a href="calendar.php" onclick="setPage('Calendar')">Calendar</a></li>
                 <li><a href="add-job.php" onclick="setPage('Add Job')">Add Job</a></li>
                 <li><a href="search-jobs.php" onclick="setPage('Search Jobs')">Search Jobs</a></li>
+                <li><a href="calendar.php" onclick="setPage('Calendar')">Calendar</a></li>
                 <!--<li><a href="profile.php" onclick="setPage('Profile')">Profile</a></li>-->
                 <li><a href="help-center.php" onclick="setPage('Help Center')">Help Center</a></li>
                 <li>
