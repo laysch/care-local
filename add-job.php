@@ -55,9 +55,6 @@ function sanitizeInput($data) {
     $data = htmlspecialchars($data); // Converts special characters to HTML entities
     return $data;
 }
-
-// Set the current page
-$currentPage = 'Home'; 
 ?>
 
 <!DOCTYPE html>
