@@ -53,6 +53,17 @@
                 echo $e->getMessage();
             }
 
+            try {
+                $query = "CREATE TABLE messages (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    sender_id INT NOT NULL,
+                    receiver_id INT NOT NULL,
+                    messages TEXT NOT NULL,
+                    timestamp DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    is_read TINYINT(1) DEFAULT 0
+                );"
+            }
+
             $conn->close();
         ?>
     </body>
