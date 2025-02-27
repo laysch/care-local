@@ -11,11 +11,11 @@ function sanitizeInput($data) {
 
 try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $tableName === sanitizeInput($_POST['tableName']) ?? '';
+        $tableName = sanitizeInput($_POST['tableName']) ?? '';
         $action = $_POST['action'] ?? '';
 
         if ($action == 'drop') {
-            $query = "DROP TABLE '$tableName'";
+            $query = "DROP TABLE " . $tableName;
         } elseif ($action === 'truncate') {
             $query = "TRUNCATE TABLE '$tableName'";
         } else {
