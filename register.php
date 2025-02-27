@@ -8,17 +8,36 @@ if (isset($_POST['register'])) {
     $username = trim($_POST['username']);
     $email = trim($_POST['email']);
     $password = password_hash(trim($_POST['password']), PASSWORD_DEFAULT);
-    
-    $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-    $stmt->bind_param("sss", $username, $email, $password);
-    
-    if ($stmt->execute()) {
-        $success = "Registration successful. Please login.";
-        header("Location: login.php");
-        exit();
+
+    // no empty fields
+    if (empty($username) || empty($email) || empty($password)) {
+        $error = "Please fill in all required fields.";
     } else {
-        $error = "Error registering. Try again.";
-    }
+        // verify is username or email already exists
+        $stmt = $conn->prepare("SELECT username, email FROM users WHERE username = ? OR email = ? LIMIT 1");
+        $stmt->bind_param("ss", $username, $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            $existingUser = $result->fetch_assoc();
+            if ($existingUser['username'] === $username) {
+                $error = "That username is already taken.";
+            } elseif ($existingUser['email'] === $email) {
+                $error = "That email is already in use. ";
+            }
+        } else {
+            // process registration
+            $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
+            $stmt->bind_param("sss", $username, $email, $password);
+            if ($stmt->execute()) {
+                $success = "Registration successful. Please login.";
+                header("Location: login.php");
+                exit();
+            } else {
+                $error = "Error registering. Try again.";
+            }
+        }
+    }    
 }
 ?>
 
