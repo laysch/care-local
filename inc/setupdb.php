@@ -7,6 +7,7 @@
             require_once 'database.php';
 
             // Create jobs
+            echo "<p>";
             try {
                 $query = "CREATE TABLE IF NOT EXISTS jobs (
                     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -18,12 +19,14 @@
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )";
                 $conn->query($query);
-                echo "Table '<b>jobs</b>' created successfully<br>";
+                echo "Table '<b>jobs</b>' created successfully";
             } catch (Exception $e) {
                 echo $e->getMessage();
             }
+            echo "</p>";
 
             // Create users
+            echo "<p>";
             try {
                 $query = "CREATE TABLE IF NOT EXISTS users (
                     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -32,12 +35,14 @@
                     password VARCHAR(255) NOT NULL
                 )";
                 $conn->query($query);
-                echo "Table '<b>users</b>' created successfully<br>";
+                echo "Table '<b>users</b>' created successfully";
             } catch (Exception $e) {
                 echo $e->getMessage();
             }
+            echo "</p>";
 
             // Create events
+            echo "<p>";
             try {
                 $query = "CREATE TABLE IF NOT EXISTS events(
                     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -52,7 +57,10 @@
             } catch (Exception $e) {
                 echo $e->getMessage();
             }
+            echo "</p>";
 
+            // Create messages
+            echo "<p>";
             try {
                 $query = "CREATE TABLE messages (
                     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -67,6 +75,7 @@
             } catch (Exception $e) {
                 echo $e->getMessage();
             }
+            echo "</p>";
 
             $conn->close();
         ?>
