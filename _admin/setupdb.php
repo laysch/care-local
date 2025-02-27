@@ -4,7 +4,7 @@
     </head>
     <body>
         <?php
-            require_once 'database.php';
+            require_once '../inc/database.php';
 
             // Create jobs
             echo "<p>";
