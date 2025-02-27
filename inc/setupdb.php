@@ -61,7 +61,11 @@
                     messages TEXT NOT NULL,
                     timestamp DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     is_read TINYINT(1) DEFAULT 0
-                );"
+                );";
+                $conn->query($query);
+                echo "Table '<b>messages</b>' created successfully";
+            } catch (Exception $e) {
+                echo $e->getMessage();
             }
 
             $conn->close();
