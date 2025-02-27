@@ -9,7 +9,7 @@
             // Create jobs
             echo "<p>";
             try {
-                $query = "CREATE TABLE IF NOT EXISTS jobs (
+                $query = "CREATE TABLE jobs (
                     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                     jobtitle VARCHAR(255) NOT NULL,
                     description TEXT NOT NULL,
@@ -28,7 +28,7 @@
             // Create users
             echo "<p>";
             try {
-                $query = "CREATE TABLE IF NOT EXISTS users (
+                $query = "CREATE TABLE users (
                     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                     email VARCHAR(100) NOT NULL,
                     username VARCHAR(32) NOT NULL,
@@ -44,7 +44,7 @@
             // Create events
             echo "<p>";
             try {
-                $query = "CREATE TABLE IF NOT EXISTS events(
+                $query = "CREATE TABLE events(
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     title VARCHAR(255) NOT NULL,
                     description TEXT,
