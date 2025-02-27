@@ -1,13 +1,14 @@
 <html>
     <head>
         <title>Database Setup</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
+        <div style="display: flex; justify-content: center; min-height: 100vh; mid-width: 100vh;">
         <?php
             require_once '../inc/database.php';
 
             // Create jobs
-            echo "<p>";
             try {
                 $query = "CREATE TABLE jobs (
                     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -23,10 +24,9 @@
             } catch (Exception $e) {
                 echo $e->getMessage();
             }
-            echo "</p>";
+            echo "<br>";
 
             // Create users
-            echo "<p>";
             try {
                 $query = "CREATE TABLE users (
                     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -39,10 +39,9 @@
             } catch (Exception $e) {
                 echo $e->getMessage();
             }
-            echo "</p>";
+            echo "<br>";
 
             // Create events
-            echo "<p>";
             try {
                 $query = "CREATE TABLE events(
                     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -57,16 +56,15 @@
             } catch (Exception $e) {
                 echo $e->getMessage();
             }
-            echo "</p>";
+            echo "<br>";
 
             // Create messages
-            echo "<p>";
             try {
                 $query = "CREATE TABLE messages (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     sender_id INT NOT NULL,
                     receiver_id INT NOT NULL,
-                    messages TEXT NOT NULL,
+                    message TEXT NOT NULL,
                     timestamp DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     is_read TINYINT(1) DEFAULT 0
                 );";
@@ -75,9 +73,10 @@
             } catch (Exception $e) {
                 echo $e->getMessage();
             }
-            echo "</p>";
+            echo "<br>";
 
             $conn->close();
         ?>
+        </div>
     </body>
 </html

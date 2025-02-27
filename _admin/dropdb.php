@@ -22,14 +22,14 @@ try {
             throw new Exception("Invalid action");
         }
 
-        if (!$conn->query($qury)) {
+        if (!$conn->query($query)) {
             throw new Exception($conn->error);
         }
 
         echo "Successful " . $action . " on " . $tableName;
     }
 } catch (Exception $e) {
-    echo $e;
+    echo $e->getMessage();;
 }
 ?>
 <html>
