@@ -5,7 +5,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 ob_start();
-include '/inc/getMessages.php';
+include 'inc/getMessages.php';
 $jsonResults = ob_get_clean();
 $messages = json_decode($jsonResults, true);
 
