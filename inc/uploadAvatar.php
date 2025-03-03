@@ -8,10 +8,11 @@ if (!isset($_SESSION['user_id'])) {
 
 if (isset($_POST['upload'])) {
     $userId = $_SESSION['user_id'];
-    $file = "../img/avatar/" . basename($_FILES["avatar"]["name"]);
+    $uploadDir = "../img/avatar/";
     $allowedFiles = ['jpg', 'jpeg', 'png', 'gif'];
-    $fileType = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+    $fileType = strtolower(pathinfo($_FILES["avatar"]["name"], PATHINFO_EXTENSION));
     $maxFileSize = 5 * 1024 * 1024; // 5mb
+    $newFile = uniqid("avatar_") . "." . $fileType;
 
     try {
         if (!in_array($fileType, $allowedFiles)) {
@@ -21,7 +22,7 @@ if (isset($_POST['upload'])) {
         if ($_FILES["avatar"]["size"] > $maxFileSize) {
             throw new Exception("Please use an image unde 5MB.")
         
-        if (move_uploaded_file($_FILES["avatar"]["tmp_name"], $file)) {
+        if (move_uploaded_file($_FILES["avatar"]["tmp_name"], $uploadDir . $newFile)) {
             $query = "UPDATE users SET avatar = ? WHERE id = ?";
             $stmt = $conn->prepare($query);
             $stmt->bind_param("si", basename($file), $userId);
