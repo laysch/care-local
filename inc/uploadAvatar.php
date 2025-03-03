@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 
 if (isset($_POST['upload'])) {
     $userId = $_SESSION['user_id'];
-    $file = "/img/avatar" . basename($_FILES["avatar"]["name"]);
+    $file = "../img/avatar" . basename($_FILES["avatar"]["name"]);
     $allowedFiles = ['jpg', 'jpeg', 'png', 'gif'];
     $fileType = strtolower(pathinfo($file, PATHINFO_EXTENSION));
 
