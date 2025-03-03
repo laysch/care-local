@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <?php include 'navbar.php'; ?>
     <img src="<?php echo "img/avatar/" . $row['avatar']; ?>" alt="User Avatar">
-    <form action="inc/upload-avatar.php" method="POST" enctype="multipart/form-data">
+    <form action="inc/uploadAvatar.php" method="POST" enctype="multipart/form-data">
         <input type="file" name="avatar" accept="image/*">
         <button type="submit" name="upload">Upload</button>
     </form>
