@@ -21,7 +21,7 @@ if (isset($_POST['upload'])) {
                 $stmt = $conn->prepare($query);
                 $stmt->bind_param("si", basename($file), $userId);
                 $stmt->execute();
-                header("Location: profile.php");
+                header("Location: /profile.php");
             } else {
                 throw new Exception("Avatar upload failed");
             }
