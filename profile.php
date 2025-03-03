@@ -30,12 +30,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         if (!empty($_POST['username'])) {
             $updates[] = "username = ?";
-            $params[] = $_POST['username'];
+            $params[] = sanitizeInput($_POST['username']);
             $types .= 's';
         }
         if (!empty($_POST['email'])) {
             $updates[] = "email = ?";
-            $params[] = $_POST['email'];
+            $params[] = sanitizeInput($_POST['email']);
             $types .= 's';
         }
 
