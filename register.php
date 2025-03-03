@@ -27,8 +27,8 @@ if (isset($_POST['register'])) {
             }
         } else {
             // process registration
-            $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-            $stmt->bind_param("sss", $username, $email, $password);
+            $stmt = $conn->prepare("INSERT INTO users (username, email, password, avatar) VALUES (?, ?, ?, ?)");
+            $stmt->bind_param("ssss", $username, $email, $password, "default_avatar.png");
             if ($stmt->execute()) {
                 $success = "Registration successful. Please login.";
                 header("Location: login.php");
