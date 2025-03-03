@@ -1,8 +1,29 @@
-<?php session_start(); ?>
+<?php session_start();
+require_once 'inc/database.php';
+
+if (isset($_SESSION['user_id'])) {
+    $userId = $_SESSION['user_id'];
+    $query = "SELECT avatar FROM users WHERE id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
+    $avatar = $user['avatar'];
+}
+?>
 <!-- navbar.php -->
 <style>
     .menu-content h1, .menu-content p {
         color: black;
+    }
+    .user-avatar {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        object-fit: cover;
+        cursor: pointer;
+        border: 2px solid #5D674C; 
     }
 </style>
 
@@ -10,12 +31,12 @@
     <button class="menu-btn" onclick="toggleMenu()">
         <span id="current-page"><?php echo isset($currentPage) ? htmlspecialchars($currentPage) : 'Home'; ?></span> ☰
     </button>
-    
+
     <?php
         if (!isset($_SESSION['username'])) {
-            echo "<button class=\"menu-btn\" onclick=\"toggleLogin()\"><span>Login</span></button>";
+            echo "<button class=\"menu-btn\" onclick=\"toggleLogin()\"><span>Login</span></button>";            
         } else {
-            echo "<button class=\"menu-btn\" ><span onclick=\"location.href='logout.php'\">Logout : " . htmlspecialchars($_SESSION['username']) . "</span></button>";
+            echo "<button class=\"menu-btn\" ><span onclick=\"location.href='logout.php'\"><img src=\"img/avatar/" .htmlspecialchars($avatar) ."\" alt=\"User Avatar\" class=\"user-avatar\"></span></button>";
         }
     ?>
 </nav>
