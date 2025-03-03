@@ -14,7 +14,56 @@ $stmt = $conn->prepare($query);
 $stmt->bind_param('i', $userId);
 $stmt->execute();
 $result = $stmt->get_result();
-$row = $result->fetch_assoc()
+$row = $result->fetch_assoc();
+
+function sanitizeInput($data) {
+    $data = trim($data); 
+    $data = stripslashes($data); 
+    $data = htmlspecialchars($data); 
+    return $data;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $updates = [];
+    $params = [];
+    $types = '';
+    try {
+        if (!empty($_POST['username'])) {
+            $updates[] = "username = ?";
+            $params[] = $_POST['username'];
+            $types .= 's';
+        }
+        if (!empty($_POST['email'])) {
+            $updates[] = "email = ?";
+            $params[] = $_POST['email'];
+            $types .= 's';
+        }
+
+        if (!empty($_POST['password'])) {
+            if ($_POST['password'] != $_POST['password_confirm']) {
+                throw new Exception("Password and Confirmation do not match!");
+            } else {
+                $hashed_password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+                $updates[] = "password = ?";
+                $params[] = $hashed_password;
+                $types .= 's';
+            }
+        }
+
+        if (!empty($updates)) {
+            $query = "UPDATE users SET " . implode(', ', $updates) . " WHERE id = ?";
+            $params[] = $userId;
+            $types .= 'i';
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param($types, ...$params);
+            $stmt->execute();
+            header("Refresh:0");
+        }
+    } catch (Exception $e) {
+        $conn->rollback();
+        echo $e->getMessage();
+    }
+}
 ?>
 
 <html>
@@ -28,15 +77,18 @@ $row = $result->fetch_assoc()
 </head>
 <body>
     <?php include 'navbar.php'; ?>
-    <table>
-        <tr>
-            <td>Username:</td>
-            <td><?php echo $row['username']?></td>
-        </tr>
-        <tr>
-            <td>Email Address:</td>
-            <td><?php echo $row['email']?></td>
-        </tr>
-    </table>
+
+    <form action="profile.php" method="POST">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($row['username']); ?>" required>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($row['email']); ?>" required>
+        <label for="password">New Password:</label>
+        <input type="password" id="password" name="password" placeholder="***">
+        <label for="password">Confirm Password:</label>
+        <input type="password" id="password_confirm" name="password_confirm" placeholder="***">
+
+        <button type="submit" name="update_profile">Update Profile</button>
+    </form>
 </body>
 </html
