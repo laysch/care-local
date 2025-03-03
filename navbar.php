@@ -43,17 +43,15 @@
                 <li><a href="add-job.php" onclick="setPage('Add Job')">Add Job</a></li>
                 <li><a href="search-jobs.php" onclick="setPage('Search Jobs')">Search Jobs</a></li>
                 <li><a href="calendar.php" onclick="setPage('Calendar')">Calendar</a></li>
-                <!--<li><a href="profile.php" onclick="setPage('Profile')">Profile</a></li>-->
                 <li><a href="help-center.php" onclick="setPage('Help Center')">Help Center</a></li>
-                <li>
                     <?php
                         if (!isset($_SESSION['username'])) {
-                            echo "<a href=\"#\" onclick=\"toggleMenu();toggleLogin();return false;\">Login</a></span>";
+                            echo "<li><a href=\"#\" onclick=\"toggleMenu();toggleLogin();return false;\">Login</a></span></li>";
                         } else {
-                            echo "<a href=\"logout.php\">Logout : " . $_SESSION['username'] . "</a>";
+                            echo "<li><a href=\"profile.php\">My Profile</a></li>";
+                            echo "<li><a href=\"logout.php\">Logout : " . $_SESSION['username'] . "</a></li>";
                         }
                     ?>
-                </li>
             </ul>
         </div>
         <div class="menu-right">
