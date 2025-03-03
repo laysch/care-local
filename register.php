@@ -8,6 +8,7 @@ if (isset($_POST['register'])) {
     $username = trim($_POST['username']);
     $email = trim($_POST['email']);
     $password = password_hash(trim($_POST['password']), PASSWORD_DEFAULT);
+    $defaultAvatar = 'default_avatar.png';
 
     // no empty fields
     if (empty($username) || empty($email) || empty($password)) {
@@ -28,7 +29,7 @@ if (isset($_POST['register'])) {
         } else {
             // process registration
             $stmt = $conn->prepare("INSERT INTO users (username, email, password, avatar) VALUES (?, ?, ?, ?)");
-            $stmt->bind_param("ssss", $username, $email, $password, "default_avatar.png");
+            $stmt->bind_param("ssss", $username, $email, $password, $defaultAvatar);
             if ($stmt->execute()) {
                 $success = "Registration successful. Please login.";
                 header("Location: login.php");
