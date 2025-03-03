@@ -26,7 +26,7 @@ if (isset($_POST['upload'])) {
                 throw new Exception("Avatar upload failed");
             }
         }
-    } catch catch (Exception $e) {
+    } catch (Exception $e) {
         echo $e->getMessage();
     }
 }
