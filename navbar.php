@@ -1,8 +1,11 @@
-<?php session_start();
+<?php 
+session_start();
 require_once 'inc/database.php';
 
 if (isset($_SESSION['user_id'])) {
     $userId = $_SESSION['user_id'];
+
+    // avatar
     $query = "SELECT avatar FROM users WHERE id = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("i", $userId);
@@ -10,6 +13,17 @@ if (isset($_SESSION['user_id'])) {
     $result = $stmt->get_result();
     $user = $result->fetch_assoc();
     $avatar = $user['avatar'];
+
+    // unread message count
+    $unreadCount = 0;
+    $query = "SELECT COUNT(*) as cnt FROM messages WHERE receiver_id = ? AND is_read = 0";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($row = $result->fetch_assoc()) {
+        $unreadCount = (int)$row['cnt'];
+    }
 }
 ?>
 <!-- navbar.php -->
@@ -17,7 +31,12 @@ if (isset($_SESSION['user_id'])) {
     .menu-content h1, .menu-content p {
         color: black;
     }
-    .user-avatar {
+    .avatar-container {
+        position: relative; /* So the badge can be positioned absolutely within it */
+        display: inline-block; /* Keep the avatar + badge together */
+        margin-right: 15px;    /* Some spacing if needed */
+    }
+    .avatar {
         width: 25px;
         height: 25px;
         border-radius: 50%;
@@ -25,20 +44,37 @@ if (isset($_SESSION['user_id'])) {
         cursor: pointer;
         border: 2px solid #5D674C; 
     }
+    .unread-badge {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: red;
+        color: white;
+        border-radius: 50%;
+        padding: 2px 2px;
+        font-size: 0.75rem; /* Adjust size as needed */
+        font-weight: bold;
+        min-width: 20px;
+        text-align: center;
+    }
 </style>
 
 <nav class="top-nav">
     <button class="menu-btn" onclick="toggleMenu()">
         <span id="current-page"><?php echo isset($currentPage) ? htmlspecialchars($currentPage) : 'Home'; ?></span> ☰
     </button>
-
+    <div class="avatar-container">
     <?php
         if (!isset($_SESSION['username'])) {
             echo "<button class=\"menu-btn\" onclick=\"toggleLogin()\"><span>Login</span></button>";            
         } else {
-            echo "<button class=\"menu-btn\" ><span onclick=\"location.href='logout.php'\"><img src=\"img/avatar/" .htmlspecialchars($avatar) ."\" alt=\"User Avatar\" class=\"user-avatar\"></span></button>";
+            echo "<button class=\"menu-btn\" ><span onclick=\"location.href='logout.php'\"><img src=\"img/avatar/" .htmlspecialchars($avatar) ."\" alt=\"User Avatar\" class=\"avatar\"></span></button>";
+            if ($unreadCount > 0){
+                echo "<span class=\"unread-badge\">" . $unreadCount . "</span>";
+            }
         }
     ?>
+    </div>
 </nav>
 
 <div class="fullscreen-menu" id="menu">
