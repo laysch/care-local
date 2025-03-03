@@ -79,6 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php include 'navbar.php'; ?>
 
     <form action="profile.php" method="POST">
+        <img src="<?php echo "img/avatar/" . $row['avatar']; ?>" alt="User Avatar">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($row['username']); ?>" required>
         <label for="email">Email:</label>

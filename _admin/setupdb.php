@@ -32,7 +32,8 @@
                     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                     email VARCHAR(100) NOT NULL,
                     username VARCHAR(32) NOT NULL,
-                    password VARCHAR(255) NOT NULL
+                    password VARCHAR(255) NOT NULL,
+                    avatar VARCHAR(255) NULL
                 )";
                 $conn->query($query);
                 echo "Table '<b>users</b>' created successfully";

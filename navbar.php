@@ -18,20 +18,6 @@
             echo "<button class=\"menu-btn\" ><span onclick=\"location.href='logout.php'\">Logout : " . htmlspecialchars($_SESSION['username']) . "</span></button>";
         }
     ?>
-    
-    <!--
-    <button class="menu-btn">
-        <span id="login">
-            #<?php
-            #    if (!isset($_SESSION['username'])) {
-            #         echo "<span onclick=\"location.href='login.php'\">Login</span";
-            #     } else {
-            #        echo "<span onclick=\"location.href='logout.php'\">Logout : " . $_SESSION['username'] . "</span>";
-            #    }
-            #?>
-        </span>
-    </button>
-    -->
 </nav>
 
 <div class="fullscreen-menu" id="menu">
