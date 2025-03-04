@@ -1,4 +1,59 @@
 <?php $currentPage = 'Search Jobs'; ?>
+session_start();
+if (!isset($_SESSION['username'])) {
+    header('Location: /login.php');
+    exit;
+}
+
+// Connect to the database
+require_once 'inc/database.php';
+
+// Initialize query to get all jobs by default
+$query = "SELECT * FROM jobs WHERE 1=1";
+$params = [];
+$types = "";
+
+if (isset($_GET['county']) && is_array($_GET['county']) && !empty($_GET['county'])) {
+    $countyFilters = [];
+    foreach ($_GET['county'] as $county) {
+        $countyFilters[] = "county = ?";
+        $params[] = $county;
+        $types .= "s";
+    }
+    $query .= " AND (" . implode(" OR ", $countyFilters) . ")";
+}
+
+// Check if there are skills selected for filtering
+if (isset($_GET['skills']) && is_array($_GET['skills']) && !empty($_GET['skills'])) {
+    $skillFilters = [];
+    foreach ($_GET['skills'] as $skill) {
+        $skillFilters[] = "skills LIKE ?";
+        $params[] = "%".$skill."%";
+        $types .= "s";
+    }
+    $query .= " AND (" . implode(" OR ", $skillFilters) . ")";
+}
+
+$stmt = $conn->prepare($query);
+if ($stmt === false) {
+    die("Statement preparation failed: " . $conn->error);
+}
+if (!empty($params)) {
+    $stmt->bind_param($types, ...$params);
+}
+if (!$stmt->execute()) {
+    die("Query execution failed: " . $stmt->error);
+}
+$result = $stmt->get_result();
+if (!$result) {
+    die("Query result retrieval failed: " . $stmt->error);
+}
+
+// Fetch the user's skills (assuming they are stored in the session)
+$userSkills = isset($_SESSION['user_skills']) ? $_SESSION['user_skills'] : [];
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
