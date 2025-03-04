@@ -158,16 +158,18 @@ $job = $result->fetch_assoc();
             <p>Below are the details for the selected job posting.</p>
         </section>
 
-        <div class="job-details">
-            <h1><?php echo htmlspecialchars($job['jobtitle']); ?></h1>
-            <p><strong>Location:</strong> <?php echo htmlspecialchars($job['location']); ?></p>
-            <p><strong>Description:</strong> <?php echo nl2br(htmlspecialchars($job['description'])); ?></p>
-            <p><strong>Skills Required:</strong> <?php echo htmlspecialchars($job['skills']); ?></p>
+       <div class="button-container">
+                <!-- Add to Job Cart Form -->
+                <form action="add-to-cart.php" method="POST" style="display: inline;">
+                    <input type="hidden" name="job_id" value="<?php echo $job['id']; ?>">
+                    <input type="hidden" name="job_title" value="<?php echo htmlspecialchars($job['jobtitle']); ?>">
+                    <input type="hidden" name="job_description" value="<?php echo htmlspecialchars($job['description']); ?>">
+                    <input type="hidden" name="job_skills" value="<?php echo htmlspecialchars($job['skills']); ?>">
+                    <button type="submit" name="add_to_cart" class="btn-small">Add to Job Cart</button>
+                </form>
 
-            <div class="button-container">
-            <a href="job-application.php" class="btn-small">Apply</a>
-      
-            <a href="search-jobs.php" class="btn">Back to Job Listings</a>
+                <!-- Back to Job Listings Button -->
+                <a href="search-jobs.php" class="btn">Back to Job Listings</a>
             </div>
         </div>
     </div>
