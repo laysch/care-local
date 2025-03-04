@@ -14,7 +14,6 @@
 
     <div class="hero-section">
         <h1>Welcome to CareLocal</h1>
-        <img src="img/favicon.png" alt="CareLocal Logo" style="width: 250px; max-width: 100%; margin-bottom: 15px;">
         <p>Where Local Talent Meets Local Needs</p>
     </div>
 
