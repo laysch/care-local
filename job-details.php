@@ -119,6 +119,18 @@ $job = $result->fetch_assoc();
             font-weight: bold;
         }
 
+        .btn-small {
+    display: inline-block;
+    padding: 6px 12px; /* Smaller padding */
+    background-color: #efac9a; /* Same background color */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 0.9em; /* Smaller font size */
+}
+
         .btn:hover {
             background-color: #efac9a; /* Light peach on hover */
         }
@@ -140,7 +152,8 @@ $job = $result->fetch_assoc();
             <p><strong>Location:</strong> <?php echo htmlspecialchars($job['location']); ?></p>
             <p><strong>Description:</strong> <?php echo nl2br(htmlspecialchars($job['description'])); ?></p>
             <p><strong>Skills Required:</strong> <?php echo htmlspecialchars($job['skills']); ?></p>
-
+            
+            <a href="search-jobs.php" class="btn-small">Apply</a>
             <a href="search-jobs.php" class="btn">Back to Job Listings</a>
         </div>
     </div>
