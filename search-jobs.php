@@ -1,4 +1,6 @@
-<?php $currentPage = 'Search Jobs'; ?>
+<?php include 'navbar.php'; ?> 
+<?php   
+$currentPage = 'Search Jobs';
 session_start();
 if (!isset($_SESSION['username'])) {
     header('Location: /login.php');
@@ -58,8 +60,11 @@ $userSkills = isset($_SESSION['user_skills']) ? $_SESSION['user_skills'] : [];
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Job Search | CareLocal</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Jobs - CareLocal</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+    <link rel="icon" type="image/x-icon" href="/img/favicon.png">
     <link href="https://fonts.cdnfonts.com/css/share-techmono-2" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/ubuntu-mono" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/pt-sans" rel="stylesheet">
@@ -75,9 +80,6 @@ $userSkills = isset($_SESSION['user_skills']) ? $_SESSION['user_skills'] : [];
             --bodyTextColor: #839c99;
             --linksColor: #222222;
             --linksHoverColor: #efac9a;
-            --accent1BgColor: #5D674C;
-            --accent1TextColor: white;
-            --headingsColor: #222222;
         }
 
         body {
@@ -135,7 +137,7 @@ $userSkills = isset($_SESSION['user_skills']) ? $_SESSION['user_skills'] : [];
         }
 
         .category-btn {
-            background-color: var(--accent1BgColor);
+            background-color: #5D674C;
             color: white;
             padding: 10px 20px;
             border: none;
@@ -147,89 +149,170 @@ $userSkills = isset($_SESSION['user_skills']) ? $_SESSION['user_skills'] : [];
             background-color: #efac9a;
         }
 
-        .search-bar {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .search-bar input {
-            padding: 10px;
-            width: 60%;
-            border-radius: 5px;
-            border: 1px solid var(--bordersColor);
-        }
-
-        .search-bar button {
-            background-color: var(--accent1BgColor);
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .job-listing {
-            margin-top: 30px;
-        }
-
-        .job-item {
-            margin-bottom: 20px;
+        .job-box {
+            background-color: #F3E9B5;
+            color: #5D674C;
             padding: 15px;
-            background-color: #f0f0f0;
             border-radius: 5px;
+            margin: 10px;
+            border: 2px solid #D1D79D;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: center;
         }
 
-        .job-item h3 {
-            font-size: 1.5em;
-            color: var(--headingsColor);
-            margin-bottom: 10px;
+        .job-box:hover {
+            background-color: #FCEADE;
         }
 
-        .job-item p {
-            font-size: 1em;
-            color: var(--bodyTextColor);
+        .job-box a {
+            text-decoration: none;
+            color: #5D674C;
+            font-weight: bold;
+        }
+
+        .job-box a:hover {
+            color: #FCEADE;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            width: 100px;
+        }
+
+        .dropdown-toggle {
+            border: 1px solid #D1D79D;
+            padding: 12px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-toggle:hover {
+            background-color: #e2e6ea;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: #D1D79D;
+            border: 1px solidrgb(103, 161, 137);
+            width: 100%;
+            max-height: 220px;
+            overflow-y: auto;
+            border-radius: 6px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            transition: opacity 0.3s ease-in-out;
+            padding: 8px;
+        }
+
+        .dropdown-menu label {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .dropdown-menu label:hover {
+            background-color: #f3e9b5;
+        }
+
+        .dropdown-menu input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .show {
+            display: block;
+            opacity: 1;
         }
     </style>
 </head>
-<body class="has--boxshadow" data-shape="circle" data-body-font-family="Share Tech Mono" data-body-font-size="14px" data-sidebar-position="left" data-pagination-display="mssg">
-    <div id="container">
-        <!-- Sidebar -->
-        <?php include 'sidebar.php'; ?>
+<body>
 
-        <!-- Main Body -->
-        <div id="main-body-wrapper">
-            <section class="hero">
-                <h1>Search Jobs</h1>
-                <p>Find Your Next Opportunity</p>
-            </section>
+    <div id="main-body-wrapper">
+        <section class="hero">
+            <h1>Job Search</h1>
+            <p>Find the job that suits your skills and location.</p>
+        </section>
 
-            <!-- Search Bar -->
-            <div class="search-bar">
-                <input type="text" id="search-input" placeholder="Search jobs..." oninput="searchJobs()">
-                <button class="filter-btn">⚙</button>
-            </div>
-
-            <!-- Job Listings -->
-            <section class="job-listing">
-                <div class="job-item">
-                    <h3>Software Engineer</h3>
-                    <p>Location: Remote | Full-time</p>
-                    <p>We are looking for a talented software engineer to join our growing team.</p>
+        <div class="filter-section">
+            <form action="search-jobs.php" method="GET">    
+                <b>Filter:</b>
+                <div class="dropdown">
+                    <div class="dropdown-toggle" onclick="toggleSkills()">Skills</div>
+                    <div class="dropdown-menu" id="dropdown-skills">
+                        <label><input type="checkbox" name="skills[]" value="Communication"> Communication</label>
+                        <label><input type="checkbox" name="skills[]" value="Teamwork"> Teamwork</label>
+                        <label><input type="checkbox" name="skills[]" value="Problem-Solving"> Problem-Solving</label>
+                        <label><input type="checkbox" name="skills[]" value="Leadership"> Leadership</label>
+                        <label><input type="checkbox" name="skills[]" value="Technical Skills"> Technical Skills</label>
+                        <label><input type="checkbox" name="skills[]" value="Time Management"> Time Management</label>
+                    </div>
                 </div>
-                <div class="job-item">
-                    <h3>Data Analyst</h3>
-                    <p>Location: New York | Part-time</p>
-                    <p>Join our team to help us make data-driven decisions and improve our systems.</p>
+                <div class="dropdown">
+                    <div class="dropdown-toggle" onclick="toggleCounty()">County</div>
+                    <div class="dropdown-menu" id="dropdown-county">
+                        <label><input type="checkbox" name="county[]" value="Nassau">Nassau</label>
+                        <label><input type="checkbox" name="county[]" value="Suffolk">Suffolk</label>
+                    </div>                             
                 </div>
-                <!-- More job listings... -->
-            </section>
+
+                <br>
+                <input type="submit" value="Filter" class="btn">
+                <button type="button" class="btn" onclick="removeFilters()">Remove Filters</button>
+            </form>
+        </div>
+
+        <div class="job-listings">
+            <?php
+            while ($row = $result->fetch_assoc()) {
+                // Get the job's required skills (assuming the skills are stored as a comma-separated string in the 'skills' field)
+                $jobSkills = explode(',', $row['skills']); // This splits the string of skills into an array
+
+                // Calculate the match percentage
+                $commonSkills = array_intersect($userSkills, $jobSkills); // Find common skills
+                $matchPercentage = (count($commonSkills) / count($jobSkills)) * 100; // Calculate percentage match
+
+                // Display the job box with the match percentage
+                echo "<div class='job-box' onclick='window.location.href=\"job-details.php?id=" . $row['id'] . "\"'>";
+                echo "<a href='job-details.php?id=" . $row['id'] . "'>" . htmlspecialchars($row['jobtitle']) . "</a><br>";
+                echo htmlspecialchars($row['location']) . "<br>";
+                echo "<span style='font-size: 14px; color: #5D674C;'>Match: " . round($matchPercentage, 2) . "%</span>";
+                echo "</div>";
+            }
+            ?>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="add-job.php" class="btn">Post a Job</a>
+            <a href="index.php" class="btn">Back to Main Menu</a>
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="script.js"></script>
+    <script>
+        function toggleSkills() {
+            var dropdown = document.getElementById('dropdown-skills');
+            dropdown.classList.toggle('show');
+        }
+
+        function toggleCounty() {
+            var dropdown = document.getElementById('dropdown-county');
+            dropdown.classList.toggle('show');
+        }
+
+        function removeFilters() {
+            window.location.href = 'search-jobs.php'; // Simply refresh the page without filters
+        }
+    </script>
 </body>
 </html>
+
 
 
