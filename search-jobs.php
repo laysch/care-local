@@ -1,3 +1,4 @@
+<?php include 'sidebar.php'; ?>
 <?php   
 $currentPage = 'Search Jobs';
 session_start();
