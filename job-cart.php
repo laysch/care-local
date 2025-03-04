@@ -46,7 +46,7 @@ require_once 'inc/database.php';
         .job-cart-container {
             max-width: 800px;
             margin: 0 auto;
-            background: #fff;
+            background: #cdd8c4;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
