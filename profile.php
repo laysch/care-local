@@ -80,32 +80,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <?php include 'navbar.php'; ?>
 
-    <!-- Check if avatar exists -->
-    <?php if (isset($row['avatar']) && !empty($row['avatar'])): ?>
-        <img src="<?php echo "img/avatar/" . htmlspecialchars($row['avatar']); ?>" alt="User Avatar">
-    <?php else: ?>
-        <img src="img/default-avatar.png" alt="Default User Avatar">
-    <?php endif; ?>
+    <div class="profile-container">
+        <div class="sidebar">
+            <!-- Sidebar content goes here, like navigation or user options -->
+        </div>
 
-    <form action="inc/uploadAvatar.php" method="POST" enctype="multipart/form-data">
-        <input type="file" name="avatar" accept="image/*">
-        <button type="submit" name="upload">Upload</button>
-    </form>
+        <div class="profile-content">
+            <h2>My Profile</h2>
 
-    <form action="profile.php" method="POST">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" value="<?php echo isset($row['username']) ? htmlspecialchars($row['username']) : ''; ?>" required>
+            <!-- Display Avatar -->
+            <div class="avatar-section">
+                <?php if (isset($row['avatar']) && !empty($row['avatar'])): ?>
+                    <img src="<?php echo "img/avatar/" . htmlspecialchars($row['avatar']); ?>" alt="User Avatar">
+                <?php else: ?>
+                    <img src="img/default-avatar.png" alt="Default User Avatar">
+                <?php endif; ?>
+                <form action="inc/uploadAvatar.php" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="avatar" accept="image/*">
+                    <button type="submit" name="upload">Upload</button>
+                </form>
+            </div>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" value="<?php echo isset($row['email']) ? htmlspecialchars($row['email']) : ''; ?>" required>
+            <!-- Profile Update Form -->
+            <div class="profile-update-form">
+                <form action="profile.php" method="POST">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" value="<?php echo isset($row['username']) ? htmlspecialchars($row['username']) : ''; ?>" required>
 
-        <label for="password">New Password:</label>
-        <input type="password" id="password" name="password" placeholder="***">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" value="<?php echo isset($row['email']) ? htmlspecialchars($row['email']) : ''; ?>" required>
 
-        <label for="password_confirm">Confirm Password:</label>
-        <input type="password" id="password_confirm" name="password_confirm" placeholder="***">
+                    <label for="password">New Password:</label>
+                    <input type="password" id="password" name="password" placeholder="***">
 
-        <button type="submit" name="update_profile">Update Profile</button>
-    </form>
+                    <label for="password_confirm">Confirm Password:</label>
+                    <input type="password" id="password_confirm" name="password_confirm" placeholder="***">
+
+                    <button type="submit" name="update_profile">Update Profile</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
+
