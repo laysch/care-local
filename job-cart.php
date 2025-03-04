@@ -13,7 +13,7 @@ require_once 'inc/database.php';
     <link href="https://fonts.cdnfonts.com/css/ubuntu-mono" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/pt-sans" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/source-sans-pro" rel="stylesheet">
-    <link href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css" rel="stylesheet">
+    <link href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css' rel='stylesheet'>
     <link href="https://cdn.jsdelivr.net/gh/echxn/yeolithm@master/src/css/pixelution.css" rel="stylesheet">
     <style>
         :root {
@@ -32,18 +32,12 @@ require_once 'inc/database.php';
             color: #5D674C;
             margin: 0;
             padding: 0;
+        }
+
+        #container {
             display: flex;
         }
 
-        /* Sidebar */
-        #sidebar {
-            width: 250px;
-            background-color: #cdd8c4;
-            padding: 20px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Main Content */
         #main-body-wrapper {
             flex: 1;
             padding: 20px;
@@ -126,37 +120,44 @@ require_once 'inc/database.php';
         }
     </style>
 </head>
-<body>
-    <!-- Include Sidebar -->
-    <?php include 'sidebar.php'; ?>
+<body class="has--boxshadow" data-shape="circle" data-body-font-family="Share Tech Mono" data-body-font-size="14px" data-sidebar-position="left" data-pagination-display="mssg">
+    <div id="container">
+        <!-- Include Sidebar -->
+        <?php include 'sidebar.php'; ?>
 
-    <!-- Main Body -->
-    <div id="main-body-wrapper">
-        <div class="job-cart-container">
-            <h1>Your Job Cart</h1>
-            <?php if (isset($_SESSION['job_cart']) && !empty($_SESSION['job_cart'])): ?>
-                <?php foreach ($_SESSION['job_cart'] as $jobId => $job): ?>
-                    <div class="job-item">
-                        <div class="job-title"><?php echo htmlspecialchars($job['title']); ?></div>
-                        <div class="job-description"><?php echo htmlspecialchars($job['description']); ?></div>
-                        <div class="job-skills">Skills: <?php echo htmlspecialchars($job['skills']); ?></div>
-                        <a href="apply.php?job_id=<?php echo $jobId; ?>" class="apply-button">Apply</a>
-                        <!-- Delete Button -->
-                        <form action="delete-from-cart.php" method="POST" style="display: inline;">
-                            <input type="hidden" name="job_id" value="<?php echo $jobId; ?>">
-                            <button type="submit" class="delete-button">Delete</button>
-                        </form>
-                    </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p>Your job cart is empty.</p>
-            <?php endif; ?>
+        <!-- Main Body -->
+        <div id="main-body-wrapper">
+            <div class="job-cart-container">
+                <h1>Your Job Cart</h1>
+                <?php if (isset($_SESSION['job_cart']) && !empty($_SESSION['job_cart'])): ?>
+                    <?php foreach ($_SESSION['job_cart'] as $jobId => $job): ?>
+                        <div class="job-item">
+                            <div class="job-title"><?php echo htmlspecialchars($job['title']); ?></div>
+                            <div class="job-description"><?php echo htmlspecialchars($job['description']); ?></div>
+                            <div class="job-skills">Skills: <?php echo htmlspecialchars($job['skills']); ?></div>
+                            <a href="apply.php?job_id=<?php echo $jobId; ?>" class="apply-button">Apply</a>
+                            <!-- Delete Button -->
+                            <form action="delete-from-cart.php" method="POST" style="display: inline;">
+                                <input type="hidden" name="job_id" value="<?php echo $jobId; ?>">
+                                <button type="submit" class="delete-button">Delete</button>
+                            </form>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>Your job cart is empty.</p>
+                <?php endif; ?>
 
-            <!-- Return to Job Search Button -->
-            <div style="text-align: center; margin-top: 20px;">
-                <a href="search-jobs.php" class="return-button">Return to Job Search</a>
+                <!-- Return to Job Search Button -->
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="search-jobs.php" class="return-button">Return to Job Search</a>
+                </div>
             </div>
         </div>
     </div>
+
+    <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://static.tumblr.com/kmw8hta/1WKpaiuda/tooltipster.main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/echxn/yeolithm@master/src/js/pixelution.js"></script>
 </body>
 </html>
