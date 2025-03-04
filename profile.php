@@ -1,4 +1,5 @@
 <?php
+$currentPage = 'My Profile';
 session_start();
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
@@ -25,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $updates = [];
     $params = [];
     $types = '';
+
     try {
         if (!empty($_POST['username'])) {
             $updates[] = "username = ?";
@@ -66,48 +68,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile - CareLocal</title>
-    <!-- Include necessary stylesheets -->
+    <title>My Profile | CareLocal</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+    <link rel="icon" type="image/x-icon" href="/img/favicon.png">
 </head>
 <body>
-    <div id="container">
-        <!-- Sidebar -->
-        <?php include('sidebar.php'); ?>
+    <?php include 'navbar.php'; ?>
 
-        <!-- Main Body -->
-        <div id="main-body-wrapper">
-            <!-- Profile Header -->
-            <div class="profile-header">
-                <img src="<?php echo htmlspecialchars($row['avatar'] ? 'img/avatar/' . $row['avatar'] : 'img/default-avatar.png'); ?>" alt="User Avatar">
-                <div>
-                    <h1><?php echo htmlspecialchars($row['username']); ?></h1>
-                    <p>Location: <?php echo htmlspecialchars($row['location']); ?></p>
-                </div>
-            </div>
+    <!-- Check if avatar exists -->
+    <?php if (isset($row['avatar']) && !empty($row['avatar'])): ?>
+        <img src="<?php echo "img/avatar/" . htmlspecialchars($row['avatar']); ?>" alt="User Avatar">
+    <?php else: ?>
+        <img src="img/default-avatar.png" alt="Default User Avatar">
+    <?php endif; ?>
 
-            <!-- Edit Profile Form -->
-            <div id="edit-profile-form">
-                <form method="POST">
-                    <input type="text" name="username" value="<?php echo htmlspecialchars($row['username']); ?>" placeholder="Username" required>
-                    <input type="email" name="email" value="<?php echo htmlspecialchars($row['email']); ?>" placeholder="Email" required>
-                    <input type="password" name="password" placeholder="New Password">
-                    <input type="password" name="password_confirm" placeholder="Confirm Password">
-                    <button type="submit">Update Profile</button>
-                </form>
-            </div>
+    <form action="inc/uploadAvatar.php" method="POST" enctype="multipart/form-data">
+        <input type="file" name="avatar" accept="image/*">
+        <button type="submit" name="upload">Upload</button>
+    </form>
 
-            <!-- Avatar Upload Form -->
-            <form action="inc/uploadAvatar.php" method="POST" enctype="multipart/form-data">
-                <input type="file" name="avatar" accept="image/*">
-                <button type="submit">Upload Avatar</button>
-            </form>
-        </div>
-    </div>
+    <form action="profile.php" method="POST">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" value="<?php echo isset($row['username']) ? htmlspecialchars($row['username']) : ''; ?>" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="<?php echo isset($row['email']) ? htmlspecialchars($row['email']) : ''; ?>" required>
+
+        <label for="password">New Password:</label>
+        <input type="password" id="password" name="password" placeholder="***">
+
+        <label for="password_confirm">Confirm Password:</label>
+        <input type="password" id="password_confirm" name="password_confirm" placeholder="***">
+
+        <button type="submit" name="update_profile">Update Profile</button>
+    </form>
 </body>
 </html>
 
