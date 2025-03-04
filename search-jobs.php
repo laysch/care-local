@@ -86,6 +86,7 @@ $userSkills = isset($_SESSION['user_skills']) ? $_SESSION['user_skills'] : [];
             background-image: url('https://example.com/background.jpg');
             background-attachment: fixed;
             background-repeat: repeat;
+            background-color: white;
         }
 
         #main-body-wrapper {
