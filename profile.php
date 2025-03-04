@@ -193,64 +193,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-top: 5px;
         }
 
-        .edit-profile-form {
-            background-color: var(--cardBgColor);
+        .bio, .skills {
+            background-color: #f4f8f4;
             padding: 20px;
             border-radius: 10px;
             margin-bottom: 20px;
         }
-
-        .edit-profile-form input,
-        .edit-profile-form textarea,
-        .edit-profile-form select,
-        .edit-profile-form label {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            border: 1px solid var(--bordersColor);
-            font-family: var(--bodyFontFamily);
+        .bio h2, .skills h2 {
+            font-size: 1.5em;
+            color: #333;
         }
-
-        .edit-profile-form button {
-            background-color: var(--buttonColor);
+        .skills ul {
+            list-style: none;
+            padding: 0;
+        }
+        .skills ul li {
+            font-size: 1.1em;
+            color: #333;
+        }
+        .edit-button {
+            background-color: #ff9a8b;
             color: white;
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
             font-size: 1.1em;
             cursor: pointer;
-            transition: background-color 0.3s;
         }
-
-        .edit-profile-form button:hover {
-            background-color: var(--buttonHoverColor);
+        .edit-profile-form {
+            display: none;
         }
-
+        .edit-profile-form input, .edit-profile-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #839c99;
+        }
         .edit-profile-form .checkbox-group {
             display: flex;
             flex-wrap: wrap;
         }
-
         .edit-profile-form .checkbox-group label {
             margin-right: 20px;
-            font-size: 1em;
-            color: var(--bodyTextColor);
         }
-        .checkbox-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.checkbox-group label {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 1em;
-    cursor: pointer;
-}
-
     </style>
 </head>
 <body>
@@ -272,17 +258,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <h1><?php echo htmlspecialchars($row['username']); ?></h1>
                     <p><?php echo htmlspecialchars($row['email']); ?></p>
                 </div>
-                <div>
-    <h2>Skills:</h2>
-    <p id="skills-display">
-        <?php echo !empty($row['skills']) ? htmlspecialchars($row['skills']) : "No skills selected"; ?>
-    </p>
-</div>
-<button onclick="toggleEditProfileForm()">Edit Profile</button>
-
+               <!-- Skills Section -->
+            <div class="skills">
+                <h2>Skills</h2>
+                <ul>
+                    <?php if (!empty($user['skills'])): ?>
+                        <?php foreach ($user['skills'] as $skill): ?>
+                            <li><?php echo htmlspecialchars($skill); ?></li>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <li>No skills selected.</li>
+                    <?php endif; ?>
+                </ul>
             </div>
+
+            <!-- Edit Profile Button -->
+            <button class="edit-button" onclick="toggleEditProfileForm()">Edit Profile</button>
+
         
             <!-- Edit Profile Form -->
+                <!-- Edit Profile Form -->
+            <div id="edit-profile-form" class="edit-profile-form">
+                <form method="POST" enctype="multipart/form-data">
+                    <input type="text" name="name" value="<?php echo htmlspecialchars($user['name']); ?>" placeholder="Name" required>
+                    <textarea name="bio" placeholder="About Me" required><?php echo htmlspecialchars($user['bio']); ?></textarea>
+
+                    <label for="skills">Skills (check all that apply):</label>
+                    <div class="checkbox-group">
+                        <?php
+                        $allSkills = ["Communication", "Teamwork", "Problem-Solving", "Leadership", "Technical Skills", "Time Management"];
+                        foreach ($allSkills as $skill):
+                            $checked = in_array($skill, $user['skills']) ? 'checked' : '';
+                        ?>
+                            <label>
+                                <input type="checkbox" name="skills[]" value="<?php echo $skill; ?>" <?php echo $checked; ?>> <?php echo $skill; ?>
+                            </label>
+                        <?php endforeach; ?>
+                    </div>
+
             <div class="edit-profile-form">
                 <form method="POST" enctype="multipart/form-data">
                     <label for="username">Username:</label>
