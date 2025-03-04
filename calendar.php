@@ -69,7 +69,7 @@ foreach ($events as $event) {
         /* Sidebar */
         #sidebar {
             width: 250px;
-            background-color: #f8f9fa; /* Light gray background */
+            background-color: #fff; /* Light gray background */
             padding: 20px;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
         }
@@ -84,7 +84,7 @@ foreach ($events as $event) {
         }
 
         #sidebar a:hover {
-            background-color: #fff; /* Light gray hover background */
+            background-color: #fff; 
         }
 
         /* Main Body */
