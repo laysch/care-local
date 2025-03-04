@@ -9,6 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 $userId = $_SESSION['user_id'];
 
 require_once 'inc/database.php';
+
 $query = "SELECT * FROM users WHERE id = ?";
 $stmt = $conn->prepare($query);
 $stmt->bind_param('i', $userId);
@@ -16,17 +17,16 @@ $stmt->execute();
 $result = $stmt->get_result();
 $row = $result->fetch_assoc();
 
+// Function to sanitize input
 function sanitizeInput($data) {
-    $data = trim($data); 
-    $data = stripslashes($data); 
-    $data = htmlspecialchars($data); 
-    return $data;
+    return htmlspecialchars(stripslashes(trim($data)));
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $updates = [];
     $params = [];
     $types = '';
+
     try {
         if (!empty($_POST['username'])) {
             $updates[] = "username = ?";
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (!empty($_POST['password'])) {
-            if ($_POST['password'] != $_POST['password_confirm']) {
+            if ($_POST['password'] !== $_POST['password_confirm']) {
                 throw new Exception("Password and Confirmation do not match!");
             } else {
                 $hashed_password = password_hash($_POST['password'], PASSWORD_DEFAULT);
@@ -54,14 +54,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $query = "UPDATE users SET " . implode(', ', $updates) . " WHERE id = ?";
             $params[] = $userId;
             $types .= 'i';
+
             $stmt = $conn->prepare($query);
             $stmt->bind_param($types, ...$params);
             $stmt->execute();
             header("Refresh:0");
+            exit();
         }
     } catch (Exception $e) {
-        $conn->rollback();
-        echo $e->getMessage();
+        error_log("Profile Update Error: " . $e->getMessage());
+        echo "<p style='color:red;'>Error: " . htmlspecialchars($e->getMessage()) . "</p>";
     }
 }
 ?>
@@ -77,22 +79,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <?php include 'navbar.php'; ?>
-    <img src="<?php echo "img/avatar/" . $row['avatar']; ?>" alt="User Avatar">
+
+    <!-- Check if avatar exists -->
+    <?php if (isset($row['avatar']) && !empty($row['avatar'])): ?>
+        <img src="<?php echo "img/avatar/" . htmlspecialchars($row['avatar']); ?>" alt="User Avatar">
+    <?php else: ?>
+        <img src="img/default-avatar.png" alt="Default User Avatar">
+    <?php endif; ?>
+
     <form action="inc/uploadAvatar.php" method="POST" enctype="multipart/form-data">
         <input type="file" name="avatar" accept="image/*">
         <button type="submit" name="upload">Upload</button>
     </form>
+
     <form action="profile.php" method="POST">
         <label for="username">Username:</label>
-        <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($row['username']); ?>" required>
+        <input type="text" id="username" name="username" value="<?php echo isset($row['username']) ? htmlspecialchars($row['username']) : ''; ?>" required>
+
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($row['email']); ?>" required>
+        <input type="email" id="email" name="email" value="<?php echo isset($row['email']) ? htmlspecialchars($row['email']) : ''; ?>" required>
+
         <label for="password">New Password:</label>
         <input type="password" id="password" name="password" placeholder="***">
-        <label for="password">Confirm Password:</label>
+
+        <label for="password_confirm">Confirm Password:</label>
         <input type="password" id="password_confirm" name="password_confirm" placeholder="***">
 
         <button type="submit" name="update_profile">Update Profile</button>
     </form>
 </body>
-</html
+</html>
