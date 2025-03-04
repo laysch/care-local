@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user['location'] = $_POST['location']; // Update location from the form
     $user['skills'] = isset($_POST['skills']) ? $_POST['skills'] : [];
 
-     <!-- Check if avatar exists -->
+     
     <?php if (isset($row['avatar']) && !empty($row['avatar'])): ?>
         <img src="<?php echo "img/avatar/" . htmlspecialchars($row['avatar']); ?>" alt="User Avatar">
     <?php else: ?>
