@@ -59,6 +59,7 @@ if (isset($_SESSION['user_id'])) {
             <a href="/">Home</a>            
             <a href="/add-job.php">Add Job</a>
             <a href="/search-jobs.php">Search Jobs</a>
+            <a href="/job-cart.php">Job Cart</a>
             <a href="/calendar.php">Calendar</a>
             <a href="/help-center.php">Help Center</a>
             <?php 
