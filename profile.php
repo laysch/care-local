@@ -263,8 +263,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="password" id="password_confirm" name="password_confirm" placeholder="***">
 
                     <!-- Avatar Upload -->
-                    <label for="avatar">Profile Picture:</label>
-                    <input type="file" id="avatar" name="avatar" accept="image/*">
+                    <form action="inc/uploadAvatar.php" method="POST" enctype="multipart/form-data">
+                        <input type="file" name="avatar" accept="image/*">
+                        <button type="submit" name="upload">Upload</button>
+                    </form>
 
                     <button type="submit" name="update_profile">Update Profile</button>
                 </form>
