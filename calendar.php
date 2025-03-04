@@ -117,16 +117,19 @@ foreach ($events as $event) {
             padding: 15px;
             text-align: center;
             border: 1px solid var(--bordersColor);
+            width: 14%; /* Equal width for each day (100% / 7 days) */
+            height: 120px; /* Increased height for calendar boxes */
         }
 
         th {
             background-color: #cdd8c4;
             font-size: 1.2em;
             color: var(--bodyTextColor);
+            height: 50px; /* Height for the header row */
+            white-space: nowrap; /* Prevent day names from wrapping */
         }
 
         td {
-            height: 100px;
             vertical-align: top;
         }
 
