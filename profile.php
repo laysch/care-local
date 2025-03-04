@@ -18,6 +18,11 @@ $stmt->execute();
 $result = $stmt->get_result();
 $row = $result->fetch_assoc();
 
+// Initialize bio, location, and skills if they don't exist in the database
+$row['bio'] = $row['bio'] ?? '';
+$row['location'] = $row['location'] ?? '';
+$row['skills'] = $row['skills'] ?? '';
+
 // Function to sanitize input
 function sanitizeInput($data) {
     return htmlspecialchars(stripslashes(trim($data)));
@@ -55,15 +60,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // Update name, bio, location, and skills
-        $name = sanitizeInput($_POST['name']);
+        // Update bio, location, and skills
         $bio = sanitizeInput($_POST['bio']);
         $location = sanitizeInput($_POST['location']);
-        $skills = isset($_POST['skills']) ? $_POST['skills'] : [];
-
-        $updates[] = "name = ?";
-        $params[] = $name;
-        $types .= 's';
+        $skills = isset($_POST['skills']) ? implode(', ', $_POST['skills']) : '';
 
         $updates[] = "bio = ?";
         $params[] = $bio;
@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $types .= 's';
 
         $updates[] = "skills = ?";
-        $params[] = implode(', ', $skills);
+        $params[] = $skills;
         $types .= 's';
 
         // Handle avatar upload
@@ -320,16 +320,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Bio Section -->
             <div class="bio">
                 <h2>About Me</h2>
-                <p><?php echo htmlspecialchars($row['bio']); ?></p>
+                <p><?php echo htmlspecialchars($row['bio'] ? $row['bio'] : "No bio available."); ?></p>
             </div>
 
             <!-- Skills Section -->
             <div class="skills">
                 <h2>Skills</h2>
                 <ul>
-                    <?php foreach (explode(', ', $row['skills']) as $skill): ?>
-                        <li><?php echo htmlspecialchars($skill); ?></li>
-                    <?php endforeach; ?>
+                    <?php if (!empty($row['skills'])): ?>
+                        <?php foreach (explode(', ', $row['skills']) as $skill): ?>
+                            <li><?php echo htmlspecialchars($skill); ?></li>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <li>No skills added yet.</li>
+                    <?php endif; ?>
                 </ul>
             </div>
 
@@ -342,7 +346,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div id="edit-profile-form" class="edit-profile-form" style="display: none;">
                 <form method="POST" enctype="multipart/form-data">
                     <input type="text" name="name" value="<?php echo htmlspecialchars($row['name']); ?>" placeholder="Name" required>
-                    <textarea name="bio" placeholder="About Me" required><?php echo htmlspecialchars($row['bio']); ?></textarea>
+                    <textarea name="bio" placeholder="About Me"><?php echo htmlspecialchars($row['bio']); ?></textarea>
 
                     <!-- Location Dropdown -->
                     <select name="location">
@@ -356,8 +360,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="checkbox-group">
                         <?php
                         $allSkills = ["Communication", "Teamwork", "Problem-Solving", "Leadership", "Technical Skills", "Time Management"];
+                        $userSkills = !empty($row['skills']) ? explode(', ', $row['skills']) : [];
                         foreach ($allSkills as $skill):
-                            $checked = in_array($skill, explode(', ', $row['skills'])) ? 'checked' : '';
+                            $checked = in_array($skill, $userSkills) ? 'checked' : '';
                         ?>
                             <label>
                                 <input type="checkbox" name="skills[]" value="<?php echo $skill; ?>" <?php echo $checked; ?>> <?php echo $skill; ?>
