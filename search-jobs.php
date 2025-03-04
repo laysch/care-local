@@ -1,5 +1,5 @@
-<?php include 'navbar.php'; ?> 
-<?php   
+<?php
+include 'navbar.php'; 
 $currentPage = 'Search Jobs';
 session_start();
 if (!isset($_SESSION['username'])) {
@@ -53,19 +53,20 @@ if (!$result) {
 
 // Fetch the user's skills (assuming they are stored in the session)
 $userSkills = isset($_SESSION['user_skills']) ? $_SESSION['user_skills'] : [];
+
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Job Search | CareLocal</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Jobs | CareLocal</title>
     <link href="https://fonts.cdnfonts.com/css/share-techmono-2" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/ubuntu-mono" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/pt-sans" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/source-sans-pro" rel="stylesheet">
-    <link href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css' rel='stylesheet'>
+    <link href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/gh/echxn/yeolithm@master/src/css/pixelution.css" rel="stylesheet">
     <style>
         :root {
@@ -130,172 +131,110 @@ $userSkills = isset($_SESSION['user_skills']) ? $_SESSION['user_skills'] : [];
         }
 
         .job-box {
-            background-color: #F3E9B5; /* Light yellow background */
-            color: #5D674C; /* Olive green text */
-            padding: 15px;
-            border-radius: 5px;
-            margin: 10px;
-            border: 2px solid #D1D79D;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            text-align: center;
+            background-color: var(--postBgColor);
+            border: 1px solid var(--bordersColor);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        .job-box:hover {
-            background-color: #FCEADE; /* Soft peach on hover */
+        .job-box h3 {
+            font-size: 1.5em;
+            color: var(--headingsColor);
+            margin-bottom: 10px;
         }
 
-        .job-box a {
-            text-decoration: none;
-            color: #5D674C; /* Olive green text */
-            font-weight: bold;
+        .job-box p {
+            font-size: 1em;
+            color: var(--bodyTextColor);
+            margin-bottom: 10px;
         }
 
-        .job-box a:hover {
-            color: #FCEADE; /* Soft peach on hover for contrast */
-        }
-
-        .dropdown {
-            position: relative;
-            display: inline-block;
-            width: 100px; 
-        }
-
-        .dropdown-toggle {
-            border: 1px solid #D1D79D;
-            padding: 12px;
-            width: 100%;
-            text-align: left;
-            cursor: pointer;
-            border-radius: 6px;
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-
-        .dropdown-toggle:hover {
-            background-color: #e2e6ea;
-        }
-
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            background-color: #D1D79D;
-            border: 1px solid rgb(103, 161, 137);
-            width: 100%;
-            max-height: 220px;
-            overflow-y: auto;
-            border-radius: 6px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            transition: opacity 0.3s ease-in-out;
-            padding: 8px;
-        }
-
-        .dropdown-menu label {
-            display: flex;
-            align-items: center;
-            padding: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            border-radius: 4px;
-            transition: background-color 0.2s;
-        }
-
-        .dropdown-menu label:hover {
-            background-color: #f3e9b5;
-        }
-
-        .dropdown-menu input[type="checkbox"] {
-            margin-right: 10px;
-        }
-
-        .show {
-            display: block;
-            opacity: 1;
+        .job-box .skills {
+            font-style: italic;
+            color: var(--italicTextColor);
         }
     </style>
 </head>
 <body>
-    <div id="main-body-wrapper">
-        <section class="hero">
-            <h1>Search Jobs</h1>
-            <p>Find your next opportunity here</p>
-        </section>
 
-        <!-- Filter Section -->
-        <div class="filter-section">
-            <form action="search-jobs.php" method="GET">    
-                <b>Filter:</b>
-                <div class="dropdown">
-                    <div class="dropdown-toggle" onclick="toggleSkills()">Skills</div>
-                    <div class="dropdown-menu" id="dropdown-skills">
-                        <label><input type="checkbox" name="skills[]" value="Communication"> Communication</label>
-                        <label><input type="checkbox" name="skills[]" value="Teamwork"> Teamwork</label>
-                        <label><input type="checkbox" name="skills[]" value="Problem-Solving"> Problem-Solving</label>
-                        <label><input type="checkbox" name="skills[]" value="Leadership"> Leadership</label>
-                        <label><input type="checkbox" name="skills[]" value="Technical Skills"> Technical Skills</label>
-                        <label><input type="checkbox" name="skills[]" value="Time Management"> Time Management</label>
+    <div id="container">
+        <!-- Sidebar -->
+        <?php include('sidebar.php'); ?>
+
+        <!-- Main Body -->
+        <div id="main-body-wrapper">
+            <section class="hero">
+                <h1>Search for Jobs</h1>
+                <p>Find your next opportunity with CareLocal</p>
+                <div class="cta-buttons">
+                    <a href="add-job.php">Post a Job</a>
+                    <a href="index.php">Back to Main Menu</a>
+                </div>
+            </section>
+
+            <!-- Job Feed -->
+            <section class="job-feed">
+                <form action="search-jobs.php" method="GET">
+                    <div class="filter-section">
+                        <b>Filter:</b>
+                        <div class="dropdown">
+                            <div class="dropdown-toggle" onclick="toggleSkills()">Skills</div>
+                            <div class="dropdown-menu" id="dropdown-skills">
+                                <label><input type="checkbox" name="skills[]" value="Communication"> Communication</label>
+                                <label><input type="checkbox" name="skills[]" value="Teamwork"> Teamwork</label>
+                                <label><input type="checkbox" name="skills[]" value="Problem-Solving"> Problem-Solving</label>
+                                <label><input type="checkbox" name="skills[]" value="Leadership"> Leadership</label>
+                                <label><input type="checkbox" name="skills[]" value="Technical Skills"> Technical Skills</label>
+                                <label><input type="checkbox" name="skills[]" value="Time Management"> Time Management</label>
+                            </div>
+                        </div>
+                        <div class="dropdown">
+                            <div class="dropdown-toggle" onclick="toggleCounty()">County</div>
+                            <div class="dropdown-menu" id="dropdown-county">
+                                <label><input type="checkbox" name="county[]" value="Nassau"> Nassau</label>
+                                <label><input type="checkbox" name="county[]" value="Suffolk"> Suffolk</label>
+                            </div>
+                        </div>
+                        <br>
+                        <input type="submit" value="Filter" class="btn">
+                        <button type="button" class="btn" onclick="removeFilters()">Remove Filters</button>
                     </div>
-                </div>
-                <div class="dropdown">
-                    <div class="dropdown-toggle" onclick="toggleCounty()">County:</div>
-                    <div class="dropdown-menu" id="dropdown-county">
-                        <label><input type="checkbox" name="county[]" value="Nassau">Nassau</label>
-                        <label><input type="checkbox" name="county[]" value="Suffolk">Suffolk</label>
-                    </div>                             
-                </div>
+                </form>
 
-                <br>
-                <input type="submit" value="Filter" class="btn">
-                <button type="button" class="btn" onclick="removeFilters()">Remove Filters</button>
-            </form>
-        </div>
-
-        <!-- Job Feed -->
-        <section class="job-feed">
-            <?php while ($row = $result->fetch_assoc()): ?>
-                <?php 
-                $jobSkills = explode(',', $row['skills']); 
-                $commonSkills = array_intersect($userSkills, $jobSkills);
-                $matchPercentage = (count($commonSkills) / count($jobSkills)) * 100; 
-                ?>
-                <div class="job-box" onclick="window.location.href='job-details.php?id=<?php echo $row['id']; ?>'">
-                    <a href="job-details.php?id=<?php echo $row['id']; ?>"><?php echo htmlspecialchars($row['jobtitle']); ?></a><br>
-                    <?php echo htmlspecialchars($row['location']); ?><br>
-                    <span style="font-size: 14px; color: #5D674C;">Match: <?php echo round($matchPercentage, 2); ?>%</span>
-                </div>
-            <?php endwhile; ?>
-        </section>
-
-        <div style="text-align: center; margin-top: 20px;">
-            <a href="add-job.php" class="btn">Post a Job</a>
-            <a href="index.php" class="btn">Back to Main Menu</a>
+                <?php while ($row = $result->fetch_assoc()) { 
+                    $jobSkills = explode(',', $row['skills']);
+                    $commonSkills = array_intersect($userSkills, $jobSkills);
+                    $matchPercentage = (count($commonSkills) / count($jobSkills)) * 100; 
+                    ?>
+                    <div class="job-box" onclick='window.location.href="job-details.php?id=<?= $row['id'] ?>"'>
+                        <h3><?= htmlspecialchars($row['jobtitle']) ?></h3>
+                        <p><?= htmlspecialchars($row['location']) ?></p>
+                        <span>Match: <?= round($matchPercentage, 2) ?>%</span>
+                    </div>
+                <?php } ?>
+            </section>
         </div>
     </div>
 
     <script>
         function toggleSkills() {
-            var dropdown = document.getElementById("dropdown-skills");
-            dropdown.classList.toggle("show");
+            document.getElementById("dropdown-skills").classList.toggle("show");
         }
+
         function toggleCounty() {
-            var dropdown = document.getElementById("dropdown-county");
-            dropdown.classList.toggle("show");
+            document.getElementById("dropdown-county").classList.toggle("show");
         }
 
         function removeFilters() {
-            window.location.href = "search-jobs.php"; 
+            window.location.href = "search-jobs.php";
         }
 
-        window.addEventListener("click", function (event) {
+        window.addEventListener("click", function(event) {
             if (!event.target.closest(".dropdown")) {
-                var dropdown = document.getElementById("dropdown-skills");
-                if (dropdown.classList.contains("show")) {
-                    dropdown.classList.remove("show");
-                }
-                var dropdown = document.getElementById("dropdown-county");
-                if (dropdown.classList.contains("show")) {
-                    dropdown.classList.remove("show");
-                }
+                document.getElementById("dropdown-skills").classList.remove("show");
+                document.getElementById("dropdown-county").classList.remove("show");
             }
         });
     </script>
