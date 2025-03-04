@@ -9,29 +9,60 @@ $userId = $_SESSION['user_id'];
 
 require_once 'inc/database.php';
 
-// Fetch user data from the database
-$sql = "SELECT * FROM users WHERE id = $user_id";
-$result = $conn->query($sql);
-$user = $result->fetch_assoc();
+$query = "SELECT * FROM users WHERE id = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param('i', $userId);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
 
-// Check if the form is submitted to update the user info
+// Function to sanitize input
+function sanitizeInput($data) {
+    return htmlspecialchars(stripslashes(trim($data)));
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Update user profile based on submitted form data
-    $user['name'] = $_POST['name'];
-    $user['bio'] = $_POST['bio'];
-    $user['skills'] = isset($_POST['skills']) ? $_POST['skills'] : [];
+    $updates = [];
+    $params = [];
+    $types = '';
 
-    // Handle the file upload for the avatar
-    if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
-        $uploadDir = 'uploads/';
-        $uploadFile = $uploadDir . basename($_FILES['avatar']['name']);
-
-        // Check if file is an image
-        if (getimagesize($_FILES['avatar']['tmp_name'])) {
-            move_uploaded_file($_FILES['avatar']['tmp_name'], $uploadFile);
-            $user['profile_picture'] = $uploadFile; // Update the avatar path
+try {
+        if (!empty($_POST['name'])) {
+            $updates[] = "name = ?";
+            $params[] = sanitizeInput($_POST['name']);
+            $types .= 's';
         }
+
+if (!empty($updates)) {
+            $query = "UPDATE users SET " . implode(', ', $updates) . " WHERE id = ?";
+            $params[] = $userId;
+            $types .= 'i';
+
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param($types, ...$params);
+            $stmt->execute();
+            header("Refresh:0");
+            exit();
+        }
+    } catch (Exception $e) {
+        error_log("Profile Update Error: " . $e->getMessage());
+        echo "<p style='color:red;'>Error: " . htmlspecialchars($e->getMessage()) . "</p>";
     }
+}
+?>
+    
+
+  <!-- Check if avatar exists -->
+    <?php if (isset($row['avatar']) && !empty($row['avatar'])): ?>
+        <img src="<?php echo "img/avatar/" . htmlspecialchars($row['avatar']); ?>" alt="User Avatar">
+    <?php else: ?>
+        <img src="img/default-avatar.png" alt="Default User Avatar">
+    <?php endif; ?>
+
+    <form action="inc/uploadAvatar.php" method="POST" enctype="multipart/form-data">
+        <input type="file" name="avatar" accept="image/*">
+        <button type="submit" name="upload">Upload</button>
+    </form>
 
     // Optionally, update the database with the new information (e.g., name, bio, skills, avatar)
     $skills = implode(", ", $user['skills']);
@@ -131,8 +162,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </body>
 </html>
 
-<?php
-// Close the database connection
-$conn->close();
-?>
 
