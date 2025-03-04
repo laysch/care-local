@@ -111,7 +111,7 @@ $job = $result->fetch_assoc();
         .btn {
             display: inline-block;
             padding: 10px 20px;
-            background-color: #5D674C; /* Olive green background for button */
+            background-color: #efac9a; /* Olive green background for button */
             color: white;
             text-decoration: none;
             border-radius: 5px;
