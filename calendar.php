@@ -54,7 +54,7 @@ foreach ($events as $event) {
             --bordersColor: #e0e0e0; /* Light gray borders */
             --bodyTextColor: #333333; /* Dark gray text */
             --linksColor: #222222;
-            --linksHoverColor: #efac9a;
+            --linksHoverColor: #cdd8c4;
         }
 
         body {
