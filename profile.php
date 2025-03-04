@@ -268,6 +268,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <option value="" disabled selected>Select a location</option>
                         <option value="Nassau" <?php echo $user['location'] === 'Nassau' ? 'selected' : ''; ?>>Nassau</option>
                         <option value="Suffolk" <?php echo $user['location'] === 'Suffolk' ? 'selected' : ''; ?>>Suffolk</option>
+                        <option value="Unspecified" <?php echo $user['location'] === 'Unspecified' ? 'selected' : ''; ?>>Unspecified</option>
                     </select>
 
                     <label for="skills">Skills (check all that apply):</label>
