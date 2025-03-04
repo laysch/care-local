@@ -85,7 +85,7 @@ if (isset($_POST['login'])) {
             </div>
         </div>
         <div class="right">
-            <img src="img/favicon.png" alt="CareLocal Logo" style="width: 100px; margin-bottom: 10px;">
+            <img src="img/favicon.png" alt="CareLocal Logo" style="width: 150px; max-width: 100%; margin-bottom: 15px;">
             <h1>CareLocal</h1>
             <p>Where Local Talent Meets Local Needs</p>
         </div>
