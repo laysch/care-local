@@ -6,14 +6,13 @@ require_once 'inc/database.php';
 
 if (isset($_POST['register'])) {
     $email = trim($_POST['email']);
-    $firstName = trim($_POST['first_name']);
-    $lastName = trim($_POST['last_name']);
+    $username = trim($_POST['username']);
     $password = trim($_POST['password']);
     $confirmPassword = trim($_POST['confirm_password']);
     $defaultAvatar = 'default_avatar.png';
 
     // no empty fields
-    if (empty($email) || empty($firstName) || empty($lastName) || empty($password) || empty($confirmPassword)) {
+    if (empty($email) || empty($username) || empty($password) || empty($confirmPassword)) {
         $error = "Please fill in all required fields.";
     } elseif ($password !== $confirmPassword) {
         // Check if passwords match
@@ -21,20 +20,22 @@ if (isset($_POST['register'])) {
     } else {
         $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
-        // verify if email already exists
-        $stmt = $conn->prepare("SELECT email FROM users WHERE email = ? LIMIT 1");
-        $stmt->bind_param("s", $email);
+        // verify if email or username already exists
+        $stmt = $conn->prepare("SELECT email, username FROM users WHERE email = ? OR username = ? LIMIT 1");
+        $stmt->bind_param("ss", $email, $username);
         $stmt->execute();
         $result = $stmt->get_result();
         if ($result->num_rows > 0) {
             $existingUser = $result->fetch_assoc();
             if ($existingUser['email'] === $email) {
                 $error = "That email is already in use.";
+            } elseif ($existingUser['username'] === $username) {
+                $error = "That username is already taken.";
             }
         } else {
             // process registration
-            $stmt = $conn->prepare("INSERT INTO users (email, first_name, last_name, password, avatar) VALUES (?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssss", $email, $firstName, $lastName, $passwordHash, $defaultAvatar);
+            $stmt = $conn->prepare("INSERT INTO users (email, username, password, avatar) VALUES (?, ?, ?, ?)");
+            $stmt->bind_param("ssss", $email, $username, $passwordHash, $defaultAvatar);
             if ($stmt->execute()) {
                 $success = "Registration successful. Please login.";
                 header("Location: login.php");
@@ -76,12 +77,8 @@ if (isset($_POST['register'])) {
             <?php if (isset($success)) echo "<p style='color:green;'>$success</p>"; ?>
             <form method="post">
                 <div class="form-group">
-                    <label for="first_name">First Name:</label>
-                    <input type="text" name="first_name" required>
-                </div>
-                <div class="form-group">
-                    <label for="last_name">Last Name:</label>
-                    <input type="text" name="last_name" required>
+                    <label for="username">Username:</label>
+                    <input type="text" name="username" required>
                 </div>
                 <div class="form-group">
                     <label for="email">Email:</label>
