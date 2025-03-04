@@ -20,7 +20,7 @@ if (isset($_POST['upload'])) {
         } 
 
         if ($_FILES["avatar"]["size"] > $maxFileSize) {
-            throw new Exception("Please use an image unde 5MB.")
+            throw new Exception("Please use an image unde 5MB.") }
         
         if (move_uploaded_file($_FILES["avatar"]["tmp_name"], $uploadDir . $newFile)) {
             $query = "UPDATE users SET avatar = ? WHERE id = ?";
