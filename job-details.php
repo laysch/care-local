@@ -154,6 +154,7 @@ $job = $result->fetch_assoc();
             <p><strong>Skills Required:</strong> <?php echo htmlspecialchars($job['skills']); ?></p>
             
             <a href="search-jobs.php" class="btn-small">Apply</a>
+        </div>
             <a href="search-jobs.php" class="btn">Back to Job Listings</a>
         </div>
     </div>
