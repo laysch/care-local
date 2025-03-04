@@ -27,8 +27,7 @@ if (isset($_POST['login'])) {
                 session_regenerate_id(true);
                 $_SESSION['user_id'] = $row['id'];
                 $_SESSION['username'] = $row['username'];
-                echo "<body onload=\"window.top.location.reload();\">";
-                # header("Location: index.php");
+                header("Location: index.php");
                 exit();
             } else {
                 $error = "Invalid email or password. Please try again.";
