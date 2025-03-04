@@ -304,8 +304,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <img src="img/default-avatar.png" alt="Default User Avatar">
     <?php endif; ?>
                 <div>
-                    <h1><?php echo htmlspecialchars($user['name']); ?></h1>
-                    <p>Location: <?php echo htmlspecialchars($user['location']); ?></p>
+                    <h1><?php echo htmlspecialchars($user['username']); ?></h1>
+                    <p>Location:; ?></p>
                 </div>
             </div>
 
