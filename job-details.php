@@ -23,11 +23,72 @@ $job = $result->fetch_assoc();
 <head>
     <meta charset="UTF-8">
     <title>Job Details</title>
+    <link href="https://fonts.cdnfonts.com/css/share-techmono-2" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/ubuntu-mono" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/pt-sans" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/source-sans-pro" rel="stylesheet">
+    <link href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/echxn/yeolithm@master/src/css/pixelution.css" rel="stylesheet">
     <style>
+        :root {
+            --bodyFontFamily: 'Share Tech Mono', monospace;
+            --bodyFontSize: 14px;
+            --backgroundColor: #f9eedd;
+            --bordersColor: #839c99;
+            --bodyTextColor: #839c99;
+            --linksColor: #222222;
+            --linksHoverColor: #efac9a;
+        }
+
         body {
-            background-color: #5D674C; /* Olive green background */
-            font-family: Georgia, serif;
-            color: #FFFFFF; /* White text */
+            background-color: #f9eedd;
+            font-family: 'Share Tech Mono', monospace;
+            color: #5D674C;
+        }
+
+        #main-body-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #cdd8c4;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .hero h1 {
+            font-size: 2.5em;
+            color: #5D674C;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            color: #839c99;
+            margin-bottom: 30px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .cta-buttons a {
+            background-color: #5D674C;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .cta-buttons a:hover {
+            background-color: #efac9a;
         }
 
         .job-details {
@@ -35,30 +96,53 @@ $job = $result->fetch_assoc();
             text-align: center;
         }
 
+        .job-details h1 {
+            font-size: 2em;
+            color: #5D674C;
+            margin-bottom: 20px;
+        }
+
+        .job-details p {
+            font-size: 1.2em;
+            color: #5D674C;
+            margin-bottom: 15px;
+        }
+
         .btn {
             display: inline-block;
             padding: 10px 20px;
-            background-color: #FCEADE; /* Soft peach for buttons */
-            color: #5D674C; /* Olive green text */
+            background-color: #5D674C; /* Olive green background for button */
+            color: white;
             text-decoration: none;
             border-radius: 5px;
             margin-top: 20px;
+            font-weight: bold;
         }
 
         .btn:hover {
-            background-color: #F3E9B5; /* Light yellow on hover */
-            color: #5D674C; /* Keep olive green text */
+            background-color: #efac9a; /* Light peach on hover */
         }
     </style>
 </head>
 <body>
-    <div class="job-details">
-        <h1>Job Title: <?php echo htmlspecialchars($job['jobtitle']); ?></h1>
-        <p><strong>Location:</strong> <?php echo htmlspecialchars($job['location']); ?></p>
-        <p><strong>Description:</strong> <?php echo nl2br(htmlspecialchars($job['description'])); ?></p>
-        <p><strong>Skills Required:</strong> <?php echo htmlspecialchars($job['skills']); ?></p>
-        
-        <a href="search-jobs.php" class="btn">Back to Job Listings</a>
+    <!-- Include Sidebar -->
+    <?php include 'sidebar.php'; ?>
+
+    <!-- Main Body -->
+    <div id="main-body-wrapper">
+        <section class="hero">
+            <h1>Job Details</h1>
+            <p>Below are the details for the selected job posting.</p>
+        </section>
+
+        <div class="job-details">
+            <h1><?php echo htmlspecialchars($job['jobtitle']); ?></h1>
+            <p><strong>Location:</strong> <?php echo htmlspecialchars($job['location']); ?></p>
+            <p><strong>Description:</strong> <?php echo nl2br(htmlspecialchars($job['description'])); ?></p>
+            <p><strong>Skills Required:</strong> <?php echo htmlspecialchars($job['skills']); ?></p>
+
+            <a href="search-jobs.php" class="btn">Back to Job Listings</a>
+        </div>
     </div>
 </body>
 </html>
