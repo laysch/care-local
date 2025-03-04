@@ -36,13 +36,13 @@
         </div>
         <nav id="menu">
             <a href="/">Home</a>
-            <a href="/login">Login</a>
+            <a href="/login.php">Login</a>
             <a href="/add-job.php">Add Job</a>
             <a href="/search-jobs.php">Search Jobs</a>
-            <a href="/calendar">Calendar</a>
+            <a href="/calendar.php">Calendar</a>
             <a href="/helpcenter.php">Help Center</a>
             <a href="/profile.php">Profile</a>
-            <a href="/logout">log out</a>
+            <a href="/logout.php">log out</a>
         </nav>
     </div>
 </aside>
