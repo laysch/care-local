@@ -5,31 +5,36 @@ session_start();
 require_once 'inc/database.php';
 
 if (isset($_POST['register'])) {
-    $username = trim($_POST['username']);
     $email = trim($_POST['email']);
-    $password = password_hash(trim($_POST['password']), PASSWORD_DEFAULT);
+    $firstName = trim($_POST['first_name']);
+    $lastName = trim($_POST['last_name']);
+    $password = trim($_POST['password']);
+    $confirmPassword = trim($_POST['confirm_password']);
     $defaultAvatar = 'default_avatar.png';
 
     // no empty fields
-    if (empty($username) || empty($email) || empty($password)) {
+    if (empty($email) || empty($firstName) || empty($lastName) || empty($password) || empty($confirmPassword)) {
         $error = "Please fill in all required fields.";
+    } elseif ($password !== $confirmPassword) {
+        // Check if passwords match
+        $error = "Passwords do not match.";
     } else {
-        // verify is username or email already exists
-        $stmt = $conn->prepare("SELECT username, email FROM users WHERE username = ? OR email = ? LIMIT 1");
-        $stmt->bind_param("ss", $username, $email);
+        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+
+        // verify if email already exists
+        $stmt = $conn->prepare("SELECT email FROM users WHERE email = ? LIMIT 1");
+        $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
         if ($result->num_rows > 0) {
             $existingUser = $result->fetch_assoc();
-            if ($existingUser['username'] === $username) {
-                $error = "That username is already taken.";
-            } elseif ($existingUser['email'] === $email) {
-                $error = "That email is already in use. ";
+            if ($existingUser['email'] === $email) {
+                $error = "That email is already in use.";
             }
         } else {
             // process registration
-            $stmt = $conn->prepare("INSERT INTO users (username, email, password, avatar) VALUES (?, ?, ?, ?)");
-            $stmt->bind_param("ssss", $username, $email, $password, $defaultAvatar);
+            $stmt = $conn->prepare("INSERT INTO users (email, first_name, last_name, password, avatar) VALUES (?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssss", $email, $firstName, $lastName, $passwordHash, $defaultAvatar);
             if ($stmt->execute()) {
                 $success = "Registration successful. Please login.";
                 header("Location: login.php");
@@ -71,8 +76,12 @@ if (isset($_POST['register'])) {
             <?php if (isset($success)) echo "<p style='color:green;'>$success</p>"; ?>
             <form method="post">
                 <div class="form-group">
-                    <label for="username">Username:</label>
-                    <input type="text" name="username" required>
+                    <label for="first_name">First Name:</label>
+                    <input type="text" name="first_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="last_name">Last Name:</label>
+                    <input type="text" name="last_name" required>
                 </div>
                 <div class="form-group">
                     <label for="email">Email:</label>
@@ -81,6 +90,10 @@ if (isset($_POST['register'])) {
                 <div class="form-group">
                     <label for="password">Password:</label>
                     <input type="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password:</label>
+                    <input type="password" name="confirm_password" required>
                 </div>
                 <button type="submit" name="register" class="btn">Register</button>
             </form>
