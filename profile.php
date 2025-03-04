@@ -224,6 +224,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-size: 1em;
             color: var(--bodyTextColor);
         }
+        .checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 1em;
+    cursor: pointer;
+}
+
     </style>
 </head>
 <body>
@@ -245,6 +259,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <h1><?php echo htmlspecialchars($row['username']); ?></h1>
                     <p><?php echo htmlspecialchars($row['email']); ?></p>
                 </div>
+                <div>
+    <h2>Skills:</h2>
+    <p id="skills-display">
+        <?php echo !empty($row['skills']) ? htmlspecialchars($row['skills']) : "No skills selected"; ?>
+    </p>
+</div>
+<button onclick="toggleEditProfileForm()">Edit Profile</button>
+
             </div>
         
             <!-- Edit Profile Form -->
@@ -261,6 +283,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <label for="password_confirm">Confirm Password:</label>
                     <input type="password" id="password_confirm" name="password_confirm" placeholder="***">
+
+                    <label for="skills">Select Your Skills:</label>
+<div class="checkbox-group">
+    <?php
+    $allSkills = ["Communication", "Teamwork", "Problem-Solving", "Leadership", "Technical Skills", "Time Management"];
+    $selectedSkills = explode(", ", $row['skills'] ?? "");
+    foreach ($allSkills as $skill) {
+        $checked = in_array($skill, $selectedSkills) ? "checked" : "";
+        echo "<label><input type='checkbox' name='skills[]' value='$skill' $checked> $skill</label>";
+    }
+    ?>
+</div>
 
                 
     </form>
