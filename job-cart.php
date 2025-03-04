@@ -104,20 +104,21 @@ require_once 'inc/database.php';
             background-color: #cc0000; /* Darker red on hover */
         }
 
-        .return-button {
+     .return-button {
     display: inline-block;
     padding: 10px 20px;
     background-color: #5D674C; /* Button background color */
-    color: white; /* Text color set to white */
+    color: white !important; /* Force text color to white */
     text-decoration: none; /* Remove underline */
     border-radius: 5px; /* Rounded corners */
     font-weight: bold; /* Bold text */
     margin-top: 20px; /* Space above the button */
 }
 
-        .return-button:hover {
-            background-color: #efac9a;
-        }
+.return-button:hover {
+    background-color: #efac9a; /* Change background color on hover */
+    color: white !important; /* Ensure text stays white on hover */
+}
     </style>
 </head>
 <body class="has--boxshadow" data-shape="circle" data-body-font-family="Share Tech Mono" data-body-font-size="14px" data-sidebar-position="left" data-pagination-display="mssg">
