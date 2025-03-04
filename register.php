@@ -7,14 +7,20 @@ require_once 'inc/database.php';
 if (isset($_POST['register'])) {
     $username = trim($_POST['username']);
     $email = trim($_POST['email']);
-    $password = password_hash(trim($_POST['password']), PASSWORD_DEFAULT);
+    $password = trim($_POST['password']);
+    $confirmPassword = trim($_POST['confirm_password']);
     $defaultAvatar = 'default_avatar.png';
 
     // no empty fields
-    if (empty($username) || empty($email) || empty($password)) {
+    if (empty($username) || empty($email) || empty($password) || empty($confirmPassword)) {
         $error = "Please fill in all required fields.";
+    } elseif ($password !== $confirmPassword) {
+        // Check if passwords match
+        $error = "Passwords do not match.";
     } else {
-        // verify is username or email already exists
+        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+
+        // verify if username or email already exists
         $stmt = $conn->prepare("SELECT username, email FROM users WHERE username = ? OR email = ? LIMIT 1");
         $stmt->bind_param("ss", $username, $email);
         $stmt->execute();
@@ -24,12 +30,12 @@ if (isset($_POST['register'])) {
             if ($existingUser['username'] === $username) {
                 $error = "That username is already taken.";
             } elseif ($existingUser['email'] === $email) {
-                $error = "That email is already in use. ";
+                $error = "That email is already in use.";
             }
         } else {
             // process registration
             $stmt = $conn->prepare("INSERT INTO users (username, email, password, avatar) VALUES (?, ?, ?, ?)");
-            $stmt->bind_param("ssss", $username, $email, $password, $defaultAvatar);
+            $stmt->bind_param("ssss", $username, $email, $passwordHash, $defaultAvatar);
             if ($stmt->execute()) {
                 $success = "Registration successful. Please login.";
                 header("Location: login.php");
@@ -81,6 +87,10 @@ if (isset($_POST['register'])) {
                 <div class="form-group">
                     <label for="password">Password:</label>
                     <input type="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password:</label>
+                    <input type="password" name="confirm_password" required>
                 </div>
                 <button type="submit" name="register" class="btn">Register</button>
             </form>
