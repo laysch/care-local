@@ -263,10 +263,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 
     </form>
-                <form action="inc/uploadAvatar.php" method="POST" enctype="multipart/form-data">
-        <input type="file" name="avatar" accept="image/*">
-        <button type="submit" name="upload">Upload</button>
-    </form>
+                
 
                     <button type="submit" name="update_profile">Update Profile</button>
                 </form>
