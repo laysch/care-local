@@ -7,7 +7,7 @@
             <use xlink:href="#circleLinePath"/>
         </svg>
         <a href="/" class="sbimage">
-            <img src="https://example.com/sidebar-image.jpg" alt="Sidebar Image">
+            <img src="/img/favicon.png" alt="CareLocal">
         </a>
     </div>
     <div id="sb-title">
