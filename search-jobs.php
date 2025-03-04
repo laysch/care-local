@@ -1,4 +1,3 @@
-<?php include 'navbar.php'; ?> 
 <?php   
 $currentPage = 'Search Jobs';
 session_start();
