@@ -247,7 +247,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="profile-header">
                 <img src="<?php echo htmlspecialchars($user['profile_picture']); ?>" alt="Profile Picture">
                 <div>
-                    <h1><?php echo htmlspecialchars($user['full_name']); ?></h1>
+                    <h1><?php echo htmlspecialchars($user['email']); ?></h1>
                     <p>Location: <?php echo htmlspecialchars($user['location']); ?></p>
                 </div>
             </div>
