@@ -1,7 +1,8 @@
 <?php
 // Sample user data for profile page
 $user = [
-    "name" => "John Doe",
+    "first_name" => "John",
+    "last_name" => "Doe",
     "bio" => "A passionate developer with a love for creating innovative solutions. I enjoy working on web and mobile applications.",
     "location" => "New York, USA",
     "skills" => ["Communication", "Teamwork", "Problem-Solving"], // Example skills
@@ -10,8 +11,15 @@ $user = [
 
 // Check if the form is submitted to update the user info
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Get the first and last name from the POST data
+    $firstName = trim($_POST['first_name']);
+    $lastName = trim($_POST['last_name']);
+    $fullName = $firstName . ' ' . $lastName; // Combine both first and last names
+
     // Update user profile based on submitted form data
-    $user['name'] = $_POST['name'];
+    $user['first_name'] = $firstName;
+    $user['last_name'] = $lastName;
+    $user['name'] = $fullName;
     $user['bio'] = $_POST['bio'];
     $user['skills'] = isset($_POST['skills']) ? $_POST['skills'] : [];
 
@@ -26,6 +34,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user['profile_picture'] = $uploadFile; // Update the avatar path
         }
     }
+
+    // Assuming $conn is your database connection
+    // You would update the database with the new first name, last name, and full name:
+    $query = "UPDATE users SET first_name = ?, last_name = ?, name = ?, bio = ?, skills = ? WHERE user_id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("sssssi", $firstName, $lastName, $fullName, $_POST['bio'], implode(',', $_POST['skills']), $userId);
+    $stmt->execute();
 }
 ?>
 
@@ -258,7 +273,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Edit Profile Form (Initially hidden) -->
             <div id="edit-profile-form" class="edit-profile-form" style="display: none;">
                 <form method="POST" enctype="multipart/form-data">
-                    <input type="text" name="name" value="<?php echo htmlspecialchars($user['name']); ?>" placeholder="Name" required>
+                    <input type="text" name="first_name" value="<?php echo htmlspecialchars($user['first_name']); ?>" placeholder="First Name" required>
+                    <input type="text" name="last_name" value="<?php echo htmlspecialchars($user['last_name']); ?>" placeholder="Last Name" required>
                     <textarea name="bio" placeholder="About Me" required><?php echo htmlspecialchars($user['bio']); ?></textarea>
 
                     <label for="skills">Skills (check all that apply):</label>
@@ -283,9 +299,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <form action="inc/uploadAvatar.php" method="POST" enctype="multipart/form-data">
                         <input type="file" name="avatar" accept="image/*">
-                        <button type="submit" name="upload">Save Changes</button>
+                        <button type="submit" name="submit">Upload Avatar</button>
                     </form>
-                    
+
+                    <button type="submit">Save Changes</button>
                 </form>
             </div>
         </div>
@@ -299,3 +316,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </script>
 </body>
 </html>
+
