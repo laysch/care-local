@@ -17,10 +17,10 @@
     <div id="sb-infobox" class="bothdisplay has--desc">
         <input type="checkbox" id="menutoggle" name="menutoggle">
         <div class="ib-toolbar">
-            <a href="/" class="home_button" title="home">
+            <a href="/" class="home_button">
                 <i class="fi fi-rr-home"></i>
             </a>
-            <a href="/ask" class="mail_button" title="ask">
+            <a href="/ask" class="mail_button">
                 <i class="fi fi-rr-envelope"></i>
             </a>
             <form action="/search" method="get" id="searchbar">
