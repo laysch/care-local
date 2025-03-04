@@ -16,17 +16,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user['location'] = $_POST['location']; // Update location from the form
     $user['skills'] = isset($_POST['skills']) ? $_POST['skills'] : [];
 
-     
-    <?php if (isset($row['avatar']) && !empty($row['avatar'])): ?>
-        <img src="<?php echo "img/avatar/" . htmlspecialchars($row['avatar']); ?>" alt="User Avatar">
-    <?php else: ?>
-        <img src="img/default-avatar.png" alt="Default User Avatar">
-    <?php endif; ?>
+    // Handle the file upload for the avatar
+    if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
+        $uploadDir = 'uploads/';
+        $uploadFile = $uploadDir . basename($_FILES['avatar']['name']);
 
-    <form action="inc/uploadAvatar.php" method="POST" enctype="multipart/form-data">
-        <input type="file" name="avatar" accept="image/*">
-        <button type="submit" name="upload">Upload</button>
-    </form>
+        // Check if file is an image
+        if (getimagesize($_FILES['avatar']['tmp_name'])) {
+            move_uploaded_file($_FILES['avatar']['tmp_name'], $uploadFile);
+            $user['profile_picture'] = $uploadFile; // Update the avatar path
+        }
+    }
 }
 ?>
 
