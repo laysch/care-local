@@ -1,8 +1,6 @@
 <?php
 $currentPage = 'My Profile';
 session_start();
-
-// Ensure user is logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
@@ -10,9 +8,8 @@ if (!isset($_SESSION['user_id'])) {
 
 $userId = $_SESSION['user_id'];
 
-require_once 'inc/database.php'; // Database connection
+require_once 'inc/database.php';
 
-// Fetch user data from the database
 $query = "SELECT * FROM users WHERE id = ?";
 $stmt = $conn->prepare($query);
 $stmt->bind_param('i', $userId);
@@ -20,49 +17,57 @@ $stmt->execute();
 $result = $stmt->get_result();
 $row = $result->fetch_assoc();
 
-// Sanitize input function
+// Function to sanitize input
 function sanitizeInput($data) {
     return htmlspecialchars(stripslashes(trim($data)));
 }
 
-// Profile update on form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $updates = [];
     $params = [];
     $types = '';
 
     try {
-        if (!empty($_POST['name'])) {
-            $updates[] = "name = ?";
-            $params[] = sanitizeInput($_POST['name']);
+        if (!empty($_POST['username'])) {
+            $updates[] = "username = ?";
+            $params[] = sanitizeInput($_POST['username']);
             $types .= 's';
         }
+        if (!empty($_POST['email'])) {
+            $updates[] = "email = ?";
+            $params[] = sanitizeInput($_POST['email']);
+            $types .= 's';
+        }
+
+        if (!empty($_POST['password'])) {
+            if ($_POST['password'] !== $_POST['password_confirm']) {
+                throw new Exception("Password and Confirmation do not match!");
+            } else {
+                $hashed_password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+                $updates[] = "password = ?";
+                $params[] = $hashed_password;
+                $types .= 's';
+            }
+        }
+
         if (!empty($_POST['bio'])) {
             $updates[] = "bio = ?";
             $params[] = sanitizeInput($_POST['bio']);
             $types .= 's';
         }
-        if (!empty($_POST['skills'])) {
-            $updates[] = "skills = ?";
-            $params[] = implode(",", $_POST['skills']); // Skills as comma-separated string
+
+        if (!empty($_POST['location'])) {
+            $updates[] = "location = ?";
+            $params[] = sanitizeInput($_POST['location']);
             $types .= 's';
         }
 
-        // Avatar update handling
-        if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
-            $uploadDir = 'uploads/';
-            $uploadFile = $uploadDir . basename($_FILES['avatar']['name']);
-            
-            // Check if the uploaded file is an image
-            if (getimagesize($_FILES['avatar']['tmp_name'])) {
-                move_uploaded_file($_FILES['avatar']['tmp_name'], $uploadFile);
-                $updates[] = "profile_picture = ?";
-                $params[] = $uploadFile; // Updated avatar path
-                $types .= 's';
-            }
+        if (!empty($_POST['skills'])) {
+            $updates[] = "skills = ?";
+            $params[] = sanitizeInput(implode(", ", $_POST['skills']));
+            $types .= 's';
         }
 
-        // If there are updates, execute the query
         if (!empty($updates)) {
             $query = "UPDATE users SET " . implode(', ', $updates) . " WHERE id = ?";
             $params[] = $userId;
@@ -71,17 +76,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $conn->prepare($query);
             $stmt->bind_param($types, ...$params);
             $stmt->execute();
-            header("Location: profile.php"); // Redirect after update
+            header("Refresh:0");
             exit();
         }
     } catch (Exception $e) {
+        error_log("Profile Update Error: " . $e->getMessage());
         echo "<p style='color:red;'>Error: " . htmlspecialchars($e->getMessage()) . "</p>";
     }
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -93,80 +98,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <?php include 'navbar.php'; ?>
 
-    <!-- Profile Section -->
-    <div id="container">
-        <div id="sidebar">
-            <!-- Sidebar with navigation (optional) -->
-            <img src="<?php echo "img/avatar/" . htmlspecialchars($row['profile_picture']); ?>" alt="Profile Picture">
-            <p><?php echo htmlspecialchars($row['name']); ?></p>
-            <nav>
-                <a href="profile.php">My Profile</a>
-                <a href="settings.php">Settings</a>
-                <a href="logout.php">Log Out</a>
-            </nav>
+    <!-- Check if avatar exists -->
+    <?php if (isset($row['avatar']) && !empty($row['avatar'])): ?>
+        <img src="<?php echo "img/avatar/" . htmlspecialchars($row['avatar']); ?>" alt="User Avatar">
+    <?php else: ?>
+        <img src="img/default-avatar.png" alt="Default User Avatar">
+    <?php endif; ?>
+
+    <form action="inc/uploadAvatar.php" method="POST" enctype="multipart/form-data">
+        <input type="file" name="avatar" accept="image/*">
+        <button type="submit" name="upload">Upload</button>
+    </form>
+
+    <form action="profile.php" method="POST">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" value="<?php echo isset($row['username']) ? htmlspecialchars($row['username']) : ''; ?>" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="<?php echo isset($row['email']) ? htmlspecialchars($row['email']) : ''; ?>" required>
+
+        <label for="bio">About Me:</label>
+        <textarea id="bio" name="bio"><?php echo isset($row['bio']) && !empty($row['bio']) ? htmlspecialchars($row['bio']) : 'Please enter information'; ?></textarea>
+
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location" value="<?php echo isset($row['location']) && !empty($row['location']) ? htmlspecialchars($row['location']) : ''; ?>" placeholder="Location">
+
+        <label for="skills">Skills:</label>
+        <div>
+            <?php
+            $allSkills = ["Communication", "Teamwork", "Problem-Solving", "Leadership", "Technical Skills", "Time Management"];
+            $userSkills = isset($row['skills']) ? explode(", ", $row['skills']) : [];
+            foreach ($allSkills as $skill):
+                $checked = in_array($skill, $userSkills) ? 'checked' : '';
+            ?>
+                <label>
+                    <input type="checkbox" name="skills[]" value="<?php echo $skill; ?>" <?php echo $checked; ?>> <?php echo $skill; ?>
+                </label><br>
+            <?php endforeach; ?>
         </div>
 
-        <div id="main-body-wrapper">
-            <!-- Profile Header -->
-            <div class="profile-header">
-                <img src="<?php echo "img/avatar/" . htmlspecialchars($row['profile_picture']); ?>" alt="Profile Picture">
-                <div>
-                    <h1><?php echo htmlspecialchars($row['name']); ?></h1>
-                    <p><?php echo htmlspecialchars($row['bio']); ?></p>
-                    <p>Location: <?php echo htmlspecialchars($row['location']); ?></p>
-                </div>
-            </div>
+        <label for="password">New Password:</label>
+        <input type="password" id="password" name="password" placeholder="***">
 
-            <!-- Bio Section -->
-            <div class="bio">
-                <h2>About Me</h2>
-                <p><?php echo htmlspecialchars($row['bio']); ?></p>
-            </div>
+        <label for="password_confirm">Confirm Password:</label>
+        <input type="password" id="password_confirm" name="password_confirm" placeholder="***">
 
-            <!-- Skills Section -->
-            <div class="skills">
-                <h2>Skills</h2>
-                <ul>
-                    <?php
-                    $skills = explode(",", $row['skills']); // Split skills string into an array
-                    foreach ($skills as $skill):
-                    ?>
-                        <li><?php echo htmlspecialchars($skill); ?></li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-
-            <!-- Edit Profile Form -->
-            <div class="edit-profile-form">
-                <form action="profile.php" method="POST" enctype="multipart/form-data">
-                    <label for="name">Name:</label>
-                    <input type="text" name="name" value="<?php echo htmlspecialchars($row['name']); ?>" required>
-
-                    <label for="bio">Bio:</label>
-                    <textarea name="bio" required><?php echo htmlspecialchars($row['bio']); ?></textarea>
-
-                    <label for="skills">Skills (select all that apply):</label>
-                    <div class="checkbox-group">
-                        <?php
-                        $allSkills = ["Communication", "Teamwork", "Problem-Solving", "Leadership", "Technical Skills", "Time Management"];
-                        foreach ($allSkills as $skill):
-                            $checked = in_array($skill, $skills) ? 'checked' : '';
-                        ?>
-                            <label>
-                                <input type="checkbox" name="skills[]" value="<?php echo $skill; ?>" <?php echo $checked; ?>> <?php echo $skill; ?>
-                            </label>
-                        <?php endforeach; ?>
-                    </div>
-
-                    <!-- Avatar Upload -->
-                    <label for="avatar">Upload Avatar:</label>
-                    <input type="file" name="avatar" accept="image/*">
-
-                    <button type="submit">Update Profile</button>
-                </form>
-            </div>
-        </div>
-    </div>
+        <button type="submit" name="update_profile">Update Profile</button>
+    </form>
 </body>
 </html>
+
 
