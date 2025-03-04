@@ -51,7 +51,7 @@ if (!isset($_SESSION['job_cart']) || empty($_SESSION['job_cart'])) {
             font-style: italic;
             color: #888;
         }
-        .apply-button {
+        .apply-button, .delete-button {
             display: inline-block;
             padding: 10px 20px;
             background-color: #efac9a;
@@ -64,6 +64,12 @@ if (!isset($_SESSION['job_cart']) || empty($_SESSION['job_cart'])) {
         .apply-button:hover {
             background-color: #e89a87;
         }
+        .delete-button {
+            background-color: #ff4d4d; /* Red color for delete button */
+        }
+        .delete-button:hover {
+            background-color: #cc0000; /* Darker red on hover */
+        }
     </style>
 </head>
 <body>
@@ -75,6 +81,11 @@ if (!isset($_SESSION['job_cart']) || empty($_SESSION['job_cart'])) {
                 <div class="job-description"><?php echo htmlspecialchars($job['description']); ?></div>
                 <div class="job-skills">Skills: <?php echo htmlspecialchars($job['skills']); ?></div>
                 <a href="apply.php?job_id=<?php echo $jobId; ?>" class="apply-button">Apply</a>
+                <!-- Delete Button -->
+                <form action="delete-from-cart.php" method="POST" style="display: inline;">
+                    <input type="hidden" name="job_id" value="<?php echo $jobId; ?>">
+                    <button type="submit" class="delete-button">Delete</button>
+                </form>
             </div>
         <?php endforeach; ?>
     </div>
