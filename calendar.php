@@ -64,7 +64,7 @@ foreach ($events as $event) {
         }
 
         #main-body-wrapper {
-            max-width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
             background-color: #cdd8c4;
