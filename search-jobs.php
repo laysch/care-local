@@ -188,8 +188,8 @@ if (!$result) {
                 <div class="job-listings">
                     <?php
                     while ($row = $result->fetch_assoc()) {
-                        echo "<div class='job-box' onclick='window.location.href=\"jobdetails.php?id=" . $row['id'] . "\"'>";
-                        echo "<a href='jobdetails.php?id=" . $row['id'] . "'>" . htmlspecialchars($row['jobtitle']) . "</a><br>";
+                        echo "<div class='job-box' onclick='window.location.href=\"job-details.php?id=" . $row['id'] . "\"'>";
+                        echo "<a href='job-details.php?id=" . $row['id'] . "'>" . htmlspecialchars($row['jobtitle']) . "</a><br>";
                         echo htmlspecialchars($row['location']);
                         echo "</div>";
                     }

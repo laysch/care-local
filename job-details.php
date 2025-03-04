@@ -58,7 +58,7 @@ $job = $result->fetch_assoc();
         <p><strong>Description:</strong> <?php echo nl2br(htmlspecialchars($job['description'])); ?></p>
         <p><strong>Skills Required:</strong> <?php echo htmlspecialchars($job['skills']); ?></p>
         
-        <a href="jobsearch.php" class="btn">Back to Job Listings</a>
+        <a href="search-jobs.php" class="btn">Back to Job Listings</a>
     </div>
 </body>
 </html>
