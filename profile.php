@@ -50,6 +50,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
+        // **Handle Skills Update**
+        if (isset($_POST['skills']) && is_array($_POST['skills'])) {
+            $skills = implode(", ", $_POST['skills']); // Convert array to comma-separated string
+            $updates[] = "skills = ?";
+            $params[] = $skills;
+            $types .= 's';
+        } else {
+            // If no skills are selected, store an empty value
+            $updates[] = "skills = ?";
+            $params[] = "";
+            $types .= 's';
+        }
+
         if (!empty($updates)) {
             $query = "UPDATE users SET " . implode(', ', $updates) . " WHERE id = ?";
             $params[] = $userId;
