@@ -284,10 +284,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php endforeach; ?>
                     </div>
 
-                    <!-- Avatar Upload -->
-                    <input type="file" name="avatar" accept="image/*">
-                    <button type="submit">Save Changes</button>
-                </form>
+                     <!-- Check if avatar exists -->
+    <?php if (isset($row['avatar']) && !empty($row['avatar'])): ?>
+        <img src="<?php echo "img/avatar/" . htmlspecialchars($row['avatar']); ?>" alt="User Avatar">
+    <?php else: ?>
+        <img src="img/default-avatar.png" alt="Default User Avatar">
+    <?php endif; ?>
+
+    <form action="inc/uploadAvatar.php" method="POST" enctype="multipart/form-data">
+        <input type="file" name="avatar" accept="image/*">
+        <button type="submit" name="upload">Upload</button>
+    </form>
             </div>
         </div>
     </div>
