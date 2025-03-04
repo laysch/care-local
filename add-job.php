@@ -81,7 +81,7 @@ function sanitizeInput($data) {
         }
 
         body {
-            background-color: #f9eedd;
+            background-color: #ffffff;
             background-image: url('https://example.com/background.jpg');
             background-attachment: fixed;
             background-repeat: repeat;
