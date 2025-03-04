@@ -34,6 +34,8 @@
                     username VARCHAR(32) NOT NULL,
                     password VARCHAR(255) NOT NULL,
                     avatar VARCHAR(255) NULL
+                    first_name VARCHAR(255) NOT NULL,
+                    last_name VARCHAR(255) NOT NULL
                 )";
                 $conn->query($query);
                 echo "Table '<b>users</b>' created successfully";
