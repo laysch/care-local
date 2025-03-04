@@ -28,7 +28,7 @@ require_once 'inc/database.php';
 
         body {
             font-family: 'Share Tech Mono', monospace;
-            background-color: #f9eedd;
+            background-color: #ffffff;
             color: #5D674C;
             margin: 0;
             padding: 0;
