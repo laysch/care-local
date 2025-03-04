@@ -1,5 +1,7 @@
 <?php 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once 'inc/database.php';
 
 if (isset($_SESSION['user_id'])) {
@@ -13,6 +15,7 @@ if (isset($_SESSION['user_id'])) {
     $result = $stmt->get_result();
     $user = $result->fetch_assoc();
     $avatar = $user['avatar'];
+    $stmt->close();
 
     // unread message count
     $unreadCount = 0;
@@ -24,6 +27,7 @@ if (isset($_SESSION['user_id'])) {
     if ($row = $result->fetch_assoc()) {
         $unreadCount = (int)$row['cnt'];
     }
+    $stmt->close();
 }
 ?>
 <!-- navbar.php -->

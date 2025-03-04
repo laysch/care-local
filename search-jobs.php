@@ -1,3 +1,4 @@
+<?php include 'navbar.php'; ?>
 <?php   
 $currentPage = 'Search Jobs';
 session_start();
@@ -49,6 +50,7 @@ $result = $stmt->get_result();
 if (!$result) {
     die("Query result retrieval failed: " . $stmt->error);
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -149,7 +151,7 @@ if (!$result) {
     </style>
 </head>
 <body>
-    <?php include 'navbar.php'; ?>
+    
     <div class="features-grid">
         <div class="feature-card">
             <fieldset>
