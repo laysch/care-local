@@ -50,8 +50,8 @@ foreach ($events as $event) {
         :root {
             --bodyFontFamily: 'Share Tech Mono', monospace;
             --bodyFontSize: 14px;
-            --backgroundColor: #f9eedd;
-            --bordersColor: #839c99;
+            --backgroundColor: #cdd8c4;
+            --bordersColor: #cdd8c4;
             --bodyTextColor: #839c99;
             --linksColor: #222222;
             --linksHoverColor: #efac9a;
