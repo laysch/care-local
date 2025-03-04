@@ -1,100 +1,30 @@
 <?php
-$currentPage = 'My Profile';
-session_start();
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
-}
+// Sample user data for profile page
+$user = [
+    "name" => "John Doe",
+    "bio" => "A passionate developer with a love for creating innovative solutions. I enjoy working on web and mobile applications.",
+    "location" => "New York, USA",
+    "skills" => ["Communication", "Teamwork", "Problem-Solving"], // Example skills
+    "profile_picture" => "https://example.com/profile.jpg"
+];
 
-$userId = $_SESSION['user_id'];
-
-require_once 'inc/database.php';
-
-$query = "SELECT * FROM users WHERE id = ?";
-$stmt = $conn->prepare($query);
-$stmt->bind_param('i', $userId);
-$stmt->execute();
-$result = $stmt->get_result();
-$row = $result->fetch_assoc();
-
-// Function to sanitize input
-function sanitizeInput($data) {
-    return htmlspecialchars(stripslashes(trim($data)));
-}
-
-// Handle profile updates
+// Check if the form is submitted to update the user info
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $updates = [];
-    $params = [];
-    $types = '';
+    // Update user profile based on submitted form data
+    $user['name'] = $_POST['name'];
+    $user['bio'] = $_POST['bio'];
+    $user['skills'] = isset($_POST['skills']) ? $_POST['skills'] : [];
 
-    try {
-        if (!empty($_POST['username'])) {
-            $updates[] = "username = ?";
-            $params[] = sanitizeInput($_POST['username']);
-            $types .= 's';
-        }
-        if (!empty($_POST['email'])) {
-            $updates[] = "email = ?";
-            $params[] = sanitizeInput($_POST['email']);
-            $types .= 's';
-        }
+    // Handle the file upload for the avatar
+    if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
+        $uploadDir = 'uploads/';
+        $uploadFile = $uploadDir . basename($_FILES['avatar']['name']);
 
-        if (!empty($_POST['password'])) {
-            if ($_POST['password'] !== $_POST['password_confirm']) {
-                throw new Exception("Password and Confirmation do not match!");
-            } else {
-                $hashed_password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-                $updates[] = "password = ?";
-                $params[] = $hashed_password;
-                $types .= 's';
-            }
+        // Check if file is an image
+        if (getimagesize($_FILES['avatar']['tmp_name'])) {
+            move_uploaded_file($_FILES['avatar']['tmp_name'], $uploadFile);
+            $user['profile_picture'] = $uploadFile; // Update the avatar path
         }
-
-        // Handle location update
-        if (isset($_POST['location'])) {
-            $location = sanitizeInput($_POST['location']);
-            if ($location == 'Nassau' || $location == 'Suffolk') {
-                $updates[] = "location = ?";
-                $params[] = $location;
-                $types .= 's';
-            } else {
-                $updates[] = "location = ?";
-                $params[] = "Not Specified";
-                $types .= 's';
-            }
-        }
-
-        // Handle bio update
-        if (!empty($_POST['bio'])) {
-            $bio = sanitizeInput($_POST['bio']);
-            $updates[] = "bio = ?";
-            $params[] = $bio;
-            $types .= 's';
-        }
-
-        // Handle skills update
-        if (isset($_POST['skills'])) {
-            $skills = implode(", ", $_POST['skills']);
-            $updates[] = "skills = ?";
-            $params[] = $skills;
-            $types .= 's';
-        }
-
-        if (!empty($updates)) {
-            $query = "UPDATE users SET " . implode(', ', $updates) . " WHERE id = ?";
-            $params[] = $userId;
-            $types .= 'i';
-
-            $stmt = $conn->prepare($query);
-            $stmt->bind_param($types, ...$params);
-            $stmt->execute();
-            header("Refresh:0");
-            exit();
-        }
-    } catch (Exception $e) {
-        error_log("Profile Update Error: " . $e->getMessage());
-        echo "<p style='color:red;'>Error: " . htmlspecialchars($e->getMessage()) . "</p>";
     }
 }
 ?>
@@ -297,30 +227,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div id="main-body-wrapper">
             <!-- Profile Header -->
             <div class="profile-header">
-                <img src="<?php echo htmlspecialchars($row['profile_picture']); ?>" alt="Profile Picture">
+                <img src="<?php echo htmlspecialchars($user['profile_picture']); ?>" alt="Profile Picture">
                 <div>
-                    <h1><?php echo htmlspecialchars($row['username']); ?></h1>
-                    <p>Location: <?php echo htmlspecialchars($row['location']) ?: 'Not Specified'; ?></p>
+                    <h1><?php echo htmlspecialchars($user['name']); ?></h1>
+                    <p>Location: <?php echo htmlspecialchars($user['location']); ?></p>
                 </div>
             </div>
 
             <!-- Bio Section -->
             <div class="bio">
                 <h2>About Me</h2>
-                <p><?php echo htmlspecialchars($row['bio']) ?: "<please enter bio here>"; ?></p>
+                <p><?php echo htmlspecialchars($user['bio']); ?></p>
             </div>
 
             <!-- Skills Section -->
             <div class="skills">
                 <h2>Skills</h2>
                 <ul>
-                    <?php 
-                    $skills = explode(", ", $row['skills']);
-                    if (empty($skills[0])) { 
-                        // No skills, set default ones
-                        $skills = ["Communication", "Teamwork", "Problem-Solving", "Leadership", "Technical Skills", "Time Management"];
-                    }
-                    foreach ($skills as $skill): ?>
+                    <?php foreach ($user['skills'] as $skill): ?>
                         <li><?php echo htmlspecialchars($skill); ?></li>
                     <?php endforeach; ?>
                 </ul>
@@ -333,32 +257,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <!-- Edit Profile Form (Initially hidden) -->
             <div id="edit-profile-form" class="edit-profile-form" style="display: none;">
-                <form method="POST">
-                    <input type="text" name="username" value="<?php echo htmlspecialchars($row['username']); ?>" placeholder="Username" required>
-                    <input type="email" name="email" value="<?php echo htmlspecialchars($row['email']); ?>" placeholder="Email" required>
-                    
-                    <label for="location">Location</label>
-                    <select name="location">
-                        <option value="Nassau" <?php echo $row['location'] == 'Nassau' ? 'selected' : ''; ?>>Nassau</option>
-                        <option value="Suffolk" <?php echo $row['location'] == 'Suffolk' ? 'selected' : ''; ?>>Suffolk</option>
-                        <option value="Not Specified" <?php echo empty($row['location']) || $row['location'] == 'Not Specified' ? 'selected' : ''; ?>>Not Specified</option>
-                    </select>
-
-                    <label for="bio">About Me</label>
-                    <textarea name="bio"><?php echo htmlspecialchars($row['bio']); ?></textarea>
+                <form method="POST" enctype="multipart/form-data">
+                    <input type="text" name="name" value="<?php echo htmlspecialchars($user['name']); ?>" placeholder="Name" required>
+                    <textarea name="bio" placeholder="About Me" required><?php echo htmlspecialchars($user['bio']); ?></textarea>
 
                     <label for="skills">Skills (check all that apply):</label>
                     <div class="checkbox-group">
                         <?php
                         $allSkills = ["Communication", "Teamwork", "Problem-Solving", "Leadership", "Technical Skills", "Time Management"];
-                        foreach ($allSkills as $skill): 
-                            $checked = in_array($skill, $skills) ? 'checked' : '';
+                        foreach ($allSkills as $skill):
+                            $checked = in_array($skill, $user['skills']) ? 'checked' : '';
                         ?>
-                            <label><input type="checkbox" name="skills[]" value="<?php echo $skill; ?>" <?php echo $checked; ?>> <?php echo $skill; ?></label>
+                            <label>
+                                <input type="checkbox" name="skills[]" value="<?php echo $skill; ?>" <?php echo $checked; ?>> <?php echo $skill; ?>
+                            </label>
                         <?php endforeach; ?>
                     </div>
 
-                    <button type="submit">Save Changes</button>
+                    <!-- Check if avatar exists -->
+                    <?php if (isset($row['avatar']) && !empty($row['avatar'])): ?>
+                        <img src="<?php echo "img/avatar/" . htmlspecialchars($row['avatar']); ?>" alt="User Avatar">
+                    <?php else: ?>
+                        <img src="img/default-avatar.png" alt="Default User Avatar">
+                    <?php endif; ?>
+
+                    <form action="inc/uploadAvatar.php" method="POST" enctype="multipart/form-data">
+                        <input type="file" name="avatar" accept="image/*">
+                        <button type="submit" name="upload">Save Changes</button>
+                    </form>
+                    
                 </form>
             </div>
         </div>
@@ -372,4 +299,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </script>
 </body>
 </html>
-
