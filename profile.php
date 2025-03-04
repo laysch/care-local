@@ -178,6 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
     <div id="container">
+        <?php include('sidebar.php'); ?>
         <!-- Main Body -->
         <div id="main-body-wrapper">
             <!-- Profile Header -->
