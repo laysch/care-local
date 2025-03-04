@@ -234,9 +234,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <!-- Main Body -->
         <div id="main-body-wrapper">
             <!-- Profile Header -->
-            <div class="profile-header">
-                 <!-- Check if avatar exists -->
-    <?php if (isset($row['avatar']) && !empty($row['avatar'])): ?>
+             <?php if (isset($row['avatar']) && !empty($row['avatar'])): ?>
         <img src="<?php echo "img/avatar/" . htmlspecialchars($row['avatar']); ?>" alt="User Avatar">
     <?php else: ?>
         <img src="img/default-avatar.png" alt="Default User Avatar">
@@ -247,7 +245,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <p><?php echo htmlspecialchars($row['email']); ?></p>
                 </div>
             </div>
-
+        
+<form action="inc/uploadAvatar.php" method="POST" enctype="multipart/form-data">
+        <input type="file" name="avatar" accept="image/*">
+        <button type="submit" name="upload">Upload</button>
+    </form>
             <!-- Edit Profile Form -->
             <div class="edit-profile-form">
                 <form method="POST" enctype="multipart/form-data">
@@ -263,11 +265,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label for="password_confirm">Confirm Password:</label>
                     <input type="password" id="password_confirm" name="password_confirm" placeholder="***">
 
-                    
-
-    <form action="inc/uploadAvatar.php" method="POST" enctype="multipart/form-data">
-        <input type="file" name="avatar" accept="image/*">
-        <button type="submit" name="upload">Upload</button>
+                
     </form>
 
                     <button type="submit" name="update_profile">Update Profile</button>
