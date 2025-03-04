@@ -252,36 +252,93 @@ function sanitizeInput($data) {
                 <label for="county">County:</label>
                 <input type="text" id="county" name="county" readonly>
 
-                <label for="skills">Skills:</label>
-                <div class="tags-container" id="tags-container">
-                    <div class="tag" data-tag="Communication">Communication</div>
-                    <div class="tag" data-tag="Teamwork">Teamwork</div>
-                    <div class="tag" data-tag="Problem-Solving">Problem-Solving</div>
-                    <div class="tag" data-tag="Leadership">Leadership</div>
-                    <div class="tag" data-tag="Technical Skills">Technical Skills</div>
-                    <div class="tag" data-tag="Time Management">Time Management</div>
+                <label for="skills">Required Skills:</label>
+                <div class="tags-container">
+                    <?php 
+                    $available_skills = ['Communication', 'Teamwork', 'Problem-Solving', 'Leadership', 'Technical Skills', 'Time Management'];
+                    $selected_skills = isset($_POST['skills']) ? $_POST['skills'] : [];
+                    foreach ($available_skills as $skill) {
+                        $isSelected = in_array($skill, $selected_skills) ? 'selected' : '';
+                        echo "<button type='button' class='tag $isSelected' onclick='toggleSkillSelection(this, \"$skill\")'>$skill</button>";
+                    }
+                    ?>
                 </div>
+
+              
+                <input type="hidden" name="skills" id="skills-input">
 
                 <button type="submit" class="cta-button">Post Job</button>
             </form>
         </div>
     </div>
-
     <script>
-        // Update county field based on selected city
-        function updateCounty() {
-            var city = document.getElementById('city-dropdown').value;
-            var countyInput = document.getElementById('county');
-            // This is a placeholder example for how the county might be derived
-            var counties = {
-                "Amagansett": "Suffolk",
-                "Bay Shore": "Suffolk",
-                "Freeport": "Nassau",
-                "Jericho": "Nassau"
-                // Add additional mappings as needed
-            };
-            countyInput.value = counties[city] || '';
+        const countyMapping = {
+    "Albertson": "Nassau", "Amagansett": "Suffolk", "Amityville": "Suffolk", "Atlantic Beach": "Nassau", "Baldwin": "Nassau", 
+    "Bay Park": "Nassau", "Bay Shore": "Suffolk", "Bayville": "Nassau", "Bellmore": "Nassau", "Bellport": "Suffolk", 
+    "Bellerose": "Queens", "Bethpage": "Nassau", "Blue Point": "Suffolk", "Bohemia": "Suffolk", "Brentwood": "Suffolk", 
+    "Bridgehampton": "Suffolk", "Brookhaven": "Suffolk", "Brookville": "Nassau", "Calverton": "Suffolk", "Carle Place": "Nassau",
+    "Cedarhurst": "Nassau", "Centre Island": "Nassau", "Centreport": "Suffolk", "Cove Neck": "Nassau", "Deer Park": "Suffolk", 
+    "East Hills": "Nassau", "East Hampton": "Suffolk", "East Meadow": "Nassau", "East Moriches": "Suffolk", "East Marion": "Suffolk", 
+    "East Northport": "Suffolk", "East Norwich": "Nassau", "East Port": "Suffolk", "East Quogue": "Suffolk", "East Rockaway": "Nassau", 
+    "East Setauket": "Suffolk", "Elmont": "Nassau", "Farmingdale": "Nassau", "Farmingville": "Suffolk", "Fishers Island": "Suffolk", 
+    "Floral Park": "Queens", "Flower Hill": "Nassau", "Franklin Square": "Nassau", "Freeport": "Nassau", "Garden City": "Nassau", 
+    "Glen Cove": "Nassau", "Glen Head": "Nassau", "Glenwood Landing": "Nassau", "Great Neck": "Nassau", "Great River": "Suffolk", 
+    "Greenlawn": "Suffolk", "Greenport": "Suffolk", "Greenvale": "Nassau", "Harbor Hills": "Nassau", "Harbor Isle": "Nassau", 
+    "Hampton Bays": "Suffolk", "Hauppauge": "Suffolk", "Hempstead": "Nassau", "Herricks": "Nassau", "Hewlett": "Nassau", 
+    "Hicksville": "Nassau", "Holbrook": "Suffolk", "Holtsville": "Suffolk", "Inwood": "Nassau", "Island Park": "Nassau", "Islandia": "Suffolk", 
+    "Jericho": "Nassau", "Kensington": "Nassau", "Kings Park": "Suffolk", "Kings Point": "Nassau", "Lake Grove": "Suffolk", 
+    "Lake Success": "Nassau", "Lakeview": "Nassau", "Laurel": "Suffolk", "Laurel Hollow": "Nassau", "Lattingtown": "Nassau", 
+    "Lawrence": "Nassau", "Levittown": "Nassau", "Lindenhurst": "Suffolk", "Lido Beach": "Nassau", "Locust Valley": "Nassau", 
+    "Long Beach": "Nassau", "Lynbrook": "Nassau", "Malverne": "Nassau", "Manorhaven": "Nassau", "Manorville": "Suffolk", 
+    "Massapequa": "Nassau", "Massapequa Park": "Nassau", "Matinecock": "Nassau", "Mastic": "Suffolk", "Mastic Beach": "Suffolk", 
+    "Melville": "Suffolk", "Merrick": "Nassau", "Miller Place": "Suffolk", "Mineola": "Nassau", "Montauk": "Suffolk", 
+    "Moriches": "Suffolk", "Middle Island": "Suffolk", "Muttontown": "Nassau", "New Cassel": "Nassau", "New Hyde Park": "Nassau", 
+    "New Suffolk": "Suffolk", "North Babylon": "Suffolk", "North Hills": "Nassau", "Northport": "Suffolk", "Oakdale": "Suffolk", 
+    "Oceanside": "Nassau", "Old Bethpage": "Nassau", "Old Brookville": "Nassau", "Old Westbury": "Nassau", "Orient": "Suffolk", 
+    "Oyster Bay": "Nassau", "Patchogue": "Suffolk", "Peconic": "Suffolk", "Plainedge": "Nassau", "Plainview": "Nassau", 
+    "Port Jefferson": "Suffolk", "Port Jefferson Station": "Suffolk", "Point Lookout": "Nassau", "Port Washington": "Nassau", 
+    "Quogue": "Suffolk", "Remsenburg": "Suffolk", "Riverhead": "Suffolk", "Rockville Centre": "Nassau", "Roosevelt": "Nassau", "Roslyn": "Nassau", 
+    "Sag Harbor": "Suffolk", "Sagaponack": "Suffolk", "Saint James": "Suffolk", "Salisbury": "Nassau", "Sands Point": "Nassau", 
+    "Sea Cliff": "Nassau", "Seaford": "Nassau", "Searingtown": "Nassau", "Selden": "Suffolk", "Shelter Island": "Suffolk", 
+    "Shelter Island Heights": "Suffolk", "Shirley": "Suffolk", "Shoreham": "Suffolk", "Smithtown": "Suffolk", "Sound Beach": "Suffolk", 
+    "South Jamesport": "Suffolk", "Southampton": "Suffolk", "Southold": "Suffolk", "Speonk": "Suffolk", "Stony Brook": "Suffolk", 
+    "Strathmore": "Nassau", "Syosset": "Nassau", "Thomaston": "Nassau", "Uniondale": "Nassau", "Valley Stream": "Nassau", "Wading River": "Suffolk", 
+    "Wantagh": "Nassau", "Wainscott": "Suffolk", "Water Mill": "Suffolk", "West Babylon": "Suffolk", "West Hempstead": "Nassau", 
+    "West Islip": "Suffolk", "Westbury": "Nassau", "Wyandanch": "Suffolk", "Woodbury": "Nassau", "Woodmere": "Nassau", "Woodsburgh": "Nassau", 
+    "Yaphank": "Suffolk"
+};
+function updateCounty() {
+            const city = document.getElementById('city-dropdown').value;
+            const countyInput = document.getElementById('county');
+            
+            if (city && countyMapping[city]) {
+                countyInput.value = countyMapping[city];
+            } else {
+                countyInput.value = '';
+            }
         }
+
+        function toggleSkillSelection(button, skill) {
+            button.classList.toggle('selected');
+            let skillsInput = document.getElementById('skills-input');
+            let selectedSkills = skillsInput.value ? skillsInput.value.split(', ') : [];
+
+            if (button.classList.contains('selected')) {
+                if (!selectedSkills.includes(skill)) {
+                    selectedSkills.push(skill);
+                }
+            } else {
+                selectedSkills = selectedSkills.filter(item => item !== skill);
+            }
+
+            skillsInput.value = selectedSkills.join(', ');
+        }
+        document.querySelector("form").addEventListener("submit", function () {
+            let selectedButtons = document.querySelectorAll(".tag.selected");
+            let skillsArray = Array.from(selectedButtons).map(btn => btn.textContent);
+            document.getElementById("skills-input").value = skillsArray.join(', ');
+        });
     </script>
+
 </body>
 </html>
