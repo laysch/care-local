@@ -105,15 +105,15 @@ require_once 'inc/database.php';
         }
 
         .return-button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #5D674C;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            margin-top: 20px;
-        }
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #5D674C; /* Button background color */
+    color: white; /* Text color set to white */
+    text-decoration: none; /* Remove underline */
+    border-radius: 5px; /* Rounded corners */
+    font-weight: bold; /* Bold text */
+    margin-top: 20px; /* Space above the button */
+}
 
         .return-button:hover {
             background-color: #efac9a;
