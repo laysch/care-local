@@ -108,19 +108,22 @@ $job = $result->fetch_assoc();
             margin-bottom: 15px;
         }
 
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #efac9a; /* Olive green background for button */
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 20px;
-            font-weight: bold;
-        }
+        
+.btn {
+    display: block; /* Changed to block */
+    padding: 10px 20px;
+    background-color: #efac9a; /* Olive green background for button */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 20px;
+    font-weight: bold;
+    width: fit-content; /* Ensures the button only takes up as much width as its content */
+}
 
-        .btn-small {
-    display: inline-block;
+
+.btn-small {
+    display: block; /* Changed to block */
     padding: 6px 12px; /* Smaller padding */
     background-color: #efac9a; /* Same background color */
     color: white;
@@ -129,6 +132,7 @@ $job = $result->fetch_assoc();
     margin-top: 20px;
     font-weight: bold;
     font-size: 0.9em; /* Smaller font size */
+    width: fit-content; /* Ensures the button only takes up as much width as its content */
 }
 
         .btn:hover {
@@ -153,9 +157,10 @@ $job = $result->fetch_assoc();
             <p><strong>Description:</strong> <?php echo nl2br(htmlspecialchars($job['description'])); ?></p>
             <p><strong>Skills Required:</strong> <?php echo htmlspecialchars($job['skills']); ?></p>
             
-            <a href="search-jobs.php" class="btn-small">Apply</a>
+            <a href="job-application.php" class="btn-small">Apply</a>
       
             <a href="search-jobs.php" class="btn">Back to Job Listings</a>
+
         </div>
     </div>
 </body>
