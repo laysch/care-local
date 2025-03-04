@@ -41,7 +41,7 @@ $job = $result->fetch_assoc();
         }
 
         body {
-            background-color: #f9eedd;
+            background-color: #fff;
             font-family: 'Share Tech Mono', monospace;
             color: #5D674C;
         }
