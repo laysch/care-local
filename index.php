@@ -1,10 +1,23 @@
 <?php
+
+require_once 'inc/database.php';
+$query = "SELECT * FROM jobs ORDER BY created_at DESC LIMIT 3";
+$results = $conn->query($query);
+$jobs = array();
+if ($results->num_rows > 0) {
+    while ($row = $results->fetch_assoc()) {
+        $jobs[] = ["title" => $row['jobtitle'],
+                "description" => $row['description'],
+                "skills" => $row['skills']
+        ];
+    }
+}
 // Define dynamic content like jobs or other items
-$jobs = [
-    ["title" => "Web Developer", "description" => "We are looking for a skilled web developer to join our team. You will be responsible for building and maintaining our website.", "skills" => "HTML, CSS, JavaScript, React"],
-    ["title" => "Graphic Designer", "description" => "We need a creative graphic designer to create visuals for our marketing campaigns.", "skills" => "Adobe Photoshop, Illustrator, Figma"],
-    ["title" => "Content Writer", "description" => "We are hiring a content writer to create engaging blog posts and articles for our website.", "skills" => "Writing, SEO, Research"]
-];
+//$jobs = [
+//    ["title" => "Web Developer", "description" => "We are looking for a skilled web developer to join our team. You will be responsible for building and maintaining our website.", "skills" => "HTML, CSS, JavaScript, React"],
+//    ["title" => "Graphic Designer", "description" => "We need a creative graphic designer to create visuals for our marketing campaigns.", "skills" => "Adobe Photoshop, Illustrator, Figma"],
+//    ["title" => "Content Writer", "description" => "We are hiring a content writer to create engaging blog posts and articles for our website.", "skills" => "Writing, SEO, Research"]
+//];
 ?>
 
 <!DOCTYPE html>
