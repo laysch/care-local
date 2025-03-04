@@ -263,12 +263,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label for="password_confirm">Confirm Password:</label>
                     <input type="password" id="password_confirm" name="password_confirm" placeholder="***">
 
-                    <!-- Check if avatar exists -->
-    <?php if (isset($row['avatar']) && !empty($row['avatar'])): ?>
-        <img src="<?php echo "img/avatar/" . htmlspecialchars($row['avatar']); ?>" alt="User Avatar">
-    <?php else: ?>
-        <img src="img/default-avatar.png" alt="Default User Avatar">
-    <?php endif; ?>
+                    
 
     <form action="inc/uploadAvatar.php" method="POST" enctype="multipart/form-data">
         <input type="file" name="avatar" accept="image/*">
