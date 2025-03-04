@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="icon" type="image/x-icon" href="/img/favicon.png">
 </head>
 <body>
-    <?php include 'navbar.php'; ?>
+    <?php include 'sidebar.php'; ?>
 
     <!-- Profile Section -->
     <div class="profile-container">
