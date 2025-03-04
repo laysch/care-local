@@ -310,29 +310,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div id="main-body-wrapper">
             <!-- Profile Header -->
             <div class="profile-header">
-                 <!-- Check if avatar exists -->
-    <?php if (isset($row['avatar']) && !empty($row['avatar'])): ?>
-        <img src="<?php echo "img/avatar/" . htmlspecialchars($row['avatar']); ?>" alt="User Avatar">
-    <?php else: ?>
-        <img src="img/default-avatar.png" alt="Default User Avatar">
-    <?php endif; ?>
+                <img src="<?php echo htmlspecialchars($row['profile_picture']); ?>" alt="Profile Picture">
                 <div>
-                    <h1><?php echo htmlspecialchars($user['username']); ?></h1>
-                    <p>Location:; ?></p>
+                    <h1><?php echo htmlspecialchars($row['name']); ?></h1>
+                    <p>Location: <?php echo htmlspecialchars($row['location'] ? $row['location'] : "Not specified"); ?></p>
                 </div>
             </div>
 
             <!-- Bio Section -->
             <div class="bio">
                 <h2>About Me</h2>
-                <p><?php echo htmlspecialchars($user['bio']); ?></p>
+                <p><?php echo htmlspecialchars($row['bio']); ?></p>
             </div>
 
             <!-- Skills Section -->
             <div class="skills">
                 <h2>Skills</h2>
                 <ul>
-                    <?php foreach ($user['skills'] as $skill): ?>
+                    <?php foreach (explode(', ', $row['skills']) as $skill): ?>
                         <li><?php echo htmlspecialchars($skill); ?></li>
                     <?php endforeach; ?>
                 </ul>
@@ -346,15 +341,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Edit Profile Form (Initially hidden) -->
             <div id="edit-profile-form" class="edit-profile-form" style="display: none;">
                 <form method="POST" enctype="multipart/form-data">
-                    <input type="text" name="name" value="<?php echo htmlspecialchars($user['name']); ?>" placeholder="Name" required>
-                    <textarea name="bio" placeholder="About Me" required><?php echo htmlspecialchars($user['bio']); ?></textarea>
+                    <input type="text" name="name" value="<?php echo htmlspecialchars($row['name']); ?>" placeholder="Name" required>
+                    <textarea name="bio" placeholder="About Me" required><?php echo htmlspecialchars($row['bio']); ?></textarea>
+
+                    <!-- Location Dropdown -->
+                    <select name="location">
+                        <option value="">Select a location</option>
+                        <option value="Nassau" <?php echo $row['location'] === 'Nassau' ? 'selected' : ''; ?>>Nassau</option>
+                        <option value="Suffolk" <?php echo $row['location'] === 'Suffolk' ? 'selected' : ''; ?>>Suffolk</option>
+                        <option value="Not Specified" <?php echo $row['location'] === 'Not Specified' ? 'selected' : ''; ?>>Not Specified</option>
+                    </select>
 
                     <label for="skills">Skills (check all that apply):</label>
                     <div class="checkbox-group">
                         <?php
                         $allSkills = ["Communication", "Teamwork", "Problem-Solving", "Leadership", "Technical Skills", "Time Management"];
                         foreach ($allSkills as $skill):
-                            $checked = in_array($skill, $user['skills']) ? 'checked' : '';
+                            $checked = in_array($skill, explode(', ', $row['skills'])) ? 'checked' : '';
                         ?>
                             <label>
                                 <input type="checkbox" name="skills[]" value="<?php echo $skill; ?>" <?php echo $checked; ?>> <?php echo $skill; ?>
@@ -362,18 +365,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php endforeach; ?>
                     </div>
 
-                    <!-- Check if avatar exists -->
-                    <?php if (isset($row['avatar']) && !empty($row['avatar'])): ?>
-                        <img src="<?php echo "img/avatar/" . htmlspecialchars($row['avatar']); ?>" alt="User Avatar">
-                    <?php else: ?>
-                        <img src="img/default-avatar.png" alt="Default User Avatar">
-                    <?php endif; ?>
-
-                   <form action="inc/uploadAvatar.php" method="POST" enctype="multipart/form-data">
-        <input type="file" name="avatar" accept="image/*">
-        <button type="submit" name="upload">Upload</button>
-    </form>
-                            <button type="submit" name="update_profile">Save Changes</button>
+                    <!-- Avatar Upload -->
+                    <input type="file" name="avatar" accept="image/*">
+                    <button type="submit">Save Changes</button>
                 </form>
             </div>
         </div>
