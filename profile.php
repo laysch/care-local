@@ -1,30 +1,100 @@
 <?php
-// Sample user data for profile page
-$user = [
-    "name" => "John Doe",
-    "bio" => "A passionate developer with a love for creating innovative solutions. I enjoy working on web and mobile applications.",
-    "location" => "New York, USA",
-    "skills" => ["Communication", "Teamwork", "Problem-Solving"], // Example skills
-    "profile_picture" => "https://example.com/profile.jpg"
-];
+$currentPage = 'My Profile';
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
 
-// Check if the form is submitted to update the user info
+$userId = $_SESSION['user_id'];
+
+require_once 'inc/database.php';
+
+$query = "SELECT * FROM users WHERE id = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param('i', $userId);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+
+// Function to sanitize input
+function sanitizeInput($data) {
+    return htmlspecialchars(stripslashes(trim($data)));
+}
+
+// Handle profile updates
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Update user profile based on submitted form data
-    $user['name'] = $_POST['name'];
-    $user['bio'] = $_POST['bio'];
-    $user['skills'] = isset($_POST['skills']) ? $_POST['skills'] : [];
+    $updates = [];
+    $params = [];
+    $types = '';
 
-    // Handle the file upload for the avatar
-    if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
-        $uploadDir = 'uploads/';
-        $uploadFile = $uploadDir . basename($_FILES['avatar']['name']);
-
-        // Check if file is an image
-        if (getimagesize($_FILES['avatar']['tmp_name'])) {
-            move_uploaded_file($_FILES['avatar']['tmp_name'], $uploadFile);
-            $user['profile_picture'] = $uploadFile; // Update the avatar path
+    try {
+        if (!empty($_POST['username'])) {
+            $updates[] = "username = ?";
+            $params[] = sanitizeInput($_POST['username']);
+            $types .= 's';
         }
+        if (!empty($_POST['email'])) {
+            $updates[] = "email = ?";
+            $params[] = sanitizeInput($_POST['email']);
+            $types .= 's';
+        }
+
+        if (!empty($_POST['password'])) {
+            if ($_POST['password'] !== $_POST['password_confirm']) {
+                throw new Exception("Password and Confirmation do not match!");
+            } else {
+                $hashed_password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+                $updates[] = "password = ?";
+                $params[] = $hashed_password;
+                $types .= 's';
+            }
+        }
+
+        // Handle location update
+        if (isset($_POST['location'])) {
+            $location = sanitizeInput($_POST['location']);
+            if ($location == 'Nassau' || $location == 'Suffolk') {
+                $updates[] = "location = ?";
+                $params[] = $location;
+                $types .= 's';
+            } else {
+                $updates[] = "location = ?";
+                $params[] = "Not Specified";
+                $types .= 's';
+            }
+        }
+
+        // Handle bio update
+        if (!empty($_POST['bio'])) {
+            $bio = sanitizeInput($_POST['bio']);
+            $updates[] = "bio = ?";
+            $params[] = $bio;
+            $types .= 's';
+        }
+
+        // Handle skills update
+        if (isset($_POST['skills'])) {
+            $skills = implode(", ", $_POST['skills']);
+            $updates[] = "skills = ?";
+            $params[] = $skills;
+            $types .= 's';
+        }
+
+        if (!empty($updates)) {
+            $query = "UPDATE users SET " . implode(', ', $updates) . " WHERE id = ?";
+            $params[] = $userId;
+            $types .= 'i';
+
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param($types, ...$params);
+            $stmt->execute();
+            header("Refresh:0");
+            exit();
+        }
+    } catch (Exception $e) {
+        error_log("Profile Update Error: " . $e->getMessage());
+        echo "<p style='color:red;'>Error: " . htmlspecialchars($e->getMessage()) . "</p>";
     }
 }
 ?>
@@ -227,7 +297,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div id="main-body-wrapper">
             <!-- Profile Header -->
             <div class="profile-header">
-                <img src="<?php echo htmlspecialchars($user['profile_picture']); ?>" alt="Profile Picture">
+                 <!-- Check if avatar exists -->
+    <?php if (isset($row['avatar']) && !empty($row['avatar'])): ?>
+        <img src="<?php echo "img/avatar/" . htmlspecialchars($row['avatar']); ?>" alt="User Avatar">
+    <?php else: ?>
+        <img src="img/default-avatar.png" alt="Default User Avatar">
+    <?php endif; ?>
                 <div>
                     <h1><?php echo htmlspecialchars($user['name']); ?></h1>
                     <p>Location: <?php echo htmlspecialchars($user['location']); ?></p>
@@ -281,11 +356,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <img src="img/default-avatar.png" alt="Default User Avatar">
                     <?php endif; ?>
 
-                    <form action="inc/uploadAvatar.php" method="POST" enctype="multipart/form-data">
-                        <input type="file" name="avatar" accept="image/*">
-                        <button type="submit" name="upload">Save Changes</button>
-                    </form>
-                    
+                   <form action="inc/uploadAvatar.php" method="POST" enctype="multipart/form-data">
+        <input type="file" name="avatar" accept="image/*">
+        <button type="submit" name="upload">Upload</button>
+    </form>
+                            <button type="submit" name="update_profile">Save Changes</button>
                 </form>
             </div>
         </div>
