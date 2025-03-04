@@ -113,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         :root {
             --bodyFontFamily: 'Share Tech Mono', monospace;
             --bodyFontSize: 14px;
-            --backgroundColor: #f9eedd;
+            --backgroundColor: #fff;
             --bordersColor: #839c99;
             --bodyTextColor: #839c99;
             --linksColor: #222222;
@@ -121,8 +121,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             --accentColor: #efac9a;
             --profileBgColor: #fff5e6;
             --cardBgColor: #f4f8f4;
-            --buttonColor: #ff9a8b;
-            --buttonHoverColor: #ff6f61;
+            --buttonColor: #cdd8c4;
+            --buttonHoverColor: #b9cfa6;
         }
 
         body {
