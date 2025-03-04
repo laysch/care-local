@@ -50,26 +50,47 @@ foreach ($events as $event) {
         :root {
             --bodyFontFamily: 'Share Tech Mono', monospace;
             --bodyFontSize: 14px;
-            --backgroundColor: #cdd8c4;
-            --bordersColor: #cdd8c4;
-            --bodyTextColor: #839c99;
+            --backgroundColor: #ffffff; /* White background */
+            --bordersColor: #e0e0e0; /* Light gray borders */
+            --bodyTextColor: #333333; /* Dark gray text */
             --linksColor: #222222;
             --linksHoverColor: #efac9a;
         }
 
         body {
-            background-image: url('https://example.com/background.jpg');
-            background-attachment: fixed;
-            background-repeat: repeat;
+            background-color: var(--backgroundColor); /* White background */
+            font-family: var(--bodyFontFamily);
+            color: var(--bodyTextColor);
+            margin: 0;
+            padding: 0;
+            display: flex;
         }
 
-        #main-body-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
+        /* Sidebar */
+        #sidebar {
+            width: 250px;
+            background-color: #f8f9fa; /* Light gray background */
             padding: 20px;
-            background-color: #cdd8c4;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #sidebar a {
+            color: #000000; /* Black text for sidebar links */
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+
+        #sidebar a:hover {
+            background-color: #e9ecef; /* Light gray hover background */
+        }
+
+        /* Main Body */
+        #main-body-wrapper {
+            flex: 1;
+            padding: 20px;
         }
 
         .hero-section {
@@ -79,38 +100,46 @@ foreach ($events as $event) {
 
         .hero-section h1 {
             font-size: 2.5em;
-            color: var(--headingsColor);
+            color: var(--bodyTextColor);
             margin-bottom: 20px;
         }
 
         table {
             width: 100%;
-            margin: 0px;
             border-collapse: collapse;
-            background-color: var(--postBgColor);
+            background-color: #ffffff; /* White background */
             border: 1px solid var(--bordersColor);
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        tr {
-            height: 100px;
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid var(--bordersColor);
         }
 
         th {
-            border-bottom: 2px dashed var(--bordersColor);
+            background-color: #f8f9fa; /* Light gray header background */
             font-size: 1.2em;
-            color: var(--headingsColor);
+            color: var(--bodyTextColor);
         }
 
         td {
-            padding: 10px;
-            border: 1px solid var(--bordersColor);
+            height: 100px;
+            vertical-align: top;
         }
 
         .dayNumber {
             font-weight: bold;
-            color: var(--headingsColor);
+            color: var(--bodyTextColor);
+            margin-bottom: 10px;
+        }
+
+        .event {
+            font-size: 0.9em;
+            color: #666666; /* Gray event text */
+            margin-top: 5px;
         }
 
         .features-grid {
@@ -118,7 +147,7 @@ foreach ($events as $event) {
         }
 
         .feature-card {
-            background-color: var(--postBgColor);
+            background-color: #ffffff; /* White background */
             border: 1px solid var(--bordersColor);
             border-radius: 10px;
             padding: 20px;
@@ -160,7 +189,7 @@ foreach ($events as $event) {
                                 echo "<td><div class='dayNumber'>" . $counter . "</div>";
                                 if (isset($eventsByDay[$counter])) {
                                     foreach ($eventsByDay[$counter] as $event) {
-                                        echo "<div>" . htmlspecialchars($event['title']) . "<div>";
+                                        echo "<div class='event'>" . htmlspecialchars($event['title']) . "</div>";
                                     }
                                 }
                                 echo "</td>";
