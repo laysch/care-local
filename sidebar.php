@@ -37,7 +37,7 @@ if (isset($_SESSION['user_id'])) {
             </a>
             <a href="/messages.php" class="mail_button">
                 <?php if ($unreadMessageCount > 0) {
-                    echo "<i class=\"fi fi-rr-envelope-open-text\" style=\"color: red;\"></i>";
+                    echo "<i class=\"fi fi-rr-envelope-dot\" style=\"color: red;\"></i>";
                 } else {
                     echo "<i class=\"fi fi-rr-envelope\"></i>";
                 } ?>
