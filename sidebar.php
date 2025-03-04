@@ -1,3 +1,13 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+if (isset($_SESSION['user_id'])) {
+    $userId = $_SESSION['user_id'];
+    $userName = $_SESSION['username'];
+}
+?>
+
 <aside id="sidebar" style="text-align: center;">
     <div id="sb-image">
         <svg id="svg_circle_text" viewBox="0 0 180 180">
@@ -35,14 +45,20 @@
             <div class="desc-inner">Where Local Talent Meets Local Needs</div>
         </div>
         <nav id="menu">
-            <a href="/">Home</a>
-            <a href="/login.php">Login</a>
+            <a href="/">Home</a>            
             <a href="/add-job.php">Add Job</a>
             <a href="/search-jobs.php">Search Jobs</a>
             <a href="/calendar.php">Calendar</a>
             <a href="/helpcenter.php">Help Center</a>
-            <a href="/profile.php">Profile</a>
-            <a href="/logout.php">log out</a>
+            <?php 
+                if (isset($_SESSION['username'])) {
+                    echo "<a href=\"/profile.php\">" . $userName ."'s Profile</a>";
+                    echo "<a href=\"/logout.php\">log out</a>";
+                } else {
+                    echo "<a href=\"/login.php\">Login</a>";
+                }
+            ?>
+            
         </nav>
     </div>
 </aside>
