@@ -84,7 +84,7 @@ foreach ($events as $event) {
         }
 
         #sidebar a:hover {
-            background-color: #e9ecef; /* Light gray hover background */
+            background-color: #fff; /* Light gray hover background */
         }
 
         /* Main Body */
@@ -120,7 +120,7 @@ foreach ($events as $event) {
         }
 
         th {
-            background-color: #f8f9fa; /* Light gray header background */
+            background-color: #cdd8c4;
             font-size: 1.2em;
             color: var(--bodyTextColor);
         }
