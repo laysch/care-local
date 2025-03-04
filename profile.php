@@ -1,12 +1,18 @@
 <?php
-// Sample user data for profile page
-$user = [
-    "name" => "John Doe",
-    "bio" => "<please enter information>",  // Placeholder
-    "location" => "",  // Empty until user fills it
-    "skills" => [],  // Empty until user selects them
-    "profile_picture" => "https://example.com/profile.jpg"  // Placeholder image
-];
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+$userId = $_SESSION['user_id'];
+
+require_once 'inc/database.php';
+
+// Fetch user data from the database
+$sql = "SELECT * FROM users WHERE id = $user_id";
+$result = $conn->query($sql);
+$user = $result->fetch_assoc();
 
 // Check if the form is submitted to update the user info
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -26,6 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user['profile_picture'] = $uploadFile; // Update the avatar path
         }
     }
+
+    // Optionally, update the database with the new information (e.g., name, bio, skills, avatar)
+    $skills = implode(", ", $user['skills']);
+    $update_sql = "UPDATE users SET name = '{$user['name']}', bio = '{$user['bio']}', skills = '$skills', profile_picture = '{$user['profile_picture']}' WHERE id = $user_id";
+    $conn->query($update_sql);
 }
 ?>
 
@@ -42,180 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css' rel='stylesheet'>
     <link href="https://cdn.jsdelivr.net/gh/echxn/yeolithm@master/src/css/pixelution.css" rel="stylesheet">
     <style>
-        :root {
-            --bodyFontFamily: 'Share Tech Mono', monospace;
-            --bodyFontSize: 14px;
-            --backgroundColor: #f9eedd;
-            --bordersColor: #839c99;
-            --bodyTextColor: #839c99;
-            --linksColor: #222222;
-            --linksHoverColor: #efac9a;
-            --accentColor: #efac9a;
-            --profileBgColor: #fff5e6;
-            --cardBgColor: #f4f8f4;
-            --buttonColor: #ff9a8b;
-            --buttonHoverColor: #ff6f61;
-        }
-
-        body {
-            background-color: var(--backgroundColor);
-            font-family: var(--bodyFontFamily);
-            margin: 0;
-            padding: 0;
-        }
-
-        #container {
-            display: flex;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        #sidebar {
-            width: 250px;
-            margin-right: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        #sidebar img {
-            width: 100%;
-            border-radius: 50%;
-            margin-bottom: 10px;
-        }
-
-        #sidebar .title-text {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        #sidebar nav a {
-            display: block;
-            text-decoration: none;
-            color: #333;
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        #sidebar nav a:hover {
-            background-color: var(--accentColor);
-            color: white;
-        }
-
-        #main-body-wrapper {
-            flex: 1;
-            padding: 20px;
-            background-color: #cdd8c4;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .profile-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .profile-header img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            margin-right: 20px;
-        }
-
-        .profile-header h1 {
-            font-size: 2em;
-            margin: 0;
-            color: #333;
-        }
-
-        .profile-header p {
-            font-size: 1.1em;
-            color: var(--bodyTextColor);
-            margin-top: 5px;
-        }
-
-        .bio, .skills {
-            background-color: var(--cardBgColor);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        .bio h2, .skills h2 {
-            font-size: 1.5em;
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        .bio p, .skills ul li {
-            font-size: 1em;
-            color: var(--bodyTextColor);
-            line-height: 1.6;
-        }
-
-        .skills ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .skills ul li {
-            font-size: 1.1em;
-            color: var(--bodyTextColor);
-            margin-bottom: 10px;
-        }
-
-        .edit-button {
-            background-color: var(--buttonColor);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .edit-button:hover {
-            background-color: var(--buttonHoverColor);
-        }
-
-        .edit-profile-form input,
-        .edit-profile-form textarea,
-        .edit-profile-form label {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            border: 1px solid var(--bordersColor);
-        }
-
-        .edit-profile-form button {
-            background-color: var(--buttonColor);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            font-size: 1.1em;
-            cursor: pointer;
-        }
-
-        .edit-profile-form .checkbox-group {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .edit-profile-form .checkbox-group label {
-            margin-right: 20px;
-            font-size: 1em;
-            color: var(--bodyTextColor);
-        }
+        /* Add your CSS styles here */
     </style>
 </head>
 <body>
@@ -230,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <img src="<?php echo htmlspecialchars($user['profile_picture']); ?>" alt="Profile Picture">
                 <div>
                     <h1><?php echo htmlspecialchars($user['name']); ?></h1>
-                    <p>Location: <?php echo htmlspecialchars($user['location'] ?: "<please enter location>"); ?></p>
+                    <p>Location: <?php echo htmlspecialchars($user['location']); ?></p>
                 </div>
             </div>
 
@@ -244,15 +82,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="skills">
                 <h2>Skills</h2>
                 <ul>
-                    <?php
-                    if (empty($user['skills'])) {
-                        echo "<li><em>No skills listed</em></li>";
-                    } else {
-                        foreach ($user['skills'] as $skill):
-                            echo "<li>" . htmlspecialchars($skill) . "</li>";
-                        endforeach;
-                    }
-                    ?>
+                    <?php foreach (explode(", ", $user['skills']) as $skill): ?>
+                        <li><?php echo htmlspecialchars($skill); ?></li>
+                    <?php endforeach; ?>
                 </ul>
             </div>
 
@@ -272,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php
                         $allSkills = ["Communication", "Teamwork", "Problem-Solving", "Leadership", "Technical Skills", "Time Management"];
                         foreach ($allSkills as $skill):
-                            $checked = in_array($skill, $user['skills']) ? 'checked' : '';
+                            $checked = in_array($skill, explode(", ", $user['skills'])) ? 'checked' : '';
                         ?>
                             <label>
                                 <input type="checkbox" name="skills[]" value="<?php echo $skill; ?>" <?php echo $checked; ?>> <?php echo $skill; ?>
@@ -280,8 +112,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <?php endforeach; ?>
                     </div>
 
+                    <!-- Check if avatar exists -->
+                    <img src="<?php echo htmlspecialchars($user['profile_picture']); ?>" alt="User Avatar">
+
                     <input type="file" name="avatar" accept="image/*">
-                    <button type="submit" name="upload">Save Changes</button>
+                    <button type="submit">Save Changes</button>
                 </form>
             </div>
         </div>
@@ -295,6 +130,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </script>
 </body>
 </html>
-`
 
+<?php
+// Close the database connection
+$conn->close();
+?>
 
