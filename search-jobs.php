@@ -66,67 +66,70 @@ $userSkills = isset($_SESSION['user_skills']) ? $_SESSION['user_skills'] : [];
     <script src="script.js" defer></script>
     <link rel="icon" type="image/x-icon" href="/img/favicon.png">
     <style>
-        .job-box {
-            background-color: #F3E9B5; /* Light yellow background */
-            color: #5D674C; /* Olive green text */
-            padding: 15px;
-            border-radius: 5px;
-            margin: 10px;
-            border: 2px solid #D1D79D;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            text-align: center;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F7F7F7;
+            color: #5D674C;
+            margin: 0;
         }
-
-        .job-box:hover {
-            background-color: #FCEADE; /* Soft peach on hover */
+        .features-grid {
+            display: flex;
+            justify-content: center;
+            padding: 20px;
         }
-
-        .job-box a {
-            text-decoration: none;
-            color: #5D674C; /* Olive green text */
+        .feature-card {
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            padding: 20px;
+        }
+        fieldset {
+            border: none;
+        }
+        legend {
+            font-size: 24px;
+            color: #5D674C;
             font-weight: bold;
         }
-
-        .job-box a:hover {
-            color: #FCEADE; /* Soft peach on hover for contrast */
+        .filter-section {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
-
+        .filter-section form {
+            width: 100%;
+        }
         .dropdown {
             position: relative;
-            display: inline-block;
-            width: 100px; 
-        }
-
-        .dropdown-toggle {
-            border: 1px solid #D1D79D;
-            padding: 12px;
             width: 100%;
+        }
+        .dropdown-toggle {
+            padding: 12px;
+            background-color: #5D674C;
+            color: white;
+            border: 1px solid #D1D79D;
+            border-radius: 6px;
             text-align: left;
             cursor: pointer;
-            border-radius: 6px;
-            font-weight: bold;
             transition: background-color 0.3s;
+            font-weight: bold;
         }
-
         .dropdown-toggle:hover {
-            background-color: #e2e6ea;
+            background-color: #8C7B5E;
         }
-
         .dropdown-menu {
             display: none;
             position: absolute;
-            background-color: #D1D79D;
-            border: 1px solidrgb(103, 161, 137);
+            background-color: #FCEADE;
+            border: 1px solid #D1D79D;
             width: 100%;
             max-height: 220px;
             overflow-y: auto;
             border-radius: 6px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            transition: opacity 0.3s ease-in-out;
             padding: 8px;
         }
-
         .dropdown-menu label {
             display: flex;
             align-items: center;
@@ -136,18 +139,45 @@ $userSkills = isset($_SESSION['user_skills']) ? $_SESSION['user_skills'] : [];
             border-radius: 4px;
             transition: background-color 0.2s;
         }
-
         .dropdown-menu label:hover {
-            background-color: #f3e9b5;
+            background-color: #F3E9B5;
         }
-
         .dropdown-menu input[type="checkbox"] {
             margin-right: 10px;
         }
-
-        .show {
-            display: block;
-            opacity: 1;
+        .job-box {
+            background-color: #F3E9B5;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border: 2px solid #D1D79D;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        .job-box:hover {
+            background-color: #FCEADE;
+        }
+        .job-box a {
+            text-decoration: none;
+            color: #5D674C;
+            font-weight: bold;
+        }
+        .job-box a:hover {
+            color: #FCEADE;
+        }
+        .btn {
+            background-color: #5D674C;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px;
+        }
+        .btn:hover {
+            background-color: #8C7B5E;
         }
     </style>
 </head>
@@ -173,7 +203,7 @@ $userSkills = isset($_SESSION['user_skills']) ? $_SESSION['user_skills'] : [];
                             </div>
                         </div>
                         <div class="dropdown">
-                            <div class="dropdown-toggle" onclick="toggleCounty()"><label for="county">County:</label></div>
+                            <div class="dropdown-toggle" onclick="toggleCounty()">County</div>
                             <div class="dropdown-menu" id="dropdown-county">
                                 <label><input type="checkbox" name="county[]" value="Nassau">Nassau</label>
                                 <label><input type="checkbox" name="county[]" value="Suffolk">Suffolk</label>
@@ -189,14 +219,10 @@ $userSkills = isset($_SESSION['user_skills']) ? $_SESSION['user_skills'] : [];
                 <div class="job-listings">
                     <?php
                     while ($row = $result->fetch_assoc()) {
-                        // Get the job's required skills (assuming the skills are stored as a comma-separated string in the 'skills' field)
-                        $jobSkills = explode(',', $row['skills']); // This splits the string of skills into an array
+                        $jobSkills = explode(',', $row['skills']);
+                        $commonSkills = array_intersect($userSkills, $jobSkills);
+                        $matchPercentage = (count($commonSkills) / count($jobSkills)) * 100;
 
-                        // Calculate the match percentage
-                        $commonSkills = array_intersect($userSkills, $jobSkills); // Find common skills
-                        $matchPercentage = (count($commonSkills) / count($jobSkills)) * 100; // Calculate percentage match
-
-                        // Display the job box with the match percentage
                         echo "<div class='job-box' onclick='window.location.href=\"job-details.php?id=" . $row['id'] . "\"'>";
                         echo "<a href='job-details.php?id=" . $row['id'] . "'>" . htmlspecialchars($row['jobtitle']) . "</a><br>";
                         echo htmlspecialchars($row['location']) . "<br>";
@@ -225,10 +251,9 @@ $userSkills = isset($_SESSION['user_skills']) ? $_SESSION['user_skills'] : [];
         }
 
         function removeFilters() {
-            window.location.href = "search-jobs.php"; // Reload page to reset filters
+            window.location.href = "search-jobs.php"; 
         }
 
-        // Close dropdown if user clicks outside
         window.addEventListener("click", function (event) {
             if (!event.target.closest(".dropdown")) {
                 var dropdown = document.getElementById("dropdown-skills");
@@ -244,3 +269,4 @@ $userSkills = isset($_SESSION['user_skills']) ? $_SESSION['user_skills'] : [];
     </script>
 </body>
 </html>
+
