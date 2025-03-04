@@ -158,7 +158,13 @@ $job = $result->fetch_assoc();
             <p>Below are the details for the selected job posting.</p>
         </section>
 
-       <div class="button-container">
+         <div class="job-details">
+            <h1><?php echo htmlspecialchars($job['jobtitle']); ?></h1>
+            <p><strong>Location:</strong> <?php echo htmlspecialchars($job['location']); ?></p>
+            <p><strong>Description:</strong> <?php echo nl2br(htmlspecialchars($job['description'])); ?></p>
+            <p><strong>Skills Required:</strong> <?php echo htmlspecialchars($job['skills']); ?></p>
+
+            <div class="button-container">
                 <!-- Add to Job Cart Form -->
                 <form action="add-to-cart.php" method="POST" style="display: inline;">
                     <input type="hidden" name="job_id" value="<?php echo $job['id']; ?>">
