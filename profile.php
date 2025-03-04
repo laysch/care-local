@@ -3,9 +3,9 @@
 $user = [
     "first_name" => "John",
     "last_name" => "Doe",
-    "bio" => "A passionate developer with a love for creating innovative solutions. I enjoy working on web and mobile applications.",
-    "location" => "New York, USA",
-    "skills" => ["Communication", "Teamwork", "Problem-Solving"], // Example skills
+    "bio" => "<please enter a bio>.",
+    "location" => "<please enter a location>",
+    "skills" => ["Communication", "Teamwork", "Problem-Solving"], 
     "profile_picture" => "https://example.com/profile.jpg"
 ];
 
@@ -14,14 +14,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Get the first and last name from the POST data
     $firstName = trim($_POST['first_name']);
     $lastName = trim($_POST['last_name']);
-    $fullName = $firstName . ' ' . $lastName; // Combine both first and last names
+    
+    // Combine first and last names to form the full name
+    $fullName = $firstName . ' ' . $lastName;
 
     // Update user profile based on submitted form data
     $user['first_name'] = $firstName;
     $user['last_name'] = $lastName;
-    $user['name'] = $fullName;
+    $user['full_name'] = $fullName; // Store the full name
     $user['bio'] = $_POST['bio'];
     $user['skills'] = isset($_POST['skills']) ? $_POST['skills'] : [];
+
 
     // Handle the file upload for the avatar
     if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
