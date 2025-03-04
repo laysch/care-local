@@ -234,12 +234,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <!-- Main Body -->
         <div id="main-body-wrapper">
             <!-- Profile Header -->
-             <?php if (isset($row['avatar']) && !empty($row['avatar'])): ?>
-        <img src="<?php echo "img/avatar/" . htmlspecialchars($row['avatar']); ?>" alt="User Avatar">
-    <?php else: ?>
-        <img src="img/default-avatar.png" alt="Default User Avatar">
-    <?php endif; ?>
-
+            <div class="profile-header">
+                <!-- Check if avatar exists -->
+                <?php if (isset($row['avatar']) && !empty($row['avatar'])): ?>
+                    <img src="<?php echo "img/avatar/" . htmlspecialchars($row['avatar']); ?>" alt="User Avatar">
+                <?php else: ?>
+                    <img src="img/default-avatar.png" alt="Default User Avatar">
+                <?php endif; ?>
                 <div>
                     <h1><?php echo htmlspecialchars($row['username']); ?></h1>
                     <p><?php echo htmlspecialchars($row['email']); ?></p>
