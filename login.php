@@ -68,7 +68,7 @@ if (isset($_POST['login'])) {
     <div class="container">
         <div class="left">
             <h2>Sign in to CareLocal</h2>
-            <?php if (isset($error)) echo "<p style='color:red;'>htmlspecialchars($error)</p>"; ?>
+            <?php if (isset($error)) echo "<p style='color:red;'>$error</p>"; ?>
             <form method="post">
                 <div class="form-group">
                     <label for="email">Email:</label>
