@@ -88,6 +88,7 @@ if (isset($_POST['register'])) {
             <p>Already have an account? <a href="login.php">Login Here!</a></p>
         </div>
         <div class="right">
+            <img src="img/favicon.png" alt="CareLocal Logo" style="width: 100px; margin-bottom: 10px;">
             <h1>CareLocal</h1>
             <p>Where Local Talent Meets Local Needs</p>
         </div>
