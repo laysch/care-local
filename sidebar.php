@@ -8,9 +8,9 @@ include 'inc/func.php';
 if (isset($_SESSION['user_id'])) {
     $userId = $_SESSION['user_id'];
     $userName = $_SESSION['username'];
-}
 
-$unreadMessageCount = getUnreadMessagesCount($conn, $userId);
+    $unreadMessageCount = getUnreadMessagesCount($conn, $userId);
+}
 ?>
 
 <aside id="sidebar" style="text-align: center;">
