@@ -38,7 +38,7 @@
             <a href="/">Home</a>
             <a href="/login">Login</a>
             <a href="/add-job.php">Add Job</a>
-            <a href="/adds">Search Job</a>
+            <a href="/search-jobs.php">Search Jobs</a>
             <a href="/calendar">Calendar</a>
             <a href="/helpcenter.php">Help Center</a>
             <a href="/profile.php">Profile</a>
