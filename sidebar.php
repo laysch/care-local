@@ -5,6 +5,8 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once 'inc/database.php';
 include 'inc/func.php';
 
+$unreadMessageCount = 0;
+
 if (isset($_SESSION['user_id'])) {
     $userId = $_SESSION['user_id'];
     $userName = $_SESSION['username'];
