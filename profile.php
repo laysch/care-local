@@ -1,4 +1,71 @@
 <?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+$userId = $_SESSION['user_id'];
+
+require_once 'inc/database.php';
+
+$query = "SELECT * FROM users WHERE id = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param('i', $userId);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+
+// Function to sanitize input
+function sanitizeInput($data) {
+    return htmlspecialchars(stripslashes(trim($data)));
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $updates = [];
+    $params = [];
+    $types = '';
+
+    try {
+        if (!empty($_POST['username'])) {
+            $updates[] = "username = ?";
+            $params[] = sanitizeInput($_POST['username']);
+            $types .= 's';
+        }
+        if (!empty($_POST['email'])) {
+            $updates[] = "email = ?";
+            $params[] = sanitizeInput($_POST['email']);
+            $types .= 's';
+        }
+
+        if (!empty($_POST['password'])) {
+            if ($_POST['password'] !== $_POST['password_confirm']) {
+                throw new Exception("Password and Confirmation do not match!");
+            } else {
+                $hashed_password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+                $updates[] = "password = ?";
+                $params[] = $hashed_password;
+                $types .= 's';
+            }
+        }
+
+        if (!empty($updates)) {
+            $query = "UPDATE users SET " . implode(', ', $updates) . " WHERE id = ?";
+            $params[] = $userId;
+            $types .= 'i';
+
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param($types, ...$params);
+            $stmt->execute();
+            header("Refresh:0");
+            exit();
+        }
+    } catch (Exception $e) {
+        error_log("Profile Update Error: " . $e->getMessage());
+        echo "<p style='color:red;'>Error: " . htmlspecialchars($e->getMessage()) . "</p>";
+    }
+}
+?>
 // Sample user data for profile page
 $user = [
     "name" => "John Doe",
