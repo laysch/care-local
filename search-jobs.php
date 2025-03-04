@@ -1,4 +1,4 @@
-<?php include 'navbar.php'; ?>
+<?php include 'navbar.php'; ?> 
 <?php   
 $currentPage = 'Search Jobs';
 session_start();
@@ -51,6 +51,9 @@ if (!$result) {
     die("Query result retrieval failed: " . $stmt->error);
 }
 
+// Fetch the user's skills (assuming they are stored in the session)
+$userSkills = isset($_SESSION['user_skills']) ? $_SESSION['user_skills'] : [];
+
 ?>
 
 <!DOCTYPE html>
@@ -96,7 +99,6 @@ if (!$result) {
         }
 
         .dropdown-toggle {
-            /*background-color: #5D674C; */
             border: 1px solid #D1D79D;
             padding: 12px;
             width: 100%;
@@ -147,7 +149,6 @@ if (!$result) {
             display: block;
             opacity: 1;
         }
-
     </style>
 </head>
 <body>
@@ -188,9 +189,18 @@ if (!$result) {
                 <div class="job-listings">
                     <?php
                     while ($row = $result->fetch_assoc()) {
+                        // Get the job's required skills (assuming the skills are stored as a comma-separated string in the 'skills' field)
+                        $jobSkills = explode(',', $row['skills']); // This splits the string of skills into an array
+
+                        // Calculate the match percentage
+                        $commonSkills = array_intersect($userSkills, $jobSkills); // Find common skills
+                        $matchPercentage = (count($commonSkills) / count($jobSkills)) * 100; // Calculate percentage match
+
+                        // Display the job box with the match percentage
                         echo "<div class='job-box' onclick='window.location.href=\"job-details.php?id=" . $row['id'] . "\"'>";
                         echo "<a href='job-details.php?id=" . $row['id'] . "'>" . htmlspecialchars($row['jobtitle']) . "</a><br>";
-                        echo htmlspecialchars($row['location']);
+                        echo htmlspecialchars($row['location']) . "<br>";
+                        echo "<span style='font-size: 14px; color: #5D674C;'>Match: " . round($matchPercentage, 2) . "%</span>";
                         echo "</div>";
                     }
                     ?>
