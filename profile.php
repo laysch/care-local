@@ -10,6 +10,7 @@ $userId = $_SESSION['user_id'];
 
 require_once 'inc/database.php';
 
+// Fetch user data from the database
 $query = "SELECT * FROM users WHERE id = ?";
 $stmt = $conn->prepare($query);
 $stmt->bind_param('i', $userId);
@@ -22,24 +23,27 @@ function sanitizeInput($data) {
     return htmlspecialchars(stripslashes(trim($data)));
 }
 
-// Handle profile updates
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $updates = [];
     $params = [];
     $types = '';
 
     try {
+        // Update username if provided
         if (!empty($_POST['username'])) {
             $updates[] = "username = ?";
             $params[] = sanitizeInput($_POST['username']);
             $types .= 's';
         }
+
+        // Update email if provided
         if (!empty($_POST['email'])) {
             $updates[] = "email = ?";
             $params[] = sanitizeInput($_POST['email']);
             $types .= 's';
         }
 
+        // Update password if provided
         if (!empty($_POST['password'])) {
             if ($_POST['password'] !== $_POST['password_confirm']) {
                 throw new Exception("Password and Confirmation do not match!");
@@ -51,36 +55,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // Handle location update
-        if (isset($_POST['location'])) {
-            $location = sanitizeInput($_POST['location']);
-            if ($location == 'Nassau' || $location == 'Suffolk') {
-                $updates[] = "location = ?";
-                $params[] = $location;
+        // Update name, bio, location, and skills
+        $name = sanitizeInput($_POST['name']);
+        $bio = sanitizeInput($_POST['bio']);
+        $location = sanitizeInput($_POST['location']);
+        $skills = isset($_POST['skills']) ? $_POST['skills'] : [];
+
+        $updates[] = "name = ?";
+        $params[] = $name;
+        $types .= 's';
+
+        $updates[] = "bio = ?";
+        $params[] = $bio;
+        $types .= 's';
+
+        $updates[] = "location = ?";
+        $params[] = $location;
+        $types .= 's';
+
+        $updates[] = "skills = ?";
+        $params[] = implode(', ', $skills);
+        $types .= 's';
+
+        // Handle avatar upload
+        if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
+            $uploadDir = 'uploads/';
+            $uploadFile = $uploadDir . basename($_FILES['avatar']['name']);
+
+            // Check if file is an image
+            if (getimagesize($_FILES['avatar']['tmp_name'])) {
+                move_uploaded_file($_FILES['avatar']['tmp_name'], $uploadFile);
+                $updates[] = "profile_picture = ?";
+                $params[] = $uploadFile;
                 $types .= 's';
             } else {
-                $updates[] = "location = ?";
-                $params[] = "Not Specified";
-                $types .= 's';
+                throw new Exception("Uploaded file is not a valid image.");
             }
         }
 
-        // Handle bio update
-        if (!empty($_POST['bio'])) {
-            $bio = sanitizeInput($_POST['bio']);
-            $updates[] = "bio = ?";
-            $params[] = $bio;
-            $types .= 's';
-        }
-
-        // Handle skills update
-        if (isset($_POST['skills'])) {
-            $skills = implode(", ", $_POST['skills']);
-            $updates[] = "skills = ?";
-            $params[] = $skills;
-            $types .= 's';
-        }
-
+        // Update the database
         if (!empty($updates)) {
             $query = "UPDATE users SET " . implode(', ', $updates) . " WHERE id = ?";
             $params[] = $userId;
