@@ -45,7 +45,7 @@ $job = $_SESSION['job_cart'][$jobId];
 
         body {
             font-family: 'Share Tech Mono', monospace;
-            background-color: #f9eedd;
+            background-color: #fff;
             color: #5D674C;
             margin: 0;
             padding: 0;
@@ -55,9 +55,9 @@ $job = $_SESSION['job_cart'][$jobId];
         /* Sidebar */
         #sidebar {
             width: 250px;
-            background-color: #cdd8c4;
+            background-color: #fff;
             padding: 20px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            
         }
 
         /* Main Content */
@@ -69,7 +69,7 @@ $job = $_SESSION['job_cart'][$jobId];
         .apply-container {
             max-width: 800px;
             margin: 0 auto;
-            background: #fff;
+            background: #cdd8c4;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
