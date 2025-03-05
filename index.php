@@ -193,7 +193,7 @@ if ($latestJobsResult->num_rows > 0) {
                 </div>
             </section>
 
-            <!-- Recommended Jobs -->
+           <!-- Recommended Jobs -->
 <section class="job-feed">
     <h2>Recommended Jobs for <?php echo htmlspecialchars($userName); ?></h2>
     <?php foreach ($recommendedJobs as $job): ?>
@@ -217,8 +217,6 @@ if ($latestJobsResult->num_rows > 0) {
         </div>
     <?php endforeach; ?>
 </section>
-        </div>
-    </div>
 
     <!-- Scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
