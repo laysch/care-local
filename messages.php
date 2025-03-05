@@ -137,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message_id'])) {
         <!-- Main Body -->
         <div id="main-body-wrapper">
             <div class="messages-container">
-                <h1>Mailbox</h1>
+                <h1>Inbox</h1>
                 <div class="messages-section">
                     <div class="messages-header">Received Messages</div>
                     <?php if (empty($receivedMessages)) {

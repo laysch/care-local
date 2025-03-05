@@ -65,6 +65,7 @@ if (isset($_SESSION['user_id'])) {
             <?php 
                 if (isset($_SESSION['username'])) {
                     echo "<a href=\"/profile.php\">" . $userName ."'s Profile</a>";
+                    echo "<a href=\"/messages.php\">Inbox</a>";
                     echo "<a href=\"/logout.php\">log out</a>";
                 } else {
                     echo "<a href=\"/login.php\">Login</a>";
