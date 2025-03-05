@@ -65,7 +65,7 @@
             try {
                 $query = "CREATE TABLE events (
                     id INT AUTO_INCREMENT PRIMARY KEY,
-                    job_id INT NOT NULL,
+                    job_id INT UNSIGNED NOT NULL,
                     title VARCHAR(255) NOT NULL,
                     date DATETIME NOT NULL,
                     location VARCHAR(255),
