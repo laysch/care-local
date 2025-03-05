@@ -9,26 +9,37 @@ if (!isset($_SESSION['username'])) {
 
 require_once 'inc/database.php';
 
-$year = date('Y');
-$monthNum = date('n');
-$monthName = date('F');
-$monthDays = cal_days_in_month(CAL_GREGORIAN, $monthNum, $year);
-$firstDate = "$year-$monthNum-01";
-$lastDate = "$year-$monthNum-$monthDays";
-$firstDay = date('w', strtotime($firstDate));
+$month = isset($_GET['month']) ? (int)$_GET['month'] : date('m');
+$year = isset($_GET['year']) ? (int)$_GET['year'] : date('Y');
+if ($month < 1) {
+    $month = 12;
+    $year--;
+} elseif ($month > 12) {
+    $month = 1;
+    $year++;
+}
+$firstDayOfMonth = strtotime("$year-$month-01");
+$totalDays = date('t', $firstDayOfMonth);
+$monthName = date('F', $firstDayOfMonth);
+$firstDayWeek = date('w', $firstDayOfMonth);
 
-$stmt = $conn->prepare("SELECT * FROM events WHERE DATE(date) BETWEEN ? AND ?");
-$stmt->bind_param("ss", $firstDate, $lastDate);
+$currentDay = (int)date('d');
+$currentMonth = (int)date('m');
+$currentYear = (int)date('Y');
+
+$events = [];
+$sql = "SELECT date, title FROM events WHERE MONTH(date) = ? AND YEAR(date) = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ii", $month, $year);
 $stmt->execute();
 $result = $stmt->get_result();
-$events = $result->fetch_all(MYSQLI_ASSOC);
-$stmt->close();
 
-$eventsByDay = [];
-foreach ($events as $event) {
-    $day = date('j', strtotime($event['date']));
-    $eventsByDay[$day][] = $event;
+while ($row = $result->fetch_assoc()) {
+    $day = (int)date('d', strtotime($row['date']));
+    $events[$day][] = $row['title'];
 }
+
+$stmt->close();
 ?>
 
 <!DOCTYPE html>
@@ -44,6 +55,7 @@ foreach ($events as $event) {
     <link href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css' rel='stylesheet'>
     <link href="https://cdn.jsdelivr.net/gh/echxn/yeolithm@master/src/css/pixelution.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style/calendar.css">
     <link rel="icon" type="image/x-icon" href="/img/favicon.png">
     <script src="script.js" defer></script>
     <style>
@@ -93,18 +105,6 @@ foreach ($events as $event) {
             padding: 20px;
         }
 
-        .hero-section {
-            background-color: #cdd8c4;
-            text-align: center;
-            padding: 50px 20px;
-        }
-
-        .hero-section h1 {
-            font-size: 2.5em;
-            color: var(--bodyTextColor);
-            margin-bottom: 20px;
-        }
-
         table {
             width: 100%;
             border-collapse: collapse;
@@ -145,16 +145,12 @@ foreach ($events as $event) {
             color: #666666; /* Gray event text */
             margin-top: 5px;
         }
-
-        .features-grid {
-            margin-top: 30px;
-        }
-
-        .feature-card {
-            background-color: #ffffff; /* White background */
-            border: 1px solid var(--bordersColor);
-            border-radius: 10px;
+        #main-body-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
             padding: 20px;
+            background-color: #cdd8c4;
+            border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
     </style>
@@ -166,56 +162,90 @@ foreach ($events as $event) {
 
         <!-- Main Body -->
         <div id="main-body-wrapper">
-            <section class="hero-section">
-                <h1><?php echo $monthName . " " . $year; ?></h1>
-            </section>
-
-            <div class="features-grid">
-                <div class="feature-card">
-                    <table>
-                        <tr style="line-height: 40px">
-                            <th>Sunday</th>
-                            <th>Monday</th>
-                            <th>Tuesday</th>
-                            <th>Wednesday</th>
-                            <th>Thursday</th>
-                            <th>Friday</th>
-                            <th>Saturday</th>
+            <div id="calendar-container">
+                <h1>            
+                    <span id="month-display" onclick="toggleMonthDropdown()"><?php echo $monthName; ?></span>
+                    <span id="year-display" onclick="toggleYearDropdown()"><?php echo $year; ?></span>
+                </h1>            
+                <div class="calendar-navigation">
+                    <button onclick="changeMonth(<?php echo $month - 1; ?>, <?php echo $year; ?>)">Previous</button>
+                    <button onclick="resetToCurrentMonth()">Today</button>
+                    <button onclick="changeMonth(<?php echo $month + 1; ?>, <?php echo $year; ?>)">Next</button>
+                </div>
+                <select id="month-dropdown" class="hidden" onchange="updateMonthYear()">
+                    <?php
+                    for ($i = 1; $i <= 12; $i++) {
+                        $selected = ($i == $month) ? "selected" : "";
+                        echo "<option value='$i' $selected>" . date('F', mktime(0, 0, 0, $i, 1)) . "</option>";
+                    }
+                    ?>
+                </select>
+                <select id="year-dropdown" class="hidden" onchange="updateMonthYear()">
+                    <?php
+                    for ($i = date('Y') - 10; $i <= date('Y') + 10; $i++) {
+                        $selected = ($i == $year) ? "selected" : "";
+                        echo "<option value='$i' $selected>$i</option>";
+                    }
+                    ?>
+                </select>
+                <table class="calendar-table">
+                    <thread>
+                        <tr>
+                            <th>Sun</th>
+                            <th>Mon</th>
+                            <th>Tue</th>
+                            <th>Wed</th>
+                            <th>Thu</th>
+                            <th>Fri</th>
+                            <th>Sat</th>
                         </tr>
-                        <?php                
-                        $totalCells = ceil(($firstDay + $monthDays) / 7) * 7;
-                        $counter = 1;
-                        echo "<tr>";
-                        for ($i = 0; $i < $totalCells; $i++) {
-                            if ($i < $firstDay || $counter > $monthDays) {
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <?php
+                            $dayCounter = 1;
+                            for ($i = 0; $i < $firstDayWeek; $i++) {
                                 echo "<td></td>";
-                            } else {
-                                echo "<td><div class='dayNumber'>" . $counter . "</div>";
-                                if (isset($eventsByDay[$counter])) {
-                                    foreach ($eventsByDay[$counter] as $event) {
-                                        echo "<div class='event'>" . htmlspecialchars($event['title']) . "</div>";
+                            }
+
+                            for ($day = 1; $day <= $totalDays; $day++) {
+                                $isToday = ($day == $currentDay && $month == $currentMonth && $year == $currentYear);
+                                $highlightClass = $isToday ? "highlight-day" : "";
+            
+                                echo "<td class='$highlightClass'>";
+                                echo "<span class='day-number'>$day</span>";
+            
+                                if (isset($events[$day])) {
+                                    foreach ($events[$day] as $event) {
+                                        echo "<div class='event'>$event</div>";
                                     }
                                 }
+            
                                 echo "</td>";
-                                $counter++;
-                            }
-                            if (($i + 1) % 7 == 0) {
-                                echo "</tr>";
-                                if ($i + 1 < $totalCells) {
-                                    echo "<tr>";
+            
+                                if (($dayCounter + $firstDayWeek) % 7 == 0) {
+                                    echo "</tr><tr>";
                                 }
+                                $dayCounter++;
                             }
-                        }
-                        ?>
-                    </table>
-                </div>
+            
+                            // Print empty cells for the last week
+                            while (($dayCounter + $firstDayWeek - 1) % 7 != 0) {
+                                echo "<td></td>";
+                                $dayCounter++;
+                            }
+            
+                            echo "</tr>";
+                            ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-
     <!-- Scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://static.tumblr.com/kmw8hta/1WKpaiuda/tooltipster.main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/echxn/yeolithm@master/src/js/pixelution.js"></script>
+    <script src="scripts/calendar.js"></script>
 </body>
 </html>
