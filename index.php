@@ -135,8 +135,8 @@ if ($results->num_rows > 0) {
                 <h1>Welcome to CareLocal</h1>
                 <p>Where Local Talent Meets Local Needs</p>
                 <div class="cta-buttons">
-                    <a href="#">Find Jobs</a>
-                    <a href="#">Post Jobs</a>
+                    <a href="search-jobs">Find Jobs</a>
+                    <a href="add-job">Post Jobs</a>
                     <a href="#">Build Community</a>
                 </div>
             </section>
