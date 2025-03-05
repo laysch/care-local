@@ -187,36 +187,38 @@ if ($latestJobsResult->num_rows > 0) {
                 <h1>Welcome to CareLocal</h1>
                 <p>Where Local Talent Meets Local Needs</p>
                 <div class="cta-buttons">
-                    <a href="search-jobs">Find Jobs</a>
-                    <a href="add-job">Post Jobs</a>
+                    <a href="search-jobs.php">Find Jobs</a>
+                    <a href="add-job.php">Post Jobs</a>
                     <a href="#">Build Community</a>
                 </div>
             </section>
 
-           <!-- Recommended Jobs -->
-<section class="job-feed">
-    <h2>Recommended Jobs for <?php echo htmlspecialchars($userName); ?></h2>
-    <?php foreach ($recommendedJobs as $job): ?>
-        <div class="job-box" onclick="window.location.href='job-details.php?id=<?php echo $job['id']; ?>'">
-            <h3><?php echo htmlspecialchars($job['title']); ?></h3>
-            <p><?php echo htmlspecialchars($job['description']); ?></p>
-            <p class="skills">Skills: <?php echo htmlspecialchars($job['skills']); ?></p>
-            <p class="match-percentage">Match: <?php echo round($job['matchPercentage'], 2); ?>%</p>
-        </div>
-    <?php endforeach; ?>
-</section>
+            <!-- Recommended Jobs -->
+            <section class="job-feed">
+                <h2>Recommended Jobs for <?php echo htmlspecialchars($userName); ?></h2>
+                <?php foreach ($recommendedJobs as $job): ?>
+                    <div class="job-box">
+                        <h3><?php echo htmlspecialchars($job['title']); ?></h3>
+                        <p><?php echo htmlspecialchars($job['description']); ?></p>
+                        <p class="skills">Skills: <?php echo htmlspecialchars($job['skills']); ?></p>
+                        <p class="match-percentage">Match: <?php echo round($job['matchPercentage'], 2); ?>%</p>
+                    </div>
+                <?php endforeach; ?>
+            </section>
 
-<!-- Job Feed -->
-<section class="job-feed">
-    <h2>Job Feed</h2>
-    <?php foreach ($latestJobs as $job): ?>
-        <div class="job-box" onclick="window.location.href='job-details.php?id=<?php echo $job['id']; ?>'">
-            <h3><?php echo htmlspecialchars($job['title']); ?></h3>
-            <p><?php echo htmlspecialchars($job['description']); ?></p>
-            <p class="skills">Skills: <?php echo htmlspecialchars($job['skills']); ?></p>
+            <!-- Job Feed -->
+            <section class="job-feed">
+                <h2>Job Feed</h2>
+                <?php foreach ($latestJobs as $job): ?>
+                    <div class="job-box">
+                        <h3><?php echo htmlspecialchars($job['title']); ?></h3>
+                        <p><?php echo htmlspecialchars($job['description']); ?></p>
+                        <p class="skills">Skills: <?php echo htmlspecialchars($job['skills']); ?></p>
+                    </div>
+                <?php endforeach; ?>
+            </section>
         </div>
-    <?php endforeach; ?>
-</section>
+    </div>
 
     <!-- Scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
