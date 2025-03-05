@@ -201,7 +201,6 @@ if ($latestJobsResult->num_rows > 0) {
                         <h3><?php echo htmlspecialchars($job['title']); ?></h3>
                         <p><?php echo htmlspecialchars($job['description']); ?></p>
                         <p class="skills">Skills: <?php echo htmlspecialchars($job['skills']); ?></p>
-                        <p class="match-percentage">Match: <?php echo round($job['matchPercentage'], 2); ?>%</p>
                     </div>
                 <?php endforeach; ?>
             </section>
