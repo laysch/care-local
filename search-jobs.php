@@ -166,7 +166,7 @@ $userSkills = getUserSkills($conn, $userId);
         }
 
         .job-box:hover {
-            background-color: #FCEADE;
+            background-color: #cdd8c4;
         }
 
         .job-box a {
