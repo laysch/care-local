@@ -188,11 +188,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         #main-body-wrapper {
             width: 80vw;
             max-width: 800px;
-            flex: 1;
+            margin: 0 auto;
             padding: 20px;
-            background-color: var(--profileBgColor);
+            background-color: #cdd8c4;
             border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         .profile-header {
