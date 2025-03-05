@@ -9,17 +9,19 @@ if (isset($_SESSION['user_id'])) {
 
 require_once 'inc/database.php';
 
-// Fetch the user's skills
-$userSkillsQuery = "SELECT skills FROM user_skills WHERE user_id = ?";
+// Fetch the user's skills from the `users` table
+$userSkillsQuery = "SELECT skills FROM users WHERE id = ?";
 $stmt = $conn->prepare($userSkillsQuery);
+if ($stmt === false) {
+    die("Error preparing statement: " . $conn->error);
+}
 $stmt->bind_param("i", $userId);
 $stmt->execute();
 $result = $stmt->get_result();
 $userSkills = [];
 if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $userSkills = explode(',', $row['skills']); // Assuming skills are stored as a comma-separated string
-    }
+    $row = $result->fetch_assoc();
+    $userSkills = explode(',', $row['skills']); // Assuming skills are stored as a comma-separated string
 }
 $stmt->close();
 
@@ -67,99 +69,7 @@ $regularJobs = array_slice($jobs, 3);
     <link href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css' rel='stylesheet'>
     <link href="https://cdn.jsdelivr.net/gh/echxn/yeolithm@master/src/css/pixelution.css" rel="stylesheet">
     <style>
-        :root {
-            --bodyFontFamily: 'Share Tech Mono', monospace;
-            --bodyFontSize: 14px;
-            --backgroundColor: #f9eedd;
-            --bordersColor: #839c99;
-            --bodyTextColor: #839c99;
-            --linksColor: #222222;
-            --linksHoverColor: #efac9a;
-        }
-
-        body {
-            background-image: url('https://example.com/background.jpg');
-            background-attachment: fixed;
-            background-repeat: repeat;
-        }
-
-        #main-body-wrapper {
-            width: 80vw;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #cdd8c4;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .hero {
-            text-align: center;
-            padding: 50px 20px;
-        }
-
-        .hero h1 {
-            font-size: 2.5em;
-            color: var(--headingsColor);
-            margin-bottom: 20px;
-        }
-
-        .hero p {
-            font-size: 1.2em;
-            color: var(--bodyTextColor);
-            margin-bottom: 30px;
-        }
-
-        .cta-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        .cta-buttons a {
-            background-color: var(--accent1BgColor);
-            color: var(--accent1TextColor);
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-
-        .job-feed {
-            margin-top: 30px;
-        }
-
-        .job-box {
-            background-color: var(--postBgColor);
-            border: 1px solid var(--bordersColor);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .job-box h3 {
-            font-size: 1.5em;
-            color: var(--headingsColor);
-            margin-bottom: 10px;
-        }
-
-        .job-box p {
-            font-size: 1em;
-            color: var(--bodyTextColor);
-            margin-bottom: 10px;
-        }
-
-        .job-box .skills {
-            font-style: italic;
-            color: var(--italicTextColor);
-        }
-
-        .job-box .match-percentage {
-            font-size: 0.9em;
-            color: #5D674C;
-            margin-top: 10px;
-        }
+        /* Your existing CSS styles */
     </style>
 </head>
 <body class="has--boxshadow" data-shape="circle" data-body-font-family="Share Tech Mono" data-body-font-size="14px" data-sidebar-position="left" data-pagination-display="mssg">
