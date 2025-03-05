@@ -93,4 +93,12 @@ function toggleMessageReadStatus($conn, $messageId, $userId) {
     return $stmt->execute(); 
 }
 
+function sendMessage($conn, $senderId, $receiverId, $message) {
+    $query = "INSERT INTO messages (sender_id, receiver_id, message) 
+              VALUES (?, ?, ?)";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("iis", $senderId, $receiverId, $message);
+    return $stmt->execute();
+}
+
 ?>

@@ -70,3 +70,86 @@ small {
     display: block;
     color: #777;
 }
+
+#sendMessageForm {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+#sendMessageForm label {
+    display: block;
+    font-weight: bold;
+    margin: 10px 0 5px;
+}
+
+#sendMessageForm textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#sendMessageForm button {
+    background: #5D674C;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#sendMessageForm button:hover {
+    background: #4a5339;
+}
+
+#userSuggestions {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    max-width: 300px;
+    width: 100%;
+    z-index: 1000;
+    border-radius: 5px;
+    overflow: hidden;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.user-suggestion {
+    padding: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    border-bottom: 1px solid #ddd;
+}
+
+.user-suggestion:last-child {
+    border-bottom: none;
+}
+
+.user-suggestion:hover {
+    background-color: #f3f3f3;
+}
+
+.messages-header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.jump-to-send {
+    text-decoration: none;
+    font-size: 14px;
+    color: #5D674C; /* Match button color */
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #FCEADE; /* Light peach */
+    transition: background 0.3s;
+}
+
+.jump-to-send:hover {
+    background-color: #F3E9B5; /* Light yellow on hover */
+}

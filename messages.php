@@ -31,6 +31,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message_id'])) {
     echo json_encode(['status' => $status ? 'success' : 'error']);
     exit();
 }
+
+// send message
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['receiver_id'], $_POST['message'])) {
+    $receiverId = intval($_POST['receiver_id']);
+    $messageContent = trim($_POST['message']);
+
+    if (!empty($messageContent)) { 
+        $status = sendMessage($conn, $userId, $receiverId, $messageContent);
+        echo json_encode(['status' => $status ? 'success' : 'error']);
+        exit();
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Invalid message']);
+        exit();
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -76,6 +91,74 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message_id'])) {
                 });
             });
         });
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.getElementById("receiverSearch");
+            const suggestionsContainer = document.getElementById("userSuggestions");
+            const receiverIdInput = document.getElementById("receiverId");
+
+            searchInput.addEventListener("input", function () {
+                let query = searchInput.value.trim();
+                if (query.length < 2) {
+                    suggestionsContainer.innerHTML = "";
+                    return;
+                }
+
+                fetch("../inc/searchUsers.php?search=" + encodeURIComponent(query))
+                    .then(response => response.json())
+                    .then(users => {
+                        suggestionsContainer.innerHTML = "";
+                        users.forEach(user => {
+                            let suggestion = document.createElement("div");
+                            suggestion.classList.add("user-suggestion");
+                            suggestion.textContent = user.username;
+                            suggestion.dataset.userId = user.id;
+
+                            suggestion.addEventListener("click", function () {
+                                searchInput.value = this.textContent;
+                                receiverIdInput.value = this.dataset.userId;
+                                suggestionsContainer.innerHTML = "";
+                            });
+
+                            suggestionsContainer.appendChild(suggestion);
+                        });
+                    })
+                    .catch(error => console.error("Error fetching users:", error));
+            });
+
+            
+            const form = document.getElementById("sendMessageForm");
+
+                form.addEventListener("submit", function (event) {
+                    event.preventDefault();
+                    const receiverIdInput = document.getElementById("receiverId");
+
+                    if (!receiverIdInput.value) {
+                        alert("Please select a user from the search results.");
+                        return;
+                    }
+
+                    const formData = new FormData(form);
+                    fetch("messages.php", {
+                        method: "POST",
+                        body: new URLSearchParams(formData),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Server Response:", data); 
+                        if (data.status === "success") {
+                            alert("Message sent successfully!");
+                            window.location.reload(); 
+                        } else {
+                            alert("Failed to send message: " + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        alert("Failed to send message. Network error.");
+                    });
+                });
+            });
+
     </script>
     <style>
         :root {
@@ -137,7 +220,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message_id'])) {
         <!-- Main Body -->
         <div id="main-body-wrapper">
             <div class="messages-container">
-                <h1>Inbox</h1>
+                <div class="messages-header-container">
+                    <h1>Inbox</h1>
+                    <a href="#sendMessageForm" class="jump-to-send">Send Message</a>
+                </div>
                 <div class="messages-section">
                     <div class="messages-header">Received Messages</div>
                     <?php if (empty($receivedMessages)) {
@@ -172,6 +258,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message_id'])) {
                         echo "</ul>";
                     } ?>
                 </div>
+                <div class="messages-section">
+                    <div class="messages-header">Send a Message</div>
+                    <form id="sendMessageForm">
+                        <label for="receiverSearch">Send to:</label>
+                        <input type="text" id="receiverSearch" placeholder="Search user..." autocomplete="off">
+                        <input type="hidden" id="receiverId" name="receiver_id"> <!-- Stores selected user ID -->
+                        <div id="userSuggestions"></div> <!-- Autocomplete results will appear here -->
+
+                        <label for="messageContent">Message:</label>
+                        <textarea id="messageContent" name="message" rows="3" required></textarea>
+
+                        <button type="submit">Send</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </body>
