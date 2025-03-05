@@ -8,6 +8,8 @@ if (!isset($_SESSION['username'])) {
     exit;
 }
 
+$userId = $_SESSION['user_id'];
+
 // Connect to the database
 require_once 'inc/database.php';
 
@@ -52,8 +54,8 @@ if (!$result) {
     die("Query result retrieval failed: " . $stmt->error);
 }
 
-// Fetch the user's skills (assuming they are stored in the session)
-$userSkills = isset($_SESSION['user_skills']) ? $_SESSION['user_skills'] : [];
+// Fetch the user's skills 
+$userSkills = getUserSkills($conn, $userId);
 
 ?>
 

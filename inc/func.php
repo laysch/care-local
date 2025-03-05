@@ -16,4 +16,21 @@ function getUnreadMessagesCount($conn, $userId) {
     return 0; 
 }
 
+function getUserSkills($conn, $userId) {
+    $query = "SELECT skills FROM users WHERE id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('i', $userId);
+    $stmt->execute();
+    $results = $stmt->get_result();
+
+    $userSkills = [];
+
+    if ($results) {
+        $row = $results->fetch_assoc();
+        $userSkills = explode(',', $row['skills']); 
+        $userSkills = array_map('trim', $userSkills);
+    }
+    
+    return $userSkills;
+}
 ?>
