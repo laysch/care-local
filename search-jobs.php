@@ -154,7 +154,7 @@ $userSkills = getUserSkills($conn, $userId);
         }
 
         .job-box {
-            background-color: #F3E9B5;
+            background-color: #fff;
             color: #5D674C;
             padding: 15px;
             border-radius: 5px;
