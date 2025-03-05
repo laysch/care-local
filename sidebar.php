@@ -3,7 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 require_once 'inc/database.php';
-include 'inc/func.php';
+include_once 'inc/func.php';
 
 $unreadMessageCount = 0;
 
