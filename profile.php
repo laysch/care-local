@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             --bodyTextColor: #839c99;
             --linksColor: #222222;
             --linksHoverColor: #efac9a;
-            --accentColor: #efac9a;
+            --accentColor: #cdd8c4;
             --profileBgColor: #fff5e6;
             --cardBgColor: #f4f8f4;
             --buttonColor: #cdd8c4;
@@ -155,7 +155,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background-color: #fff;
             border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         #sidebar img {
