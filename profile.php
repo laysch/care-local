@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Update skills  
         if (!empty($_POST['skills'])) {
             $updates[] = "skills = ?";
-            $params[] = sanitizeInput($_POST['skills']);
+            $params[] = implode(',', array_map('sanitizeInput', $_POST['skills']));
             $types .= 's';
         }  
 
