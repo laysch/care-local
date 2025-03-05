@@ -52,6 +52,7 @@ if ($results->num_rows > 0) {
         }
 
         #main-body-wrapper {
+            width: 80vw;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
