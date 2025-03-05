@@ -30,14 +30,26 @@
 .calendar-table {
     width: 100%;
     border-collapse: collapse;
-    
+    background-color: #ffffff; /* White background */
+    border: 1px solid var(--bordersColor);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .calendar-table th, .calendar-table td {
     width: 100px;
-    border: 1px solid #ddd;    
+    height: 120px;
     vertical-align: top;
     text-align: center;
+    border: 1px solid var(--bordersColor);
+}
+
+.calendar-table th {
+    vertical-align: middle;
+    height: 50px;
+    background-color: #cdd8c4;
+    color: var(--bodyTextColor);
+    white-space: nowrap;
 }
 
 .hidden {

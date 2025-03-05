@@ -99,52 +99,6 @@ $stmt->close();
             background-color: #fff; 
         }
 
-        /* Main Body */
-        #main-body-wrapper {
-            flex: 1;
-            padding: 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #ffffff; /* White background */
-            border: 1px solid var(--bordersColor);
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        th, td {
-            padding: 15px;
-            text-align: center;
-            border: 1px solid var(--bordersColor);
-            width: 14%; /* Equal width for each day (100% / 7 days) */
-            height: 120px; /* Increased height for calendar boxes */
-        }
-
-        th {
-            background-color: #cdd8c4;
-            font-size: 1.2em;
-            color: var(--bodyTextColor);
-            height: 50px; /* Height for the header row */
-            white-space: nowrap; /* Prevent day names from wrapping */
-        }
-
-        td {
-            vertical-align: top;
-        }
-
-        .dayNumber {
-            font-weight: bold;
-            color: var(--bodyTextColor);
-            margin-bottom: 10px;
-        }
-
-        .event {
-            font-size: 0.9em;
-            color: #666666; /* Gray event text */
-            margin-top: 5px;
-        }
         #main-body-wrapper {
             max-width: 800px;
             margin: 0 auto;
