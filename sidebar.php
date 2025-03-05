@@ -69,8 +69,7 @@ if (isset($_SESSION['user_id'])) {
                 } else {
                     echo "<a href=\"/login.php\">Login</a>";
                 }
-            ?>
-            
+            ?>            
         </nav>
     </div>
 </aside>

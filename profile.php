@@ -1,5 +1,4 @@
 <?php
-$currentPage = 'My Profile';
 session_start();
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
@@ -16,15 +15,16 @@ $stmt->bind_param('i', $userId);
 $stmt->execute();
 $result = $stmt->get_result();
 $row = $result->fetch_assoc();
+if (!empty($row['skills'])) {
+    $skills = explode(',', $row['skills']); 
+    $skills = array_map('trim', $skills); 
+} else { $skills = []; }
+
 
 // Function to sanitize input
 function sanitizeInput($data) {
     return htmlspecialchars(stripslashes(trim($data)));
 }
-
-// Initialize bio and skills (not connected to the database)
-$bio = '';
-$skills = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $updates = [];
@@ -58,9 +58,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // Update bio and skills (not connected to the database)
-        $bio = sanitizeInput($_POST['bio']);
-        $skills = isset($_POST['skills']) ? $_POST['skills'] : [];
+        // Update bio if provided
+        if (!empty($_POST['bio'])) {
+            $updates[] = "bio = ?";
+            $params[] = sanitizeInput($_POST['bio']);
+            $types .= 's';
+        }
+
+        // Update skills  
+        if (!empty($_POST['skills'])) {
+            $updates[] = "skills = ?";
+            $params[] = sanitizeInput($_POST['skills']);
+            $types .= 's';
+        }  
 
         // Handle avatar upload
         if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
@@ -311,7 +321,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Bio Section -->
             <div class="bio">
                 <h2>About Me</h2>
-                <p><?php echo htmlspecialchars($bio ? $bio : "No bio available."); ?></p>
+                <p><?php echo htmlspecialchars($row['bio'] ? $row['bio'] : "No bio available."); ?></p>
             </div>
 
             <!-- Skills Section -->
@@ -350,7 +360,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <!-- Bio -->
                     <label for="bio">About Me:</label>
-                    <textarea id="bio" name="bio" placeholder="Tell us about yourself"><?php echo htmlspecialchars($bio); ?></textarea>
+                    <textarea id="bio" name="bio" placeholder="Tell us about yourself"><?php echo htmlspecialchars($row['bio']); ?></textarea>
 
                     <!-- Skills -->
                     <label for="skills">Skills (check all that apply):</label>
