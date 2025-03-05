@@ -16,9 +16,12 @@ $sentMessages = [];
 foreach ($messages as $msg) {
     if ($msg['receiver_id'] == $userId) {
         $receivedMessages[] = $msg; 
-    } else {
+    } 
+}
+foreach ($messages as $msg) {
+    if ($msg['sender_id'] == $userId) {
         $sentMessages[] = $msg; 
-    }
+    } 
 }
 
 // toggle message read
