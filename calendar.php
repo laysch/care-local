@@ -94,6 +94,7 @@ foreach ($events as $event) {
         }
 
         .hero-section {
+            background-color: #cdd8c4;
             text-align: center;
             padding: 50px 20px;
         }
