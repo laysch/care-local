@@ -186,6 +186,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         #main-body-wrapper {
+            width: 80vw;
+            max-width: 800px;
             flex: 1;
             padding: 20px;
             background-color: var(--profileBgColor);
