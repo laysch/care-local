@@ -15,7 +15,7 @@ $userId = $_SESSION['user_id'];
 $userName = $_SESSION['username'];
 ?>
 
-
+<?php
 require_once 'inc/database.php';
 
 // Fetch the user's skills from the `users` table
