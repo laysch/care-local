@@ -7,6 +7,7 @@ if (!isset($_SESSION['username'])) {
     header('Location: /login.php');
     exit;
 }
+$userId = $_SESSION['user_id'];
 
 $success_message = "";
 $jobID = ""; // Initialize jobID variable
@@ -31,8 +32,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Prepare and bind SQL statement
-    $stmt = $conn->prepare("INSERT INTO jobs (jobtitle, description, location, county, skills) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssss", $jobtitle, $description, $location, $county, $skills);
+    $stmt = $conn->prepare("INSERT INTO jobs (jobtitle, description, location, county, skills, poster_id) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssss", $jobtitle, $description, $location, $county, $skills, $userId);
 
     // Execute the statement
     if ($stmt->execute()) {

@@ -63,7 +63,7 @@
 }
 
 p {
-    margin: 5px 0;
+    margin: 10px;
 }
 
 small {
@@ -85,7 +85,7 @@ small {
     margin: 10px 0 5px;
 }
 
-#sendMessageForm textarea {
+#sendMessageForm textarea, input {
     width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
@@ -143,13 +143,13 @@ small {
 .jump-to-send {
     text-decoration: none;
     font-size: 14px;
-    color: #5D674C; /* Match button color */
+    color: #5D674C; 
     padding: 5px 10px;
     border-radius: 5px;
-    background-color: #FCEADE; /* Light peach */
+    background-color: #FCEADE;
     transition: background 0.3s;
 }
 
 .jump-to-send:hover {
-    background-color: #F3E9B5; /* Light yellow on hover */
+    background-color: #F3E9B5; 
 }

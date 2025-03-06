@@ -33,19 +33,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message_id'])) {
 }
 
 // send message
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['receiver_id'], $_POST['message'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['receiver_id'], $_POST['title'], $_POST['message'])) {
     $receiverId = intval($_POST['receiver_id']);
+    $messageTitle = trim($_POST['title']);
     $messageContent = trim($_POST['message']);
 
-    if (!empty($messageContent)) { 
-        $status = sendMessage($conn, $userId, $receiverId, $messageContent);
-        echo json_encode(['status' => $status ? 'success' : 'error']);
-        exit();
+    if (!empty($messageTitle)) { 
+        if (!empty($messageContent)) { 
+            $status = sendMessage($conn, $userId, $receiverId, $messageTitle, $messageContent);
+            echo json_encode(['status' => $status ? 'success' : 'error']);
+            exit();
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Invalid message']);
+            exit();
+        }
     } else {
         echo json_encode(['status' => 'error', 'message' => 'Invalid message']);
         exit();
     }
+
 }
+
+// send message info from other page
+$prefilledRecipientId = isset($_GET['recipient_id']) ? intval($_GET['recipient_id']) : '';
+$prefilledRecipientName = isset($_GET['recipient_name']) ? htmlspecialchars($_GET['recipient_name']) : '';
+$prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']) : '';
+
 ?>
 
 <!DOCTYPE html>
@@ -93,8 +106,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['receiver_id'], $_POST
         });
         document.addEventListener("DOMContentLoaded", function () {
             const searchInput = document.getElementById("receiverSearch");
-            const suggestionsContainer = document.getElementById("userSuggestions");
             const receiverIdInput = document.getElementById("receiverId");
+            const suggestionsContainer = document.getElementById("userSuggestions");
+
+            if (receiverIdInput.value) {
+                searchInput.value = searchInput.value.trim(); 
+            }
 
             searchInput.addEventListener("input", function () {
                 let query = searchInput.value.trim();
@@ -103,10 +120,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['receiver_id'], $_POST
                     return;
                 }
 
-                fetch("../inc/searchUsers.php?search=" + encodeURIComponent(query))
+                fetch("inc/searchUsers.php?search=" + encodeURIComponent(query))
                     .then(response => response.json())
                     .then(users => {
-                        suggestionsContainer.innerHTML = "";
+                        suggestionsContainer.innerHTML = ""; // Clear old suggestions
                         users.forEach(user => {
                             let suggestion = document.createElement("div");
                             suggestion.classList.add("user-suggestion");
@@ -121,9 +138,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['receiver_id'], $_POST
 
                             suggestionsContainer.appendChild(suggestion);
                         });
+
+                        if (users.length === 0) {
+                            suggestionsContainer.innerHTML = "<div class='user-suggestion'>No users found</div>";
+                        }
                     })
                     .catch(error => console.error("Error fetching users:", error));
-            });
+             });
 
             
             const form = document.getElementById("sendMessageForm");
@@ -158,7 +179,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['receiver_id'], $_POST
                     });
                 });
             });
-
     </script>
     <style>
         :root {
@@ -233,6 +253,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['receiver_id'], $_POST
                         foreach ($receivedMessages as $msg) {
                             $messageClass = $msg['is_read'] == 0 ? "message-item-unread" : "message-item-read";
                             echo "<i class=\"message-item $messageClass\" data-message-id=\"" . htmlspecialchars($msg['message_id']) . "\">";
+                            echo htmlspecialchars($msg['title']) . "<br>";
                             echo "<strong>" . htmlspecialchars($msg['sender_username']) . "</strong> to 
                                 <strong>" . htmlspecialchars($msg['receiver_username']) . "</strong>";
                             echo "<p>" . nl2br(htmlspecialchars($msg['message'])) . "</p>";
@@ -262,9 +283,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['receiver_id'], $_POST
                     <div class="messages-header">Send a Message</div>
                     <form id="sendMessageForm">
                         <label for="receiverSearch">Send to:</label>
-                        <input type="text" id="receiverSearch" placeholder="Search user..." autocomplete="off">
-                        <input type="hidden" id="receiverId" name="receiver_id"> <!-- Stores selected user ID -->
-                        <div id="userSuggestions"></div> <!-- Autocomplete results will appear here -->
+                        <input type="text" id="receiverSearch" placeholder="Search user..." autocomplete="off"
+                            value="<?php echo $prefilledRecipientName; ?>">
+                        <input type="hidden" id="receiverId" name="receiver_id" value="<?php echo $prefilledRecipientId; ?>">
+                        <div id="userSuggestions"></div> 
+                        <label for="messageTitle">Title:</label>
+                        <input type="text" id="messageTitle" name="title" value="<?php echo $prefilledMessageTitle; ?>" required>
 
                         <label for="messageContent">Message:</label>
                         <textarea id="messageContent" name="message" rows="3" required></textarea>

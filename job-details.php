@@ -1,8 +1,8 @@
 <?php
-$currentPage = 'Job Details';
 session_start();
 
 require_once 'inc/database.php';
+include_once 'inc/func.php';
 
 // Get job ID from URL
 $job_id = $_GET['id'];
@@ -16,6 +16,10 @@ if (!$result) {
 
 // Fetch the job details
 $job = $result->fetch_assoc();
+
+// get username
+$posterId = $job['poster_id'];
+$posterUsername = getUsernameById($conn, $posterId);
 ?>
 
 <!DOCTYPE html>
@@ -163,6 +167,7 @@ $job = $result->fetch_assoc();
             <p><strong>Location:</strong> <?php echo htmlspecialchars($job['location']); ?></p>
             <p><strong>Description:</strong> <?php echo nl2br(htmlspecialchars($job['description'])); ?></p>
             <p><strong>Skills Required:</strong> <?php echo htmlspecialchars($job['skills']); ?></p>
+            <p><small>Posted by <?php echo $posterUsername; ?> at <?php echo date("F j, Y, g:i a", strtotime($job['created_at'])); ?></small</p>
 
             <div class="button-container">
                 <!-- Add to Job Cart Form -->
@@ -176,6 +181,9 @@ $job = $result->fetch_assoc();
 
                 <!-- Back to Job Listings Button -->
                 <a href="search-jobs.php" class="btn">Back to Job Listings</a>
+                <a href="messages.php?recipient_id=<?php echo $posterId; ?>&recipient_name=<?php echo urlencode($posterUsername); ?>&title=RE+<?php echo urlencode($job['jobtitle']); ?>#sendMessageForm" class="btn">
+                    Send a message to <?php echo htmlspecialchars($posterUsername); ?>
+                </a>
             </div>
         </div>
     </div>

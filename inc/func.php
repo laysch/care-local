@@ -44,7 +44,8 @@ function getUserMessages($conn, $userId) {
                 m.timestamp,
                 u1.username AS sender_username,
                 u2.username AS receiver_username,
-                is_read
+                m.is_read,
+                m.title
               FROM messages m
               JOIN users u1 ON m.sender_id = u1.id
               JOIN users u2 ON m.receiver_id = u2.id
@@ -66,7 +67,8 @@ function getUserMessages($conn, $userId) {
             'receiver_username' => $row['receiver_username'],
             'message'           => $row['message'],
             'timestamp'         => $row['timestamp'],
-            'is_read'           => $row['is_read']
+            'is_read'           => $row['is_read'],
+            'title'             => $row['title']
         ];
     }
     return !empty($messages) ? $messages : [];
@@ -93,12 +95,22 @@ function toggleMessageReadStatus($conn, $messageId, $userId) {
     return $stmt->execute(); 
 }
 
-function sendMessage($conn, $senderId, $receiverId, $message) {
-    $query = "INSERT INTO messages (sender_id, receiver_id, message) 
-              VALUES (?, ?, ?)";
+function sendMessage($conn, $senderId, $receiverId, $title, $message) {
+    $query = "INSERT INTO messages (sender_id, receiver_id, title, message) 
+              VALUES (?, ?, ?, ?)";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("iis", $senderId, $receiverId, $message);
+    $stmt->bind_param("iiss", $senderId, $receiverId, $title, $message);
     return $stmt->execute();
 }
+
+function getUsernameByID($conn, $userId) {
+    $query = "SELECT username FROM users WHERE id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
+    return $user['username'] ?? 'Unknown';
+} 
 
 ?>

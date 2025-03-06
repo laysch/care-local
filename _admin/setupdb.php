@@ -17,7 +17,8 @@
                     location VARCHAR(255) NOT NULL,
                     county VARCHAR(255) NOT NULL,
                     skills TEXT,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    poster_id INT UNSIGNED NOT NULL
                 )";
                 $conn->query($query);
                 echo "Table '<b>jobs</b>' created successfully";
@@ -52,7 +53,8 @@
                     receiver_id INT NOT NULL,
                     message TEXT NOT NULL,
                     timestamp DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                    is_read TINYINT(1) DEFAULT 0
+                    is_read TINYINT(1) DEFAULT 0,
+                    title VARCHAR(255) NULL
                 );";
                 $conn->query($query);
                 echo "Table '<b>messages</b>' created successfully";
