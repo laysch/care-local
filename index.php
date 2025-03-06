@@ -1,11 +1,20 @@
 <?php
+// Start the session if it's not already started
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-if (isset($_SESSION['user_id'])) {
-    $userId = $_SESSION['user_id'];
-    $userName = $_SESSION['username'];
+
+// Redirect to login page if the user is not logged in
+if (!isset($_SESSION['username'])) {
+    header('Location: /login.php');
+    exit;
 }
+
+// If logged in, retrieve user details
+$userId = $_SESSION['user_id'];
+$userName = $_SESSION['username'];
+?>
+
 
 require_once 'inc/database.php';
 
