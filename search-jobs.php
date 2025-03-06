@@ -13,8 +13,13 @@ $userId = $_SESSION['user_id'];
 // Connect to the database
 require_once 'inc/database.php';
 
+$order = "DESC";
+if (isset($_GET['sort']) && $_GET['sort'] === 'asc') {
+    $order = "ASC";
+}
+
 // Initialize query to get all jobs by default
-$query = "SELECT * FROM jobs WHERE 1=1";
+$query = "SELECT * FROM jobs WHERE 1=1 ORDER BY created_at $order";
 $params = [];
 $types = "";
 
@@ -182,7 +187,7 @@ $userSkills = getUserSkills($conn, $userId);
         .dropdown {
             position: relative;
             display: inline-block;
-            width: 100px;
+            width: auto;
         }
 
         .dropdown-toggle {
@@ -205,13 +210,16 @@ $userSkills = getUserSkills($conn, $userId);
             position: absolute;
             background-color: #D1D79D;
             border: 1px solidrgb(103, 161, 137);
-            width: 100%;
-            max-height: 220px;
+            min-width: 150px;
+            max-width: 300px;
+            width: auto;
+            max-height: 300px;
             overflow-y: auto;
             border-radius: 6px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
             transition: opacity 0.3s ease-in-out;
             padding: 8px;
+            white-space: nowrap;
         }
 
         .dropdown-menu label {
@@ -228,13 +236,24 @@ $userSkills = getUserSkills($conn, $userId);
             background-color: #f3e9b5;
         }
 
-        .dropdown-menu input[type="checkbox"] {
+        .dropdown-menu input[type="checkbox"],
+        .dropdown-menu input[type="radio"] {
             margin-right: 10px;
         }
 
         .show {
             display: block;
             opacity: 1;
+        }
+        .btn {
+            display: inline-block; /* Keep as inline-block */
+            padding: 10px 20px;
+            background-color: #efac9a; /* Olive green background for button */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            width: fit-content; /* Ensures the button only takes up as much width as its content */
         }
     </style>
 </head>
@@ -271,11 +290,18 @@ $userSkills = getUserSkills($conn, $userId);
                         <label><input type="checkbox" name="county[]" value="Suffolk">Suffolk</label>
                     </div>                             
                 </div>
-
+                <div class="dropdown">
+                    <div class="dropdown-toggle" onclick="toggleSort()">Sort By</div>
+                    <div class="dropdown-menu" id="dropdown-sort">
+                        <label><input type="radio" name="sort" value="desc" <?php echo (isset($_GET['sort']) && $_GET['sort'] === 'desc') ? 'checked' : ''; ?>>Newest First</label>
+                        <label><input type="radio" name="sort" value="asc" <?php echo (isset($_GET['sort']) && $_GET['sort'] === 'asc') ? 'checked' : ''; ?>>Oldest First</label>
+                    </div>
+                </div>
                 <br>
-                <input type="submit" value="Filter" class="btn">
+                <input type="submit" value="Apply Filters" class="btn">
                 <button type="button" class="btn" onclick="removeFilters()">Remove Filters</button>
             </form>
+            
         </div>
 
         <div class="job-listings">
@@ -305,15 +331,46 @@ $userSkills = getUserSkills($conn, $userId);
     </div>
 
     <script>
-        function toggleSkills() {
-            var dropdown = document.getElementById('dropdown-skills');
-            dropdown.classList.toggle('show');
-        }
+        document.addEventListener("DOMContentLoaded", function () {
+            function toggleDropdown(menuId) {
+                // Close any other open dropdowns
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    if (menu.id !== menuId) {
+                        menu.classList.remove('show');
+                    }
+                });
 
-        function toggleCounty() {
-            var dropdown = document.getElementById('dropdown-county');
-            dropdown.classList.toggle('show');
-        }
+                // Toggle the clicked dropdown
+                const dropdown = document.getElementById(menuId);
+                dropdown.classList.toggle('show');
+            }
+
+            // Event listener for clicking outside the dropdowns to close them
+            document.addEventListener("click", function (event) {
+                const dropdowns = document.querySelectorAll('.dropdown');
+                let clickedInside = false;
+
+                dropdowns.forEach(dropdown => {
+                    if (dropdown.contains(event.target)) {
+                        clickedInside = true;
+                    }
+                });
+
+                if (!clickedInside) {
+                    document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                        menu.classList.remove('show');
+                    });
+                }
+            });
+
+            // Attach event listeners to the dropdown toggles
+            document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+                toggle.addEventListener("click", function (event) {
+                    event.stopPropagation(); // Prevent click from closing immediately
+                    toggleDropdown(this.nextElementSibling.id);
+                });
+            });
+        });
 
         function removeFilters() {
             window.location.href = 'search-jobs.php'; // Simply refresh the page without filters
