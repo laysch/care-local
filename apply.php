@@ -90,9 +90,10 @@ $job = $_SESSION['job_cart'][$jobId];
         .job-skills {
             font-style: italic;
             color: #888;
+            margin-bottom: 20px; /* Added margin-bottom to create space */
         }
 
-        .return-button {
+        .return-button, .submit-button {
             display: inline-block;
             padding: 10px 20px;
             background-color: #5D674C;
@@ -103,9 +104,42 @@ $job = $_SESSION['job_cart'][$jobId];
             margin-top: 20px;
         }
 
-        .return-button:hover {
+        .return-button:hover, .submit-button:hover {
             background-color: #efac9a;
             color: white !important;
+        }
+
+        .application-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: vertical;
+        }
+
+        .button-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .button-group a, .button-group button {
+            margin: 0 10px;
         }
     </style>
 </head>
@@ -120,12 +154,30 @@ $job = $_SESSION['job_cart'][$jobId];
                 <h1>Apply for Job</h1>
                 <div class="job-title"><?php echo htmlspecialchars($job['title']); ?></div>
                 <div class="job-description"><?php echo htmlspecialchars($job['description']); ?></div>
-                <div class="job-skills">Skills: <?php echo htmlspecialchars($job['skills']); ?></div>
-                <p>This is where the application form would go.</p>
+                <div class="job-skills">Skills: <?php echo htmlspecialchars($job['skills']); ?></div>               
+                <div class="application-form">
 
-                <!-- Return to Job Cart Button -->
-                <div style="text-align: center; margin-top: 20px;">
+
+                    <div class="form-group">
+                        <label for="interest">Why are you interested in this job?</label>
+                        <textarea id="interest" name="interest" class="form-control" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="qualified">Have you done this kind of work before?</label>
+                        <textarea id="qualified" name="qualified" class="form-control" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="questions">Do you have any questions for us?</label>
+                        <textarea id="questions" name="questions" class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+
+                <!-- Button Group -->
+                <div class="button-group">
                     <a href="job-cart.php" class="return-button">Return to Job Cart</a>
+                    <button type="button" class="submit-button" onclick="submitApplication()">Submit</button>
                 </div>
             </div>
         </div>
@@ -135,5 +187,11 @@ $job = $_SESSION['job_cart'][$jobId];
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://static.tumblr.com/kmw8hta/1WKpaiuda/tooltipster.main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/echxn/yeolithm@master/src/js/pixelution.js"></script>
+    <script>
+        function submitApplication() {
+            alert("Your application has been submitted");
+            window.location.href = "index.php"; // Redirect to index.php after submission
+        }
+    </script>
 </body>
 </html>
