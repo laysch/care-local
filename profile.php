@@ -367,7 +367,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label for="skills">Skills (check all that apply):</label>
                     <div class="checkbox-group">
                         <?php
-                        $allSkills = ["Communication", "Teamwork", "Problem-Solving", "Leadership", "Technical Skills", "Time Management"];
+                        $allSkills = ["Communication", "Teamwork", "Problem-Solving", "Leadership", "Technical Skills", "Time Management", "PHP", "HTML/CSS", "JavaScript", "MySQL"];
                         foreach ($allSkills as $skill):
                             $checked = in_array($skill, $skills) ? 'checked' : '';
                         ?>

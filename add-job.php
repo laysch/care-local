@@ -255,7 +255,7 @@ function sanitizeInput($data) {
                 <label for="skills">Required Skills:</label>
                 <div class="tags-container">
                     <?php 
-                    $available_skills = ['Communication', 'Teamwork', 'Problem-Solving', 'Leadership', 'Technical Skills', 'Time Management'];
+                    $available_skills = ['Communication', 'Teamwork', 'Problem-Solving', 'Leadership', 'Technical Skills', 'Time Management', 'PHP', 'HTML/CSS', 'JavaScript', 'MySQL'];
                     $selected_skills = isset($_POST['skills']) ? $_POST['skills'] : [];
                     foreach ($available_skills as $skill) {
                         $isSelected = in_array($skill, $selected_skills) ? 'selected' : '';

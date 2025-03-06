@@ -258,6 +258,10 @@ $userSkills = getUserSkills($conn, $userId);
                         <label><input type="checkbox" name="skills[]" value="Leadership"> Leadership</label>
                         <label><input type="checkbox" name="skills[]" value="Technical Skills"> Technical Skills</label>
                         <label><input type="checkbox" name="skills[]" value="Time Management"> Time Management</label>
+                        <label><input type="checkbox" name="skills[]" value="PHP"> PHP</label>
+                        <label><input type="checkbox" name="skills[]" value="HTML/CSS"> HTML/CSS</label>
+                        <label><input type="checkbox" name="skills[]" value="JavaScript"> JavaScript</label>
+                        <label><input type="checkbox" name="skills[]" value="MySQL"> MySQL</label>
                     </div>
                 </div>
                 <div class="dropdown">
