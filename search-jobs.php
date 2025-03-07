@@ -19,7 +19,7 @@ if (isset($_GET['sort']) && $_GET['sort'] === 'asc') {
 }
 
 // Initialize query to get all jobs by default
-$query = "SELECT * FROM jobs WHERE 1=1 ORDER BY created_at $order";
+$query = "SELECT * FROM jobs WHERE 1=1 ";
 $params = [];
 $types = "";
 
@@ -44,7 +44,9 @@ if (isset($_GET['skills']) && is_array($_GET['skills']) && !empty($_GET['skills'
     $query .= " AND (" . implode(" OR ", $skillFilters) . ")";
 }
 
+$query .= " ORDER BY created_at $order";
 $stmt = $conn->prepare($query);
+
 if ($stmt === false) {
     die("Statement preparation failed: " . $conn->error);
 }
