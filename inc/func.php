@@ -113,4 +113,11 @@ function getUsernameByID($conn, $userId) {
     return $user['username'] ?? 'Unknown';
 } 
 
+// Function to sanitize input data
+function sanitizeInput($data) {
+    $data = trim($data); // Removes whitespace from the beginning and end of string
+    $data = stripslashes($data); // Removes quotes from a quoted string
+    $data = htmlspecialchars($data); // Converts special characters to HTML entities
+    return $data;
+}
 ?>

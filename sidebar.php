@@ -14,6 +14,48 @@ if (isset($_SESSION['user_id'])) {
     $unreadMessageCount = getUnreadMessagesCount($conn, $userId);
 }
 ?>
+<style>
+.search-results {
+    position: absolute;
+    background: white;
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid #ccc;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 5px; /* Adds spacing below search bar */
+    z-index: 1000;
+    padding: 5px;
+    top: 40px; /* Positions it right below the search box */
+    left: 0;
+    display: none;
+}
+
+.search-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    white-space: nowrap;  
+}
+
+.search-item:last-child {
+    border-bottom: none;
+}
+
+.search-item a {
+    text-decoration: none;
+    color: #333;
+    display: block;
+}
+
+.search-item:hover {
+    background: #f3f3f3;
+}
+
+#searchbar {
+    position: relative;
+    display: block;
+    width: 100%;
+}
+</style>
 
 <aside id="sidebar" style="text-align: center;">
     <div id="sb-image">
@@ -44,8 +86,8 @@ if (isset($_SESSION['user_id'])) {
                     echo "<i class=\"fi fi-rr-envelope\"></i>";
                 } ?>
             </a>
-            <form action="/search" method="get" id="searchbar">
-                <input type="text" name="q" class="searchquery" placeholder="Search...">
+            <form action="/search.php" method="get" id="searchbar">
+                <input type="text" name="q" class="searchquery" placeholder="Search..." autocomplete="off">
             </form>
             <label for="menutoggle" class="menu_button">
                 <i class="fi fi-rr-menu-burger"></i>
@@ -74,3 +116,4 @@ if (isset($_SESSION['user_id'])) {
         </nav>
     </div>
 </aside>
+<script src="scripts/search.js" defer></script>

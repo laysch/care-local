@@ -1,6 +1,7 @@
 <?php   
 $currentPage = "Add Job";
 require_once 'inc/database.php';
+include_once 'inc/func.php';
 
 session_start();
 if (!isset($_SESSION['username'])) {
@@ -47,14 +48,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Close statement
     $stmt->close();
-}
-
-// Function to sanitize input data
-function sanitizeInput($data) {
-    $data = trim($data); // Removes whitespace from the beginning and end of string
-    $data = stripslashes($data); // Removes quotes from a quoted string
-    $data = htmlspecialchars($data); // Converts special characters to HTML entities
-    return $data;
 }
 ?>
 

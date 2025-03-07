@@ -1,0 +1,40 @@
+.search-results {
+    position: absolute;
+    background: white;
+    width: 60%;
+    max-width: 400px;
+    border: 1px solid #ccc;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 5px; /* Adds spacing below search bar */
+    z-index: 1000;
+    padding: 5px;
+    top: 100%; /* Positions it right below the search box */
+    left: 0;
+    white-space: nowrap;  
+}
+
+.search-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    white-space: nowrap;  
+}
+
+.search-item:last-child {
+    border-bottom: none;
+}
+
+.search-item a {
+    text-decoration: none;
+    color: #333;
+    display: block;
+}
+
+.search-item:hover {
+    background: #f3f3f3;
+}
+
+/* Ensures the search bar container is relatively positioned */
+#searchbar {
+    position: relative;
+    display: inline-block; /* Keeps it from stretching full width */
+}
