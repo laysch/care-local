@@ -8,6 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 $userId = $_SESSION['user_id'];
 
 require_once 'inc/database.php';
+include_once 'inc/func.php';
 
 $query = "SELECT * FROM users WHERE id = ?";
 $stmt = $conn->prepare($query);
@@ -20,11 +21,6 @@ if (!empty($row['skills'])) {
     $skills = array_map('trim', $skills); 
 } else { $skills = []; }
 
-
-// Function to sanitize input
-function sanitizeInput($data) {
-    return htmlspecialchars(stripslashes(trim($data)));
-}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $updates = [];
