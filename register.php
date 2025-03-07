@@ -38,7 +38,7 @@ if (isset($_POST['register'])) {
             $stmt->bind_param("ssss", $email, $username, $passwordHash, $defaultAvatar);
             if ($stmt->execute()) {
                 $success = "Registration successful. Please login.";
-                header("Location: login.php");
+                header("Location: profile.php");
                 exit();
             } else {
                 $error = "Error registering. Try again.";
