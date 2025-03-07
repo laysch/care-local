@@ -8,6 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 $userId = $_SESSION['user_id'];
 
 require_once 'inc/database.php';
+include_once 'inc/func.php';
 
 $query = "SELECT * FROM users WHERE id = ?";
 $stmt = $conn->prepare($query);
@@ -20,11 +21,6 @@ if (!empty($row['skills'])) {
     $skills = array_map('trim', $skills); 
 } else { $skills = []; }
 
-
-// Function to sanitize input
-function sanitizeInput($data) {
-    return htmlspecialchars(stripslashes(trim($data)));
-}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $updates = [];
@@ -367,7 +363,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label for="skills">Skills (check all that apply):</label>
                     <div class="checkbox-group">
                         <?php
-                        $allSkills = ["Communication", "Teamwork", "Problem-Solving", "Leadership", "Technical Skills", "Time Management", "PHP", "HTML/CSS", "JavaScript", "MySQL"];
+                        $allSkills = ["Communication", "Teamwork", "Problem-Solving", "Leadership", "Technical Skills", "Time Management", "Painting", "Carpentry", "Plumbing", "Electrical Work", "PHP", "HTML/CSS", "JavaScript", "MySQL"];
                         foreach ($allSkills as $skill):
                             $checked = in_array($skill, $skills) ? 'checked' : '';
                         ?>
