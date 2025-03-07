@@ -4,7 +4,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-        <div style="display: flex; justify-content: center; min-height: 100vh; mid-width: 100vh;">
+        <div style="display: flex; justify-content: center; min-height: 100vh; min-width: 100vh;">
         <?php
             require_once '../inc/database.php';
 
