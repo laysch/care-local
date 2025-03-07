@@ -9,6 +9,9 @@
 }
 
 .messages-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 10px;
@@ -152,4 +155,19 @@ small {
 
 .jump-to-send:hover {
     background-color: #F3E9B5; 
+}
+
+.toggle-btn {
+    background-color: #5D674C;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-left: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.toggle-btn:hover {
+    background-color: #4a5339;
 }

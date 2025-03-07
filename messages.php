@@ -179,6 +179,14 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
                     });
                 });
             });
+    function toggleSection(sectionId) {
+        let section = document.getElementById(sectionId);
+        if (section.style.display === "none") {
+            section.style.display = "block";
+        } else {
+            section.style.display = "none";
+        }
+    }
     </script>
     <style>
         :root {
@@ -245,39 +253,49 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
                     <a href="#sendMessageForm" class="jump-to-send">Send Message</a>
                 </div>
                 <div class="messages-section">
-                    <div class="messages-header">Received Messages</div>
-                    <?php if (empty($receivedMessages)) {
-                        echo "<p>Lets connect with your community members today!</p>";
-                    } else {
-                        echo "<ul class=\"messages-list\">";
-                        foreach ($receivedMessages as $msg) {
-                            $messageClass = $msg['is_read'] == 0 ? "message-item-unread" : "message-item-read";
-                            echo "<i class=\"message-item $messageClass\" data-message-id=\"" . htmlspecialchars($msg['message_id']) . "\">";
-                            echo htmlspecialchars($msg['title']) . "<br>";
-                            echo "<strong>" . htmlspecialchars($msg['sender_username']) . "</strong> to 
-                                <strong>" . htmlspecialchars($msg['receiver_username']) . "</strong>";
-                            echo "<p>" . nl2br(htmlspecialchars($msg['message'])) . "</p>";
-                            echo "<small>" . date("F j, Y, g:i a", strtotime($msg['timestamp'])) . "</small>";
-                            echo "</i>";
-                        }
-                        echo "</ul>";
-                    } ?>              
+                    <div class="messages-header">
+                        <span>Received Messages</span>
+                        <button class="toggle-btn" onclick="toggleSection('receivedMessages')">=</button>
+                    </div>
+                    <div id="receivedMessages">
+                        <?php if (empty($receivedMessages)) {
+                            echo "<p>Lets connect with your community members today!</p>";
+                        } else {
+                            echo "<ul class=\"messages-list\">";
+                            foreach ($receivedMessages as $msg) {
+                                $messageClass = $msg['is_read'] == 0 ? "message-item-unread" : "message-item-read";
+                                echo "<i class=\"message-item $messageClass\" data-message-id=\"" . htmlspecialchars($msg['message_id']) . "\">";
+                                echo htmlspecialchars($msg['title']) . "<br>";
+                                echo "<strong>" . htmlspecialchars($msg['sender_username']) . "</strong> to 
+                                    <strong>" . htmlspecialchars($msg['receiver_username']) . "</strong>";
+                                echo "<p>" . nl2br(htmlspecialchars($msg['message'])) . "</p>";
+                                echo "<small>" . date("F j, Y, g:i a", strtotime($msg['timestamp'])) . "</small>";
+                                echo "</i>";
+                            }
+                            echo "</ul>";
+                        } ?>       
+                    </div>       
                 </div>
                 <div class="messages-section">
-                    <div class="messages-header">Sent Messages</div>
-                    <?php if (empty($sentMessages)) {
-                        echo "<p>Lets connect with your community members today!</p>";
-                    } else {
-                        echo "<ul class=\"messages-list\">";
-                        foreach ($sentMessages as $msg) {
-                            echo "<i class=\"message-item-read\">";
-                            echo "<strong>You</strong> to <strong>" . htmlspecialchars($msg['receiver_username']) . "</strong>";
-                            echo "<p>" . nl2br(htmlspecialchars($msg['message'])) . "</p>";
-                            echo "<small>" . date("F j, Y, g:i a", strtotime($msg['timestamp'])) . "</small>";
-                            echo "</i>";
-                        }
-                        echo "</ul>";
-                    } ?>
+                    <div class="messages-header">
+                        <span>Sent Messages</span>
+                        <button class="toggle-btn" onclick="toggleSection('sentMessages')">=</button>
+                    </div>
+                    <div id="sentMessages">
+                        <?php if (empty($sentMessages)) {
+                            echo "<p>Lets connect with your community members today!</p>";
+                        } else {
+                            echo "<ul class=\"messages-list\">";
+                            foreach ($sentMessages as $msg) {
+                                echo "<i class=\"message-item-read\">";
+                                echo "<strong>You</strong> to <strong>" . htmlspecialchars($msg['receiver_username']) . "</strong>";
+                                echo "<p>" . nl2br(htmlspecialchars($msg['message'])) . "</p>";
+                                echo "<small>" . date("F j, Y, g:i a", strtotime($msg['timestamp'])) . "</small>";
+                                echo "</i>";
+                            }
+                            echo "</ul>";
+                        } ?>
+                    </div>
                 </div>
                 <div class="messages-section">
                     <div class="messages-header">Send a Message</div>
