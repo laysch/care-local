@@ -49,6 +49,8 @@ if (isset($_GET['skills']) && is_array($_GET['skills']) && !empty($_GET['skills'
 }
 
 $query .= " ORDER BY created_at $order";
+
+$query .= " LIMIT ?, ?";
 $params[] = $offset;
 $params[] = $jobsPerPage;
 $types .= "ii";
