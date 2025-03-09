@@ -24,7 +24,7 @@ $params = [];
 $types = "";
 
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$jobsPerPage = 5; // Number of jobs per page
+$jobsPerPage = 3; // Number of jobs per page
 $offset = ($page - 1) * $jobsPerPage;
 
 if (isset($_GET['county']) && is_array($_GET['county']) && !empty($_GET['county'])) {
