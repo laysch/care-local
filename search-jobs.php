@@ -129,7 +129,7 @@ $totalPages = ceil($totalJobs / $jobsPerPage);
         }
 
         .hero h1 {
-            font-size: 2.5em;
+            font-size: 1.8em;
             color: var(--headingsColor);
             margin-bottom: 20px;
         }
