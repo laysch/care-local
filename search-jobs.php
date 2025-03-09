@@ -23,6 +23,10 @@ $query = "SELECT * FROM jobs WHERE 1=1 ";
 $params = [];
 $types = "";
 
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$jobsPerPage = 5; // Number of jobs per page
+$offset = ($page - 1) * $jobsPerPage;
+
 if (isset($_GET['county']) && is_array($_GET['county']) && !empty($_GET['county'])) {
     $countyFilters = [];
     foreach ($_GET['county'] as $county) {
@@ -45,6 +49,10 @@ if (isset($_GET['skills']) && is_array($_GET['skills']) && !empty($_GET['skills'
 }
 
 $query .= " ORDER BY created_at $order";
+$params[] = $offset;
+$params[] = $jobsPerPage;
+$types .= "ii";
+
 $stmt = $conn->prepare($query);
 
 if ($stmt === false) {
@@ -63,6 +71,11 @@ if (!$result) {
 
 // Fetch the user's skills 
 $userSkills = getUserSkills($conn, $userId);
+
+$totalQuery = "SELECT COUNT(*) AS total FROM jobs WHERE 1=1";
+$totalResult = $conn->query($totalQuery);
+$totalJobs = $totalResult->fetch_assoc()['total'];
+$totalPages = ceil($totalJobs / $jobsPerPage);
 
 ?>
 
@@ -297,7 +310,7 @@ $userSkills = getUserSkills($conn, $userId);
                     </div>                             
                 </div>
                 <div class="dropdown">
-                    <div class="dropdown-toggle" onclick="toggleSort()">Sort By</div>
+                    <div class="dropdown-toggle" onclick="toggleSort()">Date Created</div>
                     <div class="dropdown-menu" id="dropdown-sort">
                         <label><input type="radio" name="sort" value="desc" <?php echo (isset($_GET['sort']) && $_GET['sort'] === 'desc') ? 'checked' : ''; ?>>Newest First</label>
                         <label><input type="radio" name="sort" value="asc" <?php echo (isset($_GET['sort']) && $_GET['sort'] === 'asc') ? 'checked' : ''; ?>>Oldest First</label>
@@ -313,14 +326,13 @@ $userSkills = getUserSkills($conn, $userId);
         <div class="job-listings">
             <?php
             while ($row = $result->fetch_assoc()) {
-                // Get the job's required skills (assuming the skills are stored as a comma-separated string in the 'skills' field)
-                $jobSkills = explode(',', $row['skills']); // This splits the string of skills into an array
+               
+                $jobSkills = explode(',', $row['skills']); 
+                
+                $commonSkills = array_intersect($userSkills, $jobSkills); 
+                $matchPercentage = (count($commonSkills) / count($jobSkills)) * 100; 
 
-                // Calculate the match percentage
-                $commonSkills = array_intersect($userSkills, $jobSkills); // Find common skills
-                $matchPercentage = (count($commonSkills) / count($jobSkills)) * 100; // Calculate percentage match
-
-                // Display the job box with the match percentage
+              
                 echo "<div class='job-box' onclick='window.location.href=\"job-details.php?id=" . $row['id'] . "\"'>";
                 echo "<a href='job-details.php?id=" . $row['id'] . "'>" . htmlspecialchars($row['jobtitle']) . "</a><br>";
                 echo htmlspecialchars($row['location']) . "<br>";
@@ -329,11 +341,23 @@ $userSkills = getUserSkills($conn, $userId);
             }
             ?>
         </div>
+        <div style="text-align: center; margin-top: 20px;">
+            <?php
+            // Display pagination buttons
+            if ($page > 1) {
+                echo '<a href="search-jobs.php?page=' . ($page - 1) . '" class="btn">Previous</a>';
+            }
+            if ($page < $totalPages) {
+                echo '<a href="search-jobs.php?page=' . ($page + 1) . '" class="btn">Next</a>';
+            }
+            ?>
+        </div>
 
         <div style="text-align: center; margin-top: 20px;">
             <a href="add-job.php" class="btn">Post a Job</a>
             <a href="index.php" class="btn">Back to Main Menu</a>
         </div>
+        
     </div>
 
     <script>
