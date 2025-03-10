@@ -70,13 +70,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Handle avatar upload
         if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
-            $uploadDir = 'uploads/';
+            $uploadDir = 'img/avatar/';
             $uploadFile = $uploadDir . basename($_FILES['avatar']['name']);
 
             // Check if file is an image
             if (getimagesize($_FILES['avatar']['tmp_name'])) {
                 move_uploaded_file($_FILES['avatar']['tmp_name'], $uploadFile);
-                $updates[] = "profile_picture = ?";
+                $updates[] = "avatar = ?";
                 $params[] = $uploadFile;
                 $types .= 's';
             } else {
