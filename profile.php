@@ -70,17 +70,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Handle avatar upload
         if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
-            $uploadDir = 'img/avatar/';
-            $uploadFile = $uploadDir . basename($_FILES['avatar']['name']);
+            $uploadDir = "../img/avatar/";
+            $allowedFiles = ['jpg', 'jpeg', 'png', 'gif'];
+            $fileType = strtolower(pathinfo($_FILES["avatar"]["name"], PATHINFO_EXTENSION));
+            $maxFileSize = 5 * 1024 * 1024; // 5MB
+            $newFile = uniqid("avatar_") . "." . $fileType;
 
             // Check if file is an image
-            if (getimagesize($_FILES['avatar']['tmp_name'])) {
-                move_uploaded_file($_FILES['avatar']['tmp_name'], $uploadFile);
+            if (!in_array($fileType, $allowedFiles)) {
+                throw new Exception("Please use one of the following file types: " . implode(", ", $allowedFiles));
+            }
+    
+            if ($_FILES["avatar"]["size"] > $maxFileSize) {
+                throw new Exception("Please use an image under 5MB.");
+            }
+
+            if (move_uploaded_file($_FILES["avatar"]["tmp_name"], $uploadDir . $newFile)) {
                 $updates[] = "avatar = ?";
-                $params[] = $uploadFile;
+                $params[] = $newFile;
                 $types .= 's';
-            } else {
-                throw new Exception("Uploaded file is not a valid image.");
             }
         }
 
