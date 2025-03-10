@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $conn->prepare($query);
             $stmt->bind_param($types, ...$params);
             $stmt->execute();
-            
+            header("Refresh:0");
             exit();
         }
     } catch (Exception $e) {
