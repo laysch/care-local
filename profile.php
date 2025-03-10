@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Handle avatar upload
         if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
-            $uploadDir = "../img/avatar/";
+            $uploadDir = "/img/avatar/";
             $allowedFiles = ['jpg', 'jpeg', 'png', 'gif'];
             $fileType = strtolower(pathinfo($_FILES["avatar"]["name"], PATHINFO_EXTENSION));
             $maxFileSize = 5 * 1024 * 1024; // 5MB
