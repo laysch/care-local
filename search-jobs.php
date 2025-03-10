@@ -302,6 +302,10 @@ $totalPages = ceil($totalJobs / $jobsPerPage);
                         <label><input type="checkbox" name="skills[]" value="Carpentry"> Carpentry</label>
                         <label><input type="checkbox" name="skills[]" value="Plumbing"> Plumbing</label>
                         <label><input type="checkbox" name="skills[]" value="Electrical Work"> Electrical Work</label>
+                        <label><input type="checkbox" name="skills[]" value="CPR Certified"> CPR Certified</label>
+                        <label><input type="checkbox" name="skills[]" value="Coaching"> Coaching</label>
+                        <label><input type="checkbox" name="skills[]" value="Multitasking"> Multitasking</label>
+                        <label><input type="checkbox" name="skills[]" value="Patience"> Patience</label>
                     </div>
                 </div>
                 <div class="dropdown">
