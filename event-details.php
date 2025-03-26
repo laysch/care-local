@@ -159,7 +159,7 @@ $posterUsername = getUsernameById($conn, $posterId);
             <p><small>Posted by <?php echo $posterUsername; ?> at <?php echo date("F j, Y, g:i a", strtotime($event['created_at'])); ?></small</p>
 
             <div class="button-container">            
-                <button class="btn"><a href="job-details.php?id=<?php echo $event['job_id']; ?>" >Back to Job Listings</a></button>
+                <button class="btn"><a href="job-details.php?id=<?php echo $event['job_id']; ?>" >See related Job</a></button>
                 <button class="btn"><a href="messages.php?recipient_id=<?php echo $posterId; ?>&recipient_name=<?php echo urlencode($posterUsername); ?>&title=RE+<?php echo urlencode($job['jobtitle']); ?>#sendMessageForm">
                     Send a message to <?php echo htmlspecialchars($posterUsername); ?>
                 </a></button>

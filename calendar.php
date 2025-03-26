@@ -28,7 +28,7 @@ $currentMonth = (int)date('m');
 $currentYear = (int)date('Y');
 
 $events = [];
-$sql = "SELECT date, title FROM events WHERE MONTH(date) = ? AND YEAR(date) = ?";
+$sql = "SELECT date, title, id FROM events WHERE MONTH(date) = ? AND YEAR(date) = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("ii", $month, $year);
 $stmt->execute();
@@ -36,7 +36,10 @@ $result = $stmt->get_result();
 
 while ($row = $result->fetch_assoc()) {
     $day = (int)date('d', strtotime($row['date']));
-    $events[$day][] = $row['title'];
+    $events[$day][] = [
+        'title' => $row['title'],
+        'id' => $row['id']
+    ];
 }
 
 $stmt->close();
@@ -171,7 +174,9 @@ $stmt->close();
             
                                 if (isset($events[$day])) {
                                     foreach ($events[$day] as $event) {
-                                        echo "<div class='event'>$event</div>";
+                                        $title = htmlspecialchars($event['title']);
+                                        $id = (int)$event['id'];
+                                        echo "<a href=\"event-details.php?id=$id\"><div class='event'>$title</div></a>";
                                     }
                                 }
             
