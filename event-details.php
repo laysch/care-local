@@ -5,30 +5,32 @@ require_once 'inc/database.php';
 include_once 'inc/func.php';
 $currentUserId = $_SESSION['user_id'] ?? null;
 
-
-// Get job ID from URL
-$job_id = $_GET['id'];
-
-// Query to get the job details
-$query = "SELECT * FROM jobs WHERE id = $job_id";
-$result = $conn->query($query);
-if (!$result) {
-    die("Query failed: " . $conn->error);
+$event_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+if ($event_id <= 0) {
+    echo "Invalid event ID.";
+    exit;
 }
 
-// Fetch the job details
-$job = $result->fetch_assoc();
-
-// get username
-$posterId = $job['poster_id'];
+$stmt = $conn->prepare("
+    SELECT events.*, jobs.jobtitle, jobs.poster_id
+    FROM events 
+    JOIN jobs ON events.job_id = jobs.id 
+    WHERE events.id = ?
+");
+$stmt->bind_param("i", $event_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$event = $result->fetch_assoc();
+$posterId = $event['poster_id'];
 $posterUsername = getUsernameById($conn, $posterId);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Job Details</title>
+    <title><?php echo htmlspecialchars($event['title']) ?> - Event Details | CareLocal</title>
     <link href="https://fonts.cdnfonts.com/css/share-techmono-2" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/ubuntu-mono" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/pt-sans" rel="stylesheet">
@@ -146,40 +148,27 @@ $posterUsername = getUsernameById($conn, $posterId);
     <!-- Main Body -->
     <div id="main-body-wrapper">
         <section class="hero">
-            <h1>Job Details</h1>
-            <p>Below are the details for the selected job posting.</p>
+            <h1>Event Details</h1>
         </section>
 
          <div class="job-details">
-            
-            <h1><?php echo htmlspecialchars($job['jobtitle']); ?></h1>
-            <p><strong>Location:</strong> <?php echo htmlspecialchars($job['location']); ?></p>
-            <p><strong>Description:</strong> <?php echo nl2br(htmlspecialchars($job['description'])); ?></p>
-            <p><strong>Skills Required:</strong> <?php echo htmlspecialchars($job['skills']); ?></p>
-            <p><small>Posted by <?php echo $posterUsername; ?> at <?php echo date("F j, Y, g:i a", strtotime($job['created_at'])); ?></small</p>
+            <h1><?php htmlspecialchars($event['title']) ?></h1>
+            <p><strong>Location:</strong> <?php echo htmlspecialchars($event['location']); ?></p>
+            <p><strong>Description:</strong> <?php echo nl2br(htmlspecialchars($event['description'])); ?></p>
+            <p><strong>When:</strong> <?= date("F j, Y \\a\\t g:i A", strtotime($event['date'])) ?></p>
+            <p><small>Posted by <?php echo $posterUsername; ?> at <?php echo date("F j, Y, g:i a", strtotime($event['created_at'])); ?></small</p>
 
-            <div class="button-container">
-                <!-- Add to Job Cart Form -->
-                <form action="add-to-cart.php" method="POST" style="display:inline;">
-                    <input type="hidden" name="job_id" value="<?php echo $job['id']; ?>">
-                    <input type="hidden" name="job_title" value="<?php echo htmlspecialchars($job['jobtitle']); ?>">
-                    <input type="hidden" name="job_description" value="<?php echo htmlspecialchars($job['description']); ?>">
-                    <input type="hidden" name="job_skills" value="<?php echo htmlspecialchars($job['skills']); ?>">
-                    <button type="submit" name="add_to_cart" class="btn">Add to Job Cart</button>
-                </form>
-
-                <!-- Back to Job Listings Button -->
-                <button class="btn"><a href="search-jobs.php" >Back to Job Listings</a></button>
+            <div class="button-container">            
+                <button class="btn"><a href="job-details.php?id=<?php echo $event['job_id']; ?>" >Back to Job Listings</a></button>
                 <button class="btn"><a href="messages.php?recipient_id=<?php echo $posterId; ?>&recipient_name=<?php echo urlencode($posterUsername); ?>&title=RE+<?php echo urlencode($job['jobtitle']); ?>#sendMessageForm">
                     Send a message to <?php echo htmlspecialchars($posterUsername); ?>
                 </a></button>
             </div>
             <?php if ($currentUserId && $currentUserId == $posterId): ?>
                 <div class="button-container">
-                    <button class="btn"><a href="create-event.php?job_id=<?= $job['id'] ?>" >Create Event</a></button>
-                    <button class="btn" onclick="return confirm('Are you sure you want to delete this job posting?');"><a href="inc/deleteJob.php?id=<?= $job['id'] ?>">Delete Job</a></button>                  
+                    <button class="btn" onclick="return confirm('Are you sure you want to delete this posting?');"><a href="inc/deleteEvent.php?id=<?= $event['id'] ?>">Delete Event</a></button>                  
                 </div>
-            <?php endif; ?>
+            <?php endif; ?>          
         </div>
     </div>
 </body>
