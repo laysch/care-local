@@ -176,11 +176,8 @@ $posterUsername = getUsernameById($conn, $posterId);
             </div>
             <?php if ($currentUserId && $currentUserId == $job['poster_id']): ?>
                 <div class="button-container">
-                    <button class="btn"><a href="create-event.php?job_id=' . $job['id'] . '" >Create Event</a></button>
-                    <form method="POST" action="delete-job.php" onsubmit="return confirm('Are you sure you want to delete this job posting?');" style="display:inline;">
-                        <input type="hidden" name="job_id" value="<?= $job['id'] ?>">
-                        <button type="submit" class="btn">Delete Posting</button>
-                    </form>                    
+                    <button class="btn"><a href="create-event.php?job_id=<?= $job['id'] ?>" >Create Event</a></button>
+                    <button class="btn" onclick="return confirm('Are you sure you want to delete this job posting?');"><a href="inc/deleteJob.php?id=<?= $job['id'] ?>">Delete Job</a></button>                  
                 </div>
             <?php endif; ?>
         </div>
