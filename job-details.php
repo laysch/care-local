@@ -3,6 +3,8 @@ session_start();
 
 require_once 'inc/database.php';
 include_once 'inc/func.php';
+$currentUserId = $_SESSION['user_id'] ?? null;
+
 
 // Get job ID from URL
 $job_id = $_GET['id'];
@@ -51,7 +53,7 @@ $posterUsername = getUsernameById($conn, $posterId);
         }
 
         #main-body-wrapper {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
             background-color: #cdd8c4;
@@ -76,25 +78,6 @@ $posterUsername = getUsernameById($conn, $posterId);
             margin-bottom: 30px;
         }
 
-        .cta-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        .cta-buttons a {
-            background-color: #5D674C;
-            color: white;
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-
-        .cta-buttons a:hover {
-            background-color: #efac9a;
-        }
-
         .job-details {
             margin-top: 20px;
             text-align: center;
@@ -113,42 +96,47 @@ $posterUsername = getUsernameById($conn, $posterId);
         }
 
         
-/* Button Container */
-.button-container {
-    display: flex;
-    flex-direction: column; /* Stack buttons vertically */
-    align-items: center; /* Center buttons horizontally */
-    gap: 20px; /* Space between buttons */
-}
+        /* Button Container */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center; /* Center buttons horizontally */
+            gap: 20px; /* Space between buttons */
+            padding-bottom: 20px;
+        }
 
-/* Original Button */
-.btn {
-    display: inline-block; /* Keep as inline-block */
-    padding: 10px 20px;
-    background-color: #efac9a; /* Olive green background for button */
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-    width: fit-content; /* Ensures the button only takes up as much width as its content */
-}
+        /* Original Button */
+        .btn,
+        .btn:link,
+        .btn:visited {
+            display: inline-block; /* Keep as inline-block */
+            padding: 10px 20px;
+            background-color: #efac9a; /* Olive green background for button */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            width: fit-content; /* Ensures the button only takes up as much width as its content */
+            cursor: pointer;
+        }
 
-/* Smaller Button */
-.btn-small {
-    display: inline-block; /* Keep as inline-block */
-    padding: 6px 12px; /* Smaller padding */
-    background-color: #efac9a; /* Same background color */
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-    font-size: 0.9em; /* Smaller font size */
-    width: fit-content; /* Ensures the button only takes up as much width as its content */
-}
+        /* Smaller Button */
+        .btn-small {
+            display: inline-block; /* Keep as inline-block */
+            padding: 6px 12px; /* Smaller padding */
+            background-color: #efac9a; /* Same background color */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.9em; /* Smaller font size */
+            width: fit-content; /* Ensures the button only takes up as much width as its content */
+        }
 
         .btn:hover {
             background-color: #efac9a; /* Light peach on hover */
         }
+        
     </style>
 </head>
 <body>
@@ -163,6 +151,7 @@ $posterUsername = getUsernameById($conn, $posterId);
         </section>
 
          <div class="job-details">
+            
             <h1><?php echo htmlspecialchars($job['jobtitle']); ?></h1>
             <p><strong>Location:</strong> <?php echo htmlspecialchars($job['location']); ?></p>
             <p><strong>Description:</strong> <?php echo nl2br(htmlspecialchars($job['description'])); ?></p>
@@ -171,20 +160,29 @@ $posterUsername = getUsernameById($conn, $posterId);
 
             <div class="button-container">
                 <!-- Add to Job Cart Form -->
-                <form action="add-to-cart.php" method="POST" style="display: inline;">
+                <form action="add-to-cart.php" method="POST" style="display:inline;">
                     <input type="hidden" name="job_id" value="<?php echo $job['id']; ?>">
                     <input type="hidden" name="job_title" value="<?php echo htmlspecialchars($job['jobtitle']); ?>">
                     <input type="hidden" name="job_description" value="<?php echo htmlspecialchars($job['description']); ?>">
                     <input type="hidden" name="job_skills" value="<?php echo htmlspecialchars($job['skills']); ?>">
-                    <button type="submit" name="add_to_cart" class="btn-small">Add to Job Cart</button>
+                    <button type="submit" name="add_to_cart" class="btn">Add to Job Cart</button>
                 </form>
 
                 <!-- Back to Job Listings Button -->
-                <a href="search-jobs.php" class="btn">Back to Job Listings</a>
-                <a href="messages.php?recipient_id=<?php echo $posterId; ?>&recipient_name=<?php echo urlencode($posterUsername); ?>&title=RE+<?php echo urlencode($job['jobtitle']); ?>#sendMessageForm" class="btn">
+                <button class="btn"><a href="search-jobs.php" >Back to Job Listings</a></button>
+                <button class="btn"><a href="messages.php?recipient_id=<?php echo $posterId; ?>&recipient_name=<?php echo urlencode($posterUsername); ?>&title=RE+<?php echo urlencode($job['jobtitle']); ?>#sendMessageForm">
                     Send a message to <?php echo htmlspecialchars($posterUsername); ?>
-                </a>
+                </a></button>
             </div>
+            <?php if ($currentUserId && $currentUserId == $job['poster_id']): ?>
+                <div class="button-container">
+                    <button class="btn"><a href="create-event.php?job_id=' . $job['id'] . '" >Create Event</a></button>
+                    <form method="POST" action="delete-job.php" onsubmit="return confirm('Are you sure you want to delete this job posting?');" style="display:inline;">
+                        <input type="hidden" name="job_id" value="<?= $job['id'] ?>">
+                        <button type="submit" class="btn">Delete Posting</button>
+                    </form>                    
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 </body>
