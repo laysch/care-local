@@ -1,6 +1,7 @@
 <?php
 // Start the session
 session_start();
+require_once 'inc/database.php';
 
 // Check if the job ID is provided
 if (!isset($_GET['job_id'])) {
@@ -18,6 +19,26 @@ if (!isset($_SESSION['job_cart'][$jobId])) {
 
 // Get the job details
 $job = $_SESSION['job_cart'][$jobId];
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $interest = trim($_POST['interest']);
+    $qualified = trim($_POST['qualified']);
+    $questions = trim($_POST['questions']);
+    $userId = $_SESSION['user_id'];
+
+    $stmt = $conn->prepare("INSERT INTO job_applications (job_id, user_id, interest, qualified, questions) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("iisss", $jobId, $userId, $interest, $qualified, $questions);
+
+    if ($stmt->execute()) {
+        header('Location: index.php?applied=1');
+        exit;
+    } else {
+        echo "<p>Error submitting application: " . $stmt->error . "</p>";
+    }
+
+    $stmt->close();
+}
 ?>
 
 <!DOCTYPE html>
@@ -155,9 +176,7 @@ $job = $_SESSION['job_cart'][$jobId];
                 <div class="job-title"><?php echo htmlspecialchars($job['title']); ?></div>
                 <div class="job-description"><?php echo htmlspecialchars($job['description']); ?></div>
                 <div class="job-skills">Skills: <?php echo htmlspecialchars($job['skills']); ?></div>               
-                <div class="application-form">
-
-
+                <form class="application-form" method="POST">
                     <div class="form-group">
                         <label for="interest">Why are you interested in this job?</label>
                         <textarea id="interest" name="interest" class="form-control" rows="3"></textarea>
@@ -172,13 +191,14 @@ $job = $_SESSION['job_cart'][$jobId];
                         <label for="questions">Do you have any questions for us?</label>
                         <textarea id="questions" name="questions" class="form-control" rows="3"></textarea>
                     </div>
-                </div>
 
-                <!-- Button Group -->
-                <div class="button-group">
-                    <a href="job-cart.php" class="return-button">Return to Job Cart</a>
-                    <button type="button" class="submit-button" onclick="submitApplication()">Submit</button>
-                </div>
+                    <!-- Button Group -->
+                    <div class="button-group">
+                        <button class="return-button"><a href="job-cart.php">Return to Job Cart</a></button>
+                        <button type="submit" class="submit-button" onclick="submitApplication()">Submit</button>
+                    </div>
+                </form>                
+                
             </div>
         </div>
     </div>
@@ -187,11 +207,5 @@ $job = $_SESSION['job_cart'][$jobId];
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://static.tumblr.com/kmw8hta/1WKpaiuda/tooltipster.main.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/echxn/yeolithm@master/src/js/pixelution.js"></script>
-    <script>
-        function submitApplication() {
-            alert("Your application has been submitted");
-            window.location.href = "index.php"; // Redirect to index.php after submission
-        }
-    </script>
 </body>
 </html>

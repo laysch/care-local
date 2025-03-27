@@ -83,6 +83,26 @@
             }
             echo "<br>";
 
+            // Create job_applications
+            try {
+                $query = "CREATE TABLE job_applications (
+                    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                    job_id INT UNSIGNED NOT NULL,
+                    user_id INT UNSIGNED NOT NULL,
+                    interest TEXT,
+                    qualified TEXT,
+                    questions TEXT,
+                    applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (job_id) REFERENCES jobs(id) ON DELETE CASCADE,
+                    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+                );";
+                $conn->query($query);
+                echo "Table '<b>job_applications</b>' created successfully";
+            } catch (Exception $e) {
+                echo $e->getMessage();
+            }
+            echo "<br>";
+
             $conn->close();
         ?>
         </div>
