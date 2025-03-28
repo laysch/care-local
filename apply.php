@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param("iisss", $jobId, $userId, $interest, $qualified, $questions);
 
     if ($stmt->execute()) {
-        header('Location: index.php?applied=1');
+        header('Location: job-details.php?id=' . $jobId);
         exit;
     } else {
         echo "<p>Error submitting application: " . $stmt->error . "</p>";

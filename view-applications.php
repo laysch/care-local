@@ -1,40 +1,52 @@
 <?php
 session_start();
-
 require_once 'inc/database.php';
 include_once 'inc/func.php';
-$currentUserId = $_SESSION['user_id'] ?? null;
 
+$userId = $_SESSION['user_id'];
 
-// Get job ID from URL
-$job_id = $_GET['id'];
+$jobId = (int)$_GET['id'];
 
-// Query to get the job details
-$query = "SELECT * FROM jobs WHERE id = $job_id";
-$result = $conn->query($query);
-if (!$result) {
-    die("Query failed: " . $conn->error);
+$stmt = $conn->prepare("SELECT jobtitle, poster_id FROM jobs WHERE id = ?");
+$stmt->bind_param("i", $jobId);
+$stmt->execute();
+$jobResult = $stmt->get_result();
+$job = $jobResult->fetch_assoc();
+$stmt->close();
+
+if (!$job || $job['poster_id'] !== $userId) {
+    echo "<p style='color:red; text-align:center;'>You are not authorized to view applications for this job.</p>";
+    exit;
 }
 
-// Fetch the job details
-$job = $result->fetch_assoc();
+$stmt = $conn->prepare("
+    SELECT ja.*, u.username, u.email
+    FROM job_applications ja
+    JOIN users u ON ja.user_id = u.id
+    WHERE ja.job_id = ?
+    ORDER BY ja.applied_at DESC
+");
+$stmt->bind_param("i", $jobId);
+$stmt->execute();
+$appResult = $stmt->get_result();
+$applications = $appResult->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
 
-// get username
 $posterId = $job['poster_id'];
 $posterUsername = getUsernameById($conn, $posterId);
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Job Details | CareLocal</title>
+    <title>View Applications | CareLocal</title>
     <link href="https://fonts.cdnfonts.com/css/share-techmono-2" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/ubuntu-mono" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/pt-sans" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/source-sans-pro" rel="stylesheet">
     <link href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/gh/echxn/yeolithm@master/src/css/pixelution.css" rel="stylesheet">
+    <link rel="stylesheet" href="style/messages.css">
     <style>
         :root {
             --bodyFontFamily: 'Share Tech Mono', monospace;
@@ -142,45 +154,38 @@ $posterUsername = getUsernameById($conn, $posterId);
 <body>
     <!-- Include Sidebar -->
     <?php include 'sidebar.php'; ?>
-
-    <!-- Main Body -->
     <div id="main-body-wrapper">
         <section class="hero">
-            <h1>Job Details</h1>
-            <p>Below are the details for the selected job posting.</p>
+            <h1>Job Applications for: <?php echo htmlspecialchars($job['jobtitle']) ?></h1>
         </section>
-
-        <div class="job-details">
-            
-            <h1><?php echo htmlspecialchars($job['jobtitle']); ?></h1>
-            <p><strong>Location:</strong> <?php echo htmlspecialchars($job['location']); ?></p>
-            <p><strong>Description:</strong> <?php echo nl2br(htmlspecialchars($job['description'])); ?></p>
-            <p><strong>Skills Required:</strong> <?php echo htmlspecialchars($job['skills']); ?></p>
-            <p><small>Posted by <?php echo $posterUsername; ?> at <?php echo date("F j, Y, g:i a", strtotime($job['created_at'])); ?></small</p>
-
-            <div class="button-container">
-                <!-- Add to Job Cart Form -->
-                <form action="add-to-cart.php" method="POST" style="display:inline;">
-                    <input type="hidden" name="job_id" value="<?php echo $job['id']; ?>">
-                    <input type="hidden" name="job_title" value="<?php echo htmlspecialchars($job['jobtitle']); ?>">
-                    <input type="hidden" name="job_description" value="<?php echo htmlspecialchars($job['description']); ?>">
-                    <input type="hidden" name="job_skills" value="<?php echo htmlspecialchars($job['skills']); ?>">
-                    <button type="submit" name="add_to_cart" class="btn">Add to Job Cart</button>
-                </form>
-
-                <!-- Back to Job Listings Button -->
-                <button class="btn"><a href="search-jobs.php" >Back to Job Listings</a></button>
-                <button class="btn"><a href="messages.php?recipient_id=<?php echo $posterId; ?>&recipient_name=<?php echo urlencode($posterUsername); ?>&title=RE+<?php echo urlencode($job['jobtitle']); ?>#sendMessageForm">
-                    Send a message to <?php echo htmlspecialchars($posterUsername); ?>
-                </a></button>
-            </div>
-            <?php if ($currentUserId && $currentUserId == $posterId): ?>
-                <div class="button-container">
-                    <button class="btn"><a href="create-event.php?job_id=<?= $job['id'] ?>" >Create Event</a></button>
-                    <button class="btn"><a href="view-applications.php?id=<?= $job['id'] ?>" >View Applications</a></button>
-                    <button class="btn" onclick="return confirm('Are you sure you want to delete this job posting?');"><a href="inc/deleteJob.php?id=<?= $job['id'] ?>">Delete Job</a></button>                  
-                </div>
-            <?php endif; ?>
+        <div class="messages-container">
+            <?php if (empty($applications)) {
+                echo "<p style=\"text-align:center;\">No applications have been submitted for this job yet.</p>";
+            } else {
+                foreach ($applications as $app) {
+                    echo '
+                        <div class="messages-section">
+                            <div class="messages-header">
+                                <span>' . htmlspecialchars($app['username']) . '</span>
+                                <button class="toggle-btn">
+                                    <a href="messages.php?recipient_id=' . $posterId . '&recipient_name=' . urlencode($posterUsername). '&title=RE+'. urlencode($job['jobtitle']) .'#sendMessageForm">Send Message</a>
+                                </button>
+                                <form method="POST" action="inc/deleteApplication.php">
+                                    <input type="hidden" name="application_id" value="' . $app['id'] . '">
+                                    <input type="hidden" name="job_id" value="' . $jobId . '">
+                                    <button type="submit" class="toggle-btn">Delete Application</button>
+                                </form>
+                            </div>
+                        <div id="receivedMessages">
+                            <strong>Email:</strong> ' . htmlspecialchars($app['email']) . '<br>
+                            <strong>Interest:</strong> ' . nl2br(htmlspecialchars($app['interest'])) . '<br>
+                            <strong>Qualification:</strong> ' . nl2br(htmlspecialchars($app['qualified'])) . '<br>
+                            <strong>Questions:</strong> ' . nl2br(htmlspecialchars($app['questions'])) . '
+                        </div>
+                    ';
+                };
+            };
+            ?>
         </div>
     </div>
 </body>
