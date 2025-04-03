@@ -378,18 +378,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <textarea id="bio" name="bio" placeholder="Tell us about yourself"><?php echo htmlspecialchars($row['bio']); ?></textarea>
 
                     <!-- Skills -->
-                    <label for="skills">Skills (check all that apply):</label>
+                    <label for="skills">Skills (select all that apply):</label>
                     <div class="tags-container">
                         <?php
                         $allSkills = ["Communication", "Teamwork", "Problem-Solving", "Leadership", "Technical Skills", "Time Management", "Painting", "Carpentry", "Plumbing", "Electrical Work", "PHP", "HTML/CSS", "JavaScript", "MySQL", "CPR Certified", "Coaching", "Multitasking", "Patience" ];
-                        foreach ($allSkills as $skill):
-                            $checked = in_array($skill, $skills) ? 'checked' : '';
+                        $selected_skills = isset($_POST['skills']) ? $_POST['skills'] : [];
+                        foreach ($available_skills as $skill) {
+                            $isSelected = in_array($skill, $selected_skills) ? 'selected' : '';
+                            echo "<button type='button' class='tag $isSelected' onclick='toggleSkillSelection(this, \"$skill\")'>$skill</button>";
+                        }
                         ?>
                             <label>
                                 <input type="hidden" name="skills[]" value="<?php echo $skill; ?>" <?php echo $checked; ?>> <?php echo $skill; ?>
                             </label>
                         <?php endforeach; ?>
                     </div>
+                    <script>
+                        function toggleSkillSelection(button, skill) {
+            button.classList.toggle('selected');
+            let skillsInput = document.getElementById('skills-input');
+            let selectedSkills = skillsInput.value ? skillsInput.value.split(', ') : [];
+
+            if (button.classList.contains('selected')) {
+                if (!selectedSkills.includes(skill)) {
+                    selectedSkills.push(skill);
+                }
+            } else {
+                selectedSkills = selectedSkills.filter(item => item !== skill);
+            }
+
+            skillsInput.value = selectedSkills.join(', ');
+        }
+        document.querySelector("form").addEventListener("submit", function () {
+            let selectedButtons = document.querySelectorAll(".tag.selected");
+            let skillsArray = Array.from(selectedButtons).map(btn => btn.textContent);
+            document.getElementById("skills-input").value = skillsArray.join(', ');
+        });
+    </script>
 
                     <!-- Avatar Upload -->
                     <label for="avatar">Profile Picture:</label>
