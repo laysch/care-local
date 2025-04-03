@@ -290,15 +290,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             cursor: pointer;
         }
 
-        .edit-profile-form .checkbox-group {
+        
+        .tags-container {
             display: flex;
             flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
-        .edit-profile-form .checkbox-group label {
-            margin-right: 20px;
-            font-size: 1em;
-            color: var(--bodyTextColor);
+        .tag {
+            background-color: #D1D79D;
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .tag.selected {
+            background-color: #5D674C;
         }
     </style>
 </head>
@@ -369,14 +379,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <!-- Skills -->
                     <label for="skills">Skills (check all that apply):</label>
-                    <div class="checkbox-group">
+                    <div class="tags-container">
                         <?php
                         $allSkills = ["Communication", "Teamwork", "Problem-Solving", "Leadership", "Technical Skills", "Time Management", "Painting", "Carpentry", "Plumbing", "Electrical Work", "PHP", "HTML/CSS", "JavaScript", "MySQL", "CPR Certified", "Coaching", "Multitasking", "Patience" ];
                         foreach ($allSkills as $skill):
                             $checked = in_array($skill, $skills) ? 'checked' : '';
                         ?>
                             <label>
-                                <input type="checkbox" name="skills[]" value="<?php echo $skill; ?>" <?php echo $checked; ?>> <?php echo $skill; ?>
+                                <input type="hidden" name="skills[]" value="<?php echo $skill; ?>" <?php echo $checked; ?>> <?php echo $skill; ?>
                             </label>
                         <?php endforeach; ?>
                     </div>
