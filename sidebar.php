@@ -104,6 +104,7 @@ if (isset($_SESSION['user_id'])) {
             <a href="/job-cart.php">Job Cart</a>
             <a href="/calendar.php">Calendar</a>
             <a href="/help-center.php">Help Center</a>
+            <a href="/search-users.php">Search Users</a>
             <?php 
                 if (isset($_SESSION['username'])) {
                     echo "<a href=\"/profile.php\">" . $userName ."'s Profile</a>";
