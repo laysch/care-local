@@ -341,17 +341,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <!-- Skills Section -->
             <div class="skills">
-                <h2>Skills</h2>
-                <ul>
-                    <?php if (!empty($skills)): ?>
-                        <?php foreach ($skills as $skill): ?>
-                            <li><?php echo htmlspecialchars($skill); ?></li>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <li>No skills added yet.</li>
-                    <?php endif; ?>
-                </ul>
-            </div>
+    <h2>Skills</h2>
+    <ul>
+        <?php if (!empty($skills)): ?>
+            <?php foreach ($skills as $skill): ?>
+                <li><?php echo htmlspecialchars($skill); ?></li>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <li>No skills listed.</li>
+        <?php endif; ?>
+    </ul>
+</div>
 
             <!-- Edit Profile Button -->
             <div class="edit-button-wrapper">
