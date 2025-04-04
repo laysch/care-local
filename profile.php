@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!in_array($fileType, $allowedFiles)) {
                 throw new Exception("Please use one of the following file types: " . implode(", ", $allowedFiles));
             }
-    
+
             if ($_FILES["avatar"]["size"] > $maxFileSize) {
                 throw new Exception("Please use an image under 5MB.");
             }
@@ -290,25 +290,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             cursor: pointer;
         }
 
-        
-        .tags-container {
+        .edit-profile-form .checkbox-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
         }
 
-        .tag {
-            background-color: #D1D79D;
-            color: #fff;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .tag.selected {
-            background-color: #5D674C;
+        .edit-profile-form .checkbox-group label {
+            margin-right: 20px;
+            font-size: 1em;
+            color: var(--bodyTextColor);
         }
     </style>
 </head>
@@ -341,17 +331,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <!-- Skills Section -->
             <div class="skills">
-    <h2>Skills</h2>
-    <ul>
-        <?php if (!empty($skills)): ?>
-            <?php foreach ($skills as $skill): ?>
-                <li><?php echo htmlspecialchars($skill); ?></li>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <li>No skills listed.</li>
-        <?php endif; ?>
-    </ul>
-</div>
+                <h2>Skills</h2>
+                <ul>
+                    <?php if (!empty($skills)): ?>
+                        <?php foreach ($skills as $skill): ?>
+                            <li><?php echo htmlspecialchars($skill); ?></li>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <li>No skills added yet.</li>
+                    <?php endif; ?>
+                </ul>
+            </div>
 
             <!-- Edit Profile Button -->
             <div class="edit-button-wrapper">
@@ -378,22 +368,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <textarea id="bio" name="bio" placeholder="Tell us about yourself"><?php echo htmlspecialchars($row['bio']); ?></textarea>
 
                     <!-- Skills -->
-                    <label for="skills">Skills (select all that apply):</label>
-                    <div class="tags-container">
+                    <label for="skills">Skills (check all that apply):</label>
+                    <div class="checkbox-group">
                         <?php
-                        $allSkills = ["Communication", "Teamwork", "Problem-Solving", "Leadership", "Technical Skills", "Time Management", "Painting", "Carpentry", "Plumbing", "Electrical Work", "PHP", "HTML/CSS", "JavaScript", "MySQL", "CPR Certified", "Coaching", "Multitasking", "Patience" ];
-                        $selected_skills = isset($_POST['skills']) ? $_POST['skills'] : [];
-                        foreach ($available_skills as $skill) {
-                            $isSelected = in_array($skill, $selected_skills) ? 'selected' : '';
-                            echo "<button type='button' class='tag $isSelected' onclick='toggleSkillSelection(this, \"$skill\")'>$skill</button>";
-                        }
+                        $allSkills = ["Communication", "Teamwork", "Problem-Solving", "Leadership", "Technical Skills", "Time Management", "Painting", "Carpentry", "Plumbing", "Electrical Work", "PHP", "HTML/CSS", "JavaScript", "MySQL"];
+                        foreach ($allSkills as $skill):
+                            $checked = in_array($skill, $skills) ? 'checked' : '';
                         ?>
                             <label>
-                                <input type="hidden" name="skills[]" value="<?php echo $skill; ?>" <?php echo $checked; ?>> <?php echo $skill; ?>
+                                <input type="checkbox" name="skills[]" value="<?php echo $skill; ?>" <?php echo $checked; ?>> <?php echo $skill; ?>
                             </label>
                         <?php endforeach; ?>
                     </div>
-                   
 
                     <!-- Avatar Upload -->
                     <label for="avatar">Profile Picture:</label>
