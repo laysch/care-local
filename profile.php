@@ -393,28 +393,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </label>
                         <?php endforeach; ?>
                     </div>
-                    <script>
-                        function toggleSkillSelection(button, skill) {
-            button.classList.toggle('selected');
-            let skillsInput = document.getElementById('skills-input');
-            let selectedSkills = skillsInput.value ? skillsInput.value.split(', ') : [];
-
-            if (button.classList.contains('selected')) {
-                if (!selectedSkills.includes(skill)) {
-                    selectedSkills.push(skill);
-                }
-            } else {
-                selectedSkills = selectedSkills.filter(item => item !== skill);
-            }
-
-            skillsInput.value = selectedSkills.join(', ');
-        }
-        document.querySelector("form").addEventListener("submit", function () {
-            let selectedButtons = document.querySelectorAll(".tag.selected");
-            let skillsArray = Array.from(selectedButtons).map(btn => btn.textContent);
-            document.getElementById("skills-input").value = skillsArray.join(', ');
-        });
-    </script>
+                   
 
                     <!-- Avatar Upload -->
                     <label for="avatar">Profile Picture:</label>
