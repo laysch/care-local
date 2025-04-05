@@ -360,7 +360,7 @@ $totalPages = ceil($totalJobs / $jobsPerPage);
         </div>
 
         <div style="text-align: center; margin-top: 20px;">
-            <a href="preferences.php" class="btn">Set Preferences</a>
+            <a href="preferences.php" class="btn">Set Job Notifications</a>
             <a href="add-job.php" class="btn">Post a Job</a>
             <a href="index.php" class="btn">Back to Main Menu</a>
         </div>
