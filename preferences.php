@@ -1,24 +1,47 @@
 <?php
-session_start();
+$currentPage = "Set Preferences";
 require_once 'inc/database.php';
 include_once 'inc/func.php';
 
-$currentUserId = $_SESSION['user_id'] ?? null;
+session_start();
+if (!isset($_SESSION['username'])) {
+    header('Location: /login.php');
+    exit;
+}
+$userId = $_SESSION['user_id'];
 
-// Fetch skills list from the database
-require_once 'inc/database.php';
-$querySkills = "SELECT skill_name FROM skills";
-$skillsResult = $conn->query($querySkills);
-if (!$skillsResult) {
-    die("Skills query failed: " . $conn->error);
+$success_message = "";
+$skills = [];
+$county = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Collect form data
+    $city = sanitizeInput($_POST['city']);
+    $county = sanitizeInput($_POST['county']);
+    
+    // Collect skills selected
+    if (isset($_POST['skills']) && !empty($_POST['skills'])) {
+        $skills = $_POST['skills'];
+    }
+
+    // Convert skills array to string
+    $skills_string = implode(",", $skills);
+
+    // Prepare and bind SQL statement
+    $stmt = $conn->prepare("INSERT INTO user_preferences (user_id, city, county, skills) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssss", $userId, $city, $county, $skills_string);
+
+    // Execute the statement
+    if ($stmt->execute()) {
+        $success_message = "Preferences saved successfully!";
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+
+    // Close statement
+    $stmt->close();
 }
 
-// Fetch counties for selection
-$queryCounties = "SELECT county_name FROM counties";
-$countiesResult = $conn->query($queryCounties);
-if (!$countiesResult) {
-    die("Counties query failed: " . $conn->error);
-}
 ?>
 
 <!DOCTYPE html>
