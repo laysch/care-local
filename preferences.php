@@ -29,132 +29,69 @@ if ($stmt->fetch() && $prefs) {
 $stmt->close();
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Notification Preferences | CareLocal</title>
-    <link href="https://fonts.cdnfonts.com/css/share-techmono-2" rel="stylesheet">
-    <link href="https://fonts.cdnfonts.com/css/ubuntu-mono" rel="stylesheet">
-    <link href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/gh/echxn/yeolithm@master/src/css/pixelution.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Preferences</title>
     <style>
-        :root {
-            --bodyFontFamily: 'Share Tech Mono', monospace;
-            --bodyFontSize: 14px;
-            --backgroundColor: #f9eedd;
-            --bordersColor: #839c99;
-            --bodyTextColor: #839c99;
-            --linksColor: #222222;
-            --linksHoverColor: #efac9a;
-        }
-
-        body {
-            background-color: #fff;
-            font-family: 'Share Tech Mono', monospace;
-            color: #5D674C;
-        }
-
-        #main-body-wrapper {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #cdd8c4;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .hero {
-            text-align: center;
-            padding: 50px 20px;
-        }
-
-        .hero h1 {
-            font-size: 2.5em;
-            color: #5D674C;
-            margin-bottom: 20px;
-        }
-
-        .preferences-form {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .preferences-form h2 {
-            font-size: 2em;
-            color: #5D674C;
-            margin-bottom: 20px;
-        }
-
-        .preferences-form label {
-            font-size: 1.1em;
-            color: #5D674C;
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        .preferences-form select, .preferences-form input[type="checkbox"] {
-            margin: 10px;
-        }
-
-        .button-container {
+        .tags-container {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            padding-bottom: 20px;
+            flex-wrap: wrap;
         }
-
-        .btn, .btn:link, .btn:visited {
-            padding: 10px 20px;
-            background-color: #efac9a;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
+        .tag {
+            padding: 5px 10px;
+            margin: 5px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
             cursor: pointer;
         }
-
-        .btn:hover {
-            background-color: #efac9a;
+        .tag.selected {
+            background-color: #4CAF50;
+            color: white;
         }
     </style>
+    <script>
+        function toggleSkillSelection(button, skill) {
+            button.classList.toggle('selected');
+            
+            let skills = [];
+            document.querySelectorAll('.tag.selected').forEach(selectedButton => {
+                skills.push(selectedButton.textContent);
+            });
+            
+            // Set the hidden input field's value as a JSON string of selected skills
+            document.getElementById('skills_input').value = JSON.stringify(skills);
+        }
+    </script>
 </head>
 <body>
-    <?php include 'sidebar.php'; ?>
+    <h2>Choose What You Want to Be Notified About</h2>
 
-    <div id="main-body-wrapper">
-        <section class="hero">
-            <h1>Set Your Notification Preferences</h1>
-            <p>Choose the skills you're interested in and your preferred county for notifications.</p>
-        </section>
-
-        <div class="preferences-form">
-            <h2>Update Preferences</h2>
-
-            <form action="save-preferences.php" method="POST">
-                <div>
-                    <label for="skills">Select Skills:</label>
-                    <?php while ($skill = $skillsResult->fetch_assoc()): ?>
-                        <input type="checkbox" name="skills[]" value="<?= $skill['skill_name'] ?>" <?= in_array($skill['skill_name'], explode(',', $preferences['skills'] ?? '')) ? 'checked' : '' ?>> <?= $skill['skill_name'] ?>
-                    <?php endwhile; ?>
-                </div>
-
-                <div>
-                    <label for="county">Select County:</label>
-                    <select name="county" id="county">
-                        <?php while ($county = $countiesResult->fetch_assoc()): ?>
-                            <option value="<?= $county['county_name'] ?>" <?= $county['county_name'] == $preferences['county'] ? 'selected' : '' ?>><?= $county['county_name'] ?></option>
-                        <?php endwhile; ?>
-                    </select>
-                </div>
-
-                <div class="button-container">
-                    <button type="submit" class="btn">Save Preferences</button>
-                </div>
-            </form>
+    <!-- Form for updating preferences -->
+    <form method="POST" action="save_preferences.php">
+        <h3>Skills:</h3>
+        <div class="tags-container">
+            <?php foreach ($skillsOptions as $skill): ?>
+                <button type="button" class="tag <?= in_array($skill, $notify_preferences['skills']) ? 'selected' : '' ?>" onclick="toggleSkillSelection(this, '<?= $skill ?>')"><?= $skill ?></button>
+            <?php endforeach; ?>
         </div>
-    </div>
+        <!-- Hidden field to store selected skills as JSON -->
+        <input type="hidden" name="skills" id="skills_input" value="<?= json_encode($notify_preferences['skills']) ?>">
+
+        <h3>Counties:</h3>
+        <?php foreach ($counties as $county): ?>
+            <label>
+                <input type="checkbox" name="county[]" value="<?= $county ?>"
+                    <?= in_array($county, $notify_preferences['county']) ? 'checked' : '' ?>>
+                <?= $county ?>
+            </label><br>
+        <?php endforeach; ?>
+
+        <br>
+        <button type="submit">Save Preferences</button>
+    </form>
 </body>
 </html>
+
