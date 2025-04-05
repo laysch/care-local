@@ -1,10 +1,12 @@
 <?php
 require_once 'inc/database.php';
+include_once 'inc/func.php';
+
 session_start();
-
-// For demo/testing: manually set logged-in user ID
-$_SESSION['user_id'] = 1; // replace with real login session if needed
-
+if (!isset($_SESSION['username'])) {
+    header('Location: /login.php');
+    exit;
+}
 $userId = $_SESSION['user_id'];
 
 // Skills and counties options (you can fetch these dynamically from the database or hardcode)
