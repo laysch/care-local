@@ -5,16 +5,8 @@ include_once 'inc/func.php';
 
 $currentUserId = $_SESSION['user_id'] ?? null;
 
-// Get user preferences from the database
-$query = "SELECT skills, county FROM user_preferences WHERE user_id = $currentUserId";
-$result = $conn->query($query);
-if (!$result) {
-    die("Query failed: " . $conn->error);
-}
-
-$preferences = $result->fetch_assoc();
-
-// Fetch skills list from the database (if any)
+// Fetch skills list from the database
+require_once 'inc/database.php';
 $querySkills = "SELECT skill_name FROM skills";
 $skillsResult = $conn->query($querySkills);
 if (!$skillsResult) {
