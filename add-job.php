@@ -40,6 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($stmt->execute()) {
         $success_message = "Job posted successfully!";
         $jobID = $stmt->insert_id;
+        notifyUsersAboutJob($jobID); // Add this line for job notification
         header("Location: search-jobs.php");
         exit; // Ensure no further code is executed
     } else {
