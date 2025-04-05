@@ -10,7 +10,7 @@ if (!isset($_SESSION['username'])) {
 }
 $userId = $_SESSION['user_id'];
 
-// Skills and counties options (you can fetch these dynamically from the database or hardcode)
+// Skills and counties options 
 $skillsOptions = ['Communication', 'Teamwork', 'Problem-Solving', 'Leadership', 'Technical Skills', 'Time Management', 'Painting', 'Carpentry', 'Plumbing', 'Electrical Work', 'PHP', 'HTML/CSS', 'JavaScript', 'MySQL', 'CPR Certified', 'Coaching', 'Multitasking', 'Patience'];
 $counties = ['Nassau', 'Suffolk'];
 
@@ -157,15 +157,21 @@ $stmt->close();
         <div class="form-container">
             <?php if ($success_message != "") { echo "<p style='color: green;'>$success_message</p>"; } ?>
             <form action="select-preferences.php" method="POST">
-                <!-- Modify the Location Input Section -->
+                <!-- Modify the County Selection Section to be Clickable Like Skills -->
 <label for="county">Select County:</label>
-<select id="county" name="county" required>
-    <option value="Not Specified" <?php echo ($notify_preferences['county'] == 'Not Specified' ? 'selected' : ''); ?>>Not Specified</option>
-    <option value="Nassau" <?php echo ($notify_preferences['county'] == 'Nassau' ? 'selected' : ''); ?>>Nassau</option>
-    <option value="Suffolk" <?php echo ($notify_preferences['county'] == 'Suffolk' ? 'selected' : ''); ?>>Suffolk</option>
-</select>
+<div class="tags-container">
+    <?php 
+    $available_counties = ['Not Specified', 'Nassau', 'Suffolk'];
+    $selected_counties = isset($notify_preferences['county']) ? [$notify_preferences['county']] : [];
+    foreach ($available_counties as $county) {
+        $isSelected = in_array($county, $selected_counties) ? 'selected' : '';
+        echo "<button type='button' class='tag $isSelected' onclick='toggleCountySelection(this, \"$county\")'>$county</button>";
+    }
+    ?>
+</div>
+<input type="hidden" name="county" id="county-input">
 
-<!-- Handling Skills Selection -->
+<!-- Modify the Skills Selection Section -->
 <label for="skills">Select Skills:</label>
 <div class="tags-container">
     <?php 
@@ -182,17 +188,23 @@ $stmt->close();
 <!-- Save Button -->
 <button type="submit" class="cta-button">Save Preferences</button>
 
-            </form>
-        </div>
-    </div>
-    <script>
-        // JavaScript to handle skill selection
-        function toggleSkillSelection(button, skill) {
-            button.classList.toggle('selected');
-            let skillsInput = document.getElementById('skills-input');
-            let selectedSkills = Array.from(document.querySelectorAll('.tag.selected')).map(el => el.textContent);
-            skillsInput.value = selectedSkills.join(',');
-        }
-    </script>
+<script>
+    // JavaScript to handle county selection
+    function toggleCountySelection(button, county) {
+        button.classList.toggle('selected');
+        let countyInput = document.getElementById('county-input');
+        let selectedCounties = Array.from(document.querySelectorAll('.tags-container button.selected')).map(el => el.textContent);
+        countyInput.value = selectedCounties.join(',');
+    }
+
+    // JavaScript to handle skill selection (same as before)
+    function toggleSkillSelection(button, skill) {
+        button.classList.toggle('selected');
+        let skillsInput = document.getElementById('skills-input');
+        let selectedSkills = Array.from(document.querySelectorAll('.tags-container button.selected')).map(el => el.textContent);
+        skillsInput.value = selectedSkills.join(',');
+    }
+</script>
+
 </body>
 </html>
