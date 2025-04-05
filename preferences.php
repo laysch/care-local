@@ -151,7 +151,7 @@ $stmt->close();
     <div id="main-body-wrapper">
         <section class="hero">
             <h1>Select Preferences</h1>
-            <p>Choose your preferred skills and location for a better experience.</p>
+            <p>Choose your preferred skills and location to receive relevant notifications.</p>
         </section>
 
         <div class="form-container">
