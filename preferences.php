@@ -38,20 +38,79 @@ $stmt->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notification Preferences</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 30px;
+            color: #333;
+        }
+
+        h3 {
+            color: #5D674C; /* Custom color scheme */
+        }
+
+        form {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
         .tags-container {
             display: flex;
             flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
         }
+
         .tag {
-            padding: 5px 10px;
+            padding: 8px 15px;
             margin: 5px;
             background-color: #f0f0f0;
             border: 1px solid #ccc;
             cursor: pointer;
+            border-radius: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
+
+        .tag:hover {
+            background-color: #ddd;
+        }
+
         .tag.selected {
             background-color: #4CAF50;
             color: white;
+        }
+
+        label {
+            display: block;
+            margin: 8px 0;
+            font-size: 16px;
+        }
+
+        button[type="submit"] {
+            background-color: #5D674C; /* Custom color */
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #4CAF50;
         }
     </style>
     <script>
