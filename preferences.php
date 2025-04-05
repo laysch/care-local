@@ -1,4 +1,5 @@
-<?php
+<?php   
+$currentPage = "Preferences";
 require_once 'inc/database.php';
 include_once 'inc/func.php';
 
