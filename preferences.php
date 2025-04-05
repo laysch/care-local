@@ -157,23 +157,31 @@ $stmt->close();
         <div class="form-container">
             <?php if ($success_message != "") { echo "<p style='color: green;'>$success_message</p>"; } ?>
             <form action="select-preferences.php" method="POST">
-                <label for="location">Location:</label>
-                <input type="text" id="location" name="location" required>
+                <!-- Modify the Location Input Section -->
+<label for="county">Select County:</label>
+<select id="county" name="county" required>
+    <option value="Not Specified" <?php echo ($notify_preferences['county'] == 'Not Specified' ? 'selected' : ''); ?>>Not Specified</option>
+    <option value="Nassau" <?php echo ($notify_preferences['county'] == 'Nassau' ? 'selected' : ''); ?>>Nassau</option>
+    <option value="Suffolk" <?php echo ($notify_preferences['county'] == 'Suffolk' ? 'selected' : ''); ?>>Suffolk</option>
+</select>
 
-                <label for="skills">Select Skills:</label>
-                <div class="tags-container">
-                    <?php 
-                    $available_skills = ['Communication', 'Teamwork', 'Problem-Solving', 'Leadership', 'Technical Skills', 'Time Management'];
-                    $selected_skills = isset($_POST['skills']) ? $_POST['skills'] : [];
-                    foreach ($available_skills as $skill) {
-                        $isSelected = in_array($skill, $selected_skills) ? 'selected' : '';
-                        echo "<button type='button' class='tag $isSelected' onclick='toggleSkillSelection(this, \"$skill\")'>$skill</button>";
-                    }
-                    ?>
-                </div>
-                <input type="hidden" name="skills" id="skills-input">
+<!-- Handling Skills Selection -->
+<label for="skills">Select Skills:</label>
+<div class="tags-container">
+    <?php 
+    $available_skills = ['Communication', 'Teamwork', 'Problem-Solving', 'Leadership', 'Technical Skills', 'Time Management'];
+    $selected_skills = isset($_POST['skills']) ? $_POST['skills'] : $notify_preferences['skills'];
+    foreach ($available_skills as $skill) {
+        $isSelected = in_array($skill, $selected_skills) ? 'selected' : '';
+        echo "<button type='button' class='tag $isSelected' onclick='toggleSkillSelection(this, \"$skill\")'>$skill</button>";
+    }
+    ?>
+</div>
+<input type="hidden" name="skills" id="skills-input">
 
-                <button type="submit" class="cta-button">Save Preferences</button>
+<!-- Save Button -->
+<button type="submit" class="cta-button">Save Preferences</button>
+
             </form>
         </div>
     </div>
