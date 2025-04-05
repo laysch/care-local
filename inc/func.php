@@ -31,8 +31,11 @@ function getUserSkills($conn, $userId) {
 
     if ($results) {
         $row = $results->fetch_assoc();
-        $userSkills = explode(',', $row['skills']); 
-        $userSkills = array_map('trim', $userSkills);
+        // Check if 'skills' is set and not null
+        if (isset($row['skills']) && $row['skills'] !== null) {
+            $userSkills = explode(',', $row['skills']); 
+            $userSkills = array_map('trim', $userSkills); // Remove any extra spaces from skills
+        }
     }
     
     return $userSkills;
