@@ -11,10 +11,13 @@ function getUnreadMessagesCount($conn, $userId) {
     
     if ($results) {
         $row = $results->fetch_assoc();
-        return $row['cnt'];
+        // Check if $row is null
+        if ($row && isset($row['cnt'])) {
+            return $row['cnt'];
+        }
     }
     
-    return 0; 
+    return 0; // Return 0 if no results or issue with fetching
 }
 
 function getUserSkills($conn, $userId) {
