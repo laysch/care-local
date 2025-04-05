@@ -1,48 +1,34 @@
 <?php
-$currentPage = "Set Preferences";
 require_once 'inc/database.php';
-include_once 'inc/func.php';
-
 session_start();
-if (!isset($_SESSION['username'])) {
-    header('Location: /login.php');
-    exit;
-}
+
+// For demo/testing: manually set logged-in user ID
+$_SESSION['user_id'] = 1; // replace with real login session if needed
+
 $userId = $_SESSION['user_id'];
 
-$success_message = "";
-$skills = [];
-$county = "";
+// Skills and counties options (you can fetch these dynamically from the database or hardcode)
+$skillsOptions = ['Communication', 'Teamwork', 'Problem-Solving', 'Leadership', 'Technical Skills', 'Time Management', 'Painting', 'Carpentry', 'Plumbing', 'Electrical Work', 'PHP', 'HTML/CSS', 'JavaScript', 'MySQL', 'CPR Certified', 'Coaching', 'Multitasking', 'Patience'];
+$counties = ['Nassau', 'Suffolk'];
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Collect form data
-    $city = sanitizeInput($_POST['city']);
-    $county = sanitizeInput($_POST['county']);
-    
-    // Collect skills selected
-    if (isset($_POST['skills']) && !empty($_POST['skills'])) {
-        $skills = $_POST['skills'];
-    }
+// Initialize notify_preferences array
+$notify_preferences = [
+    'skills' => [],
+    'county' => []
+];
 
-    // Convert skills array to string
-    $skills_string = implode(",", $skills);
-
-    // Prepare and bind SQL statement
-    $stmt = $conn->prepare("INSERT INTO user_preferences (user_id, city, county, skills) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $userId, $city, $county, $skills_string);
-
-    // Execute the statement
-    if ($stmt->execute()) {
-        $success_message = "Preferences saved successfully!";
-    } else {
-        echo "Error: " . $stmt->error;
-    }
-
-    // Close statement
-    $stmt->close();
+// Load existing preferences from the database
+$query = "SELECT notify_preferences FROM users WHERE id = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $userId);
+$stmt->execute();
+$stmt->bind_result($prefs);
+if ($stmt->fetch() && $prefs) {
+    $notify_preferences = json_decode($prefs, true); // Decode the preferences stored in JSON format
 }
-
+$stmt->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
