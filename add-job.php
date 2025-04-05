@@ -39,8 +39,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Execute the statement
     if ($stmt->execute()) {
         $success_message = "Job posted successfully!";
-        $jobID = $stmt->insert_id;
-        notifyUsersAboutJob($jobID); // Add this line for job notification
+        // Get the job's ID after it's inserted
+    $new_job_id = $stmt->insert_id;
+
+    // Now, find users who match this job's preferences and notify them
+    $query = "SELECT id, notify_preferences FROM users";
+    $result = $conn->query($query);
+
+    while ($user = $result->fetch_assoc()) {
+        $user_preferences = json_decode($user['notify_preferences'], true);
+
+        // Check if the user's preferences match the job's skills and county
+        if (array_intersect($user_preferences['skills'], json_decode($job_skills)) && in_array($job_county, $user_preferences['county'])) {
+            // Send a message to the user about the job
+            $message = "A job matching your preferences has just been posted! <br>
+                        <a href='job_details.php?job_id={$new_job_id}'>View Job Details</a>";
+
+            // Insert a message into the inbox
+            $query = "INSERT INTO inbox (sender_id, receiver_id, message, created_at) VALUES (0, ?, ?, NOW())";
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param("is", $user['id'], $message);
+            $stmt->execute();
+        }
+    }
         header("Location: search-jobs.php");
         exit; // Ensure no further code is executed
     } else {
