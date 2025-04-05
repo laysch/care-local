@@ -155,7 +155,6 @@ $stmt->close();
         </section>
 
         <div class="form-container">
-            <?php if ($success_message != "") { echo "<p style='color: green;'>$success_message</p>"; } ?>
             <form action="select-preferences.php" method="POST">
                 <!-- Modify the County Selection Section to be Clickable Like Skills -->
 <label for="county">Select County:</label>
