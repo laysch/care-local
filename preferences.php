@@ -36,33 +36,76 @@ $stmt->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notification Preferences</title>
+    <title>Select Preferences | CareLocal</title>
+    <link href="https://fonts.cdnfonts.com/css/share-techmono-2" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/ubuntu-mono" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/pt-sans" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/source-sans-pro" rel="stylesheet">
+    <link href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css' rel='stylesheet'>
+    <link href="https://cdn.jsdelivr.net/gh/echxn/yeolithm@master/src/css/pixelution.css" rel="stylesheet">
     <style>
+        /* Styles adapted for preferences page */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            margin: 0;
-            padding: 0;
+            background-color: #ffffff;
+            background-image: url('https://example.com/background.jpg');
+            background-attachment: fixed;
+            background-repeat: repeat;
+            font-family: 'Share Tech Mono', monospace;
         }
 
-        h2 {
-            text-align: center;
-            margin-top: 30px;
-            color: #333;
-        }
-
-        h3 {
-            color: #5D674C; /* Custom color scheme */
-        }
-
-        form {
+        #main-body-wrapper {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #cdd8c4;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .hero h1 {
+            font-size: 2.5em;
+            color: #5D674C;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            color: #839c99;
+            margin-bottom: 30px;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px 0;
+            border: 1px solid #839c99;
+            border-radius: 5px;
+        }
+
+        .category-btn {
+            background-color: #5D674C;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .category-btn.active {
+            background-color: #efac9a;
         }
 
         .tags-container {
@@ -73,86 +116,74 @@ $stmt->close();
         }
 
         .tag {
+            background-color: #D1D79D;
+            color: #fff;
             padding: 8px 15px;
-            margin: 5px;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-            cursor: pointer;
             border-radius: 20px;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        .tag:hover {
-            background-color: #ddd;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
 
         .tag.selected {
-            background-color: #4CAF50;
-            color: white;
+            background-color: #5D674C;
         }
 
-        label {
-            display: block;
-            margin: 8px 0;
-            font-size: 16px;
-        }
-
-        button[type="submit"] {
-            background-color: #5D674C; /* Custom color */
+        .cta-button {
+            background-color: #5D674C;
             color: white;
-            border: none;
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
-            width: 100%;
-            margin-top: 20px;
+            font-weight: bold;
         }
 
-        button[type="submit"]:hover {
-            background-color: #4CAF50;
+        .cta-button:hover {
+            background-color: #efac9a;
         }
     </style>
-    <script>
-        function toggleSkillSelection(button, skill) {
-            button.classList.toggle('selected');
-            
-            let skills = [];
-            document.querySelectorAll('.tag.selected').forEach(selectedButton => {
-                skills.push(selectedButton.textContent);
-            });
-            
-            // Set the hidden input field's value as a JSON string of selected skills
-            document.getElementById('skills_input').value = JSON.stringify(skills);
-        }
-    </script>
 </head>
 <body>
-    <h2>Choose What You Want to Be Notified About</h2>
+    <!-- Include Sidebar -->
+    <?php include 'sidebar.php'; ?>
 
-    <!-- Form for updating preferences -->
-    <form method="POST" action="save_preferences.php">
-        <h3>Skills:</h3>
-        <div class="tags-container">
-            <?php foreach ($skillsOptions as $skill): ?>
-                <button type="button" class="tag <?= in_array($skill, $notify_preferences['skills']) ? 'selected' : '' ?>" onclick="toggleSkillSelection(this, '<?= $skill ?>')"><?= $skill ?></button>
-            <?php endforeach; ?>
+    <!-- Main Body -->
+    <div id="main-body-wrapper">
+        <section class="hero">
+            <h1>Select Preferences</h1>
+            <p>Choose your preferred skills and location for a better experience.</p>
+        </section>
+
+        <div class="form-container">
+            <?php if ($success_message != "") { echo "<p style='color: green;'>$success_message</p>"; } ?>
+            <form action="select-preferences.php" method="POST">
+                <label for="location">Location:</label>
+                <input type="text" id="location" name="location" required>
+
+                <label for="skills">Select Skills:</label>
+                <div class="tags-container">
+                    <?php 
+                    $available_skills = ['Communication', 'Teamwork', 'Problem-Solving', 'Leadership', 'Technical Skills', 'Time Management'];
+                    $selected_skills = isset($_POST['skills']) ? $_POST['skills'] : [];
+                    foreach ($available_skills as $skill) {
+                        $isSelected = in_array($skill, $selected_skills) ? 'selected' : '';
+                        echo "<button type='button' class='tag $isSelected' onclick='toggleSkillSelection(this, \"$skill\")'>$skill</button>";
+                    }
+                    ?>
+                </div>
+                <input type="hidden" name="skills" id="skills-input">
+
+                <button type="submit" class="cta-button">Save Preferences</button>
+            </form>
         </div>
-        <!-- Hidden field to store selected skills as JSON -->
-        <input type="hidden" name="skills" id="skills_input" value="<?= json_encode($notify_preferences['skills']) ?>">
-
-        <h3>Counties:</h3>
-        <?php foreach ($counties as $county): ?>
-            <label>
-                <input type="checkbox" name="county[]" value="<?= $county ?>"
-                    <?= in_array($county, $notify_preferences['county']) ? 'checked' : '' ?>>
-                <?= $county ?>
-            </label><br>
-        <?php endforeach; ?>
-
-        <br>
-        <button type="submit">Save Preferences</button>
-    </form>
+    </div>
+    <script>
+        // JavaScript to handle skill selection
+        function toggleSkillSelection(button, skill) {
+            button.classList.toggle('selected');
+            let skillsInput = document.getElementById('skills-input');
+            let selectedSkills = Array.from(document.querySelectorAll('.tag.selected')).map(el => el.textContent);
+            skillsInput.value = selectedSkills.join(',');
+        }
+    </script>
 </body>
 </html>
-
