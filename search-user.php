@@ -159,7 +159,7 @@ $totalPages = ceil($totalUsers / $usersPerPage);
             background-color: #efac9a;
         }
 
-        .job-box {
+        .user-box {
             background-color: #fff;
             color: #5D674C;
             padding: 15px;
@@ -171,17 +171,17 @@ $totalPages = ceil($totalUsers / $usersPerPage);
             text-align: center;
         }
 
-        .job-box:hover {
+        .user-box:hover {
             background-color: #cdd8c4;
         }
 
-        .job-box a {
+        .user-box a {
             text-decoration: none;
             color: #5D674C;
             font-weight: bold;
         }
 
-        .job-box a:hover {
+        .user-box a:hover {
             color: #FCEADE;
         }
 
