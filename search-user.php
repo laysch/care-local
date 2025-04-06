@@ -223,8 +223,7 @@ $totalPages = ceil($totalUsers / $usersPerPage);
             white-space: nowrap;
             opacity: 1;
             z-index: 1000;
-}
-
+        }
 
         .dropdown-menu label {
             display: flex;
@@ -250,14 +249,14 @@ $totalPages = ceil($totalUsers / $usersPerPage);
             opacity: 1;
         }
         .btn {
-            display: inline-block; /* Keep as inline-block */
+            display: inline-block; 
             padding: 10px 20px;
-            background-color: #efac9a; /* Olive green background for button */
+            background-color: #efac9a; 
             color: white;
             text-decoration: none;
             border-radius: 5px;
             font-weight: bold;
-            width: fit-content; /* Ensures the button only takes up as much width as its content */
+            width: fit-content;
         }
     </style>
 </head>
