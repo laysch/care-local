@@ -209,7 +209,7 @@ $totalPages = ceil($totalUsers / $usersPerPage);
         .dropdown-menu {
             display: none;
             position: absolute;
-            background-color: #D1D79D; /* Solid color */
+            background-color: #D1D79D;
             border: 1px solid rgb(103, 161, 137);
             min-width: 150px;
             max-width: 300px;
@@ -221,7 +221,8 @@ $totalPages = ceil($totalUsers / $usersPerPage);
             transition: opacity 0.3s ease-in-out;
             padding: 8px;
             white-space: nowrap;
-            opacity: 1; /* Ensure opacity is set to 1 for no translucency */
+            opacity: 1;
+            z-index: 1000;
 }
 
 
