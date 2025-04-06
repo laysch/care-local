@@ -80,10 +80,3 @@ function setPage(pageName) {
     document.getElementById('current-page').innerText = pageName;
     toggleMenu(); // Close menu
 }
-
-// Function to toggle the skills dropdown visibility
-function toggleSkills() {
-    const dropdownMenu = document.getElementById('dropdown-skills');
-    // Toggle the 'show' class to display or hide the dropdown
-    dropdownMenu.classList.toggle('show');
-}
