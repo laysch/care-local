@@ -21,6 +21,10 @@ if (!empty($row['skills'])) {
     $skills = array_map('trim', $skills); 
 } else { $skills = []; }
 
+//check if user is online (probably temp)
+function isUserOnline($userId) {
+    return isset($_SESSION['user_id']);
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $updates = [];
@@ -318,7 +322,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <img src="img/default-avatar.png" alt="Default User Avatar">
                 <?php endif; ?>
                 <div>
-                    <h1><?php echo htmlspecialchars($row['username']); ?></h1>
+                    <h1><?php echo htmlspecialchars($row['username']); ?> <span style="color: green;"><?php echo isUserOnline($userId) ? 'Online' : 'Offline'; ?></span></h1>
                     <p><?php echo htmlspecialchars($row['email']); ?></p>
                 </div>
             </div>
