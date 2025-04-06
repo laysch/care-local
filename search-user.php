@@ -317,5 +317,51 @@ $totalPages = ceil($totalUsers / $usersPerPage);
         </div>
     </div>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            function toggleDropdown(menuId) {
+                // Close any other open dropdowns
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    if (menu.id !== menuId) {
+                        menu.classList.remove('show');
+                    }
+                });
+
+                // Toggle the clicked dropdown
+                const dropdown = document.getElementById(menuId);
+                dropdown.classList.toggle('show');
+            }
+
+            // Event listener for clicking outside the dropdowns to close them
+            document.addEventListener("click", function (event) {
+                const dropdowns = document.querySelectorAll('.dropdown');
+                let clickedInside = false;
+
+                dropdowns.forEach(dropdown => {
+                    if (dropdown.contains(event.target)) {
+                        clickedInside = true;
+                    }
+                });
+
+                if (!clickedInside) {
+                    document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                        menu.classList.remove('show');
+                    });
+                }
+            });
+
+            // Attach event listeners to the dropdown toggles
+            document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+                toggle.addEventListener("click", function (event) {
+                    event.stopPropagation(); // Prevent click from closing immediately
+                    toggleDropdown(this.nextElementSibling.id);
+                });
+            });
+        });
+
+        function removeFilters() {
+            window.location.href = 'search-jobs.php'; // Simply refresh the page without filters
+        }
+    </script>
 </body>
 </html>
