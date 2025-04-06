@@ -259,14 +259,6 @@ $totalPages = ceil($totalUsers / $usersPerPage);
             width: fit-content;
         }
 
-        .user-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin-right: 10px;
-            object-fit: cover;
-        }
-
     </style>
 </head>
 <body>
@@ -312,13 +304,6 @@ $totalPages = ceil($totalUsers / $usersPerPage);
                 <div class="user-box">
                     <h3>Username: <?php echo htmlspecialchars($row['username']); ?></h3>
                     <p>Skills: <?php echo htmlspecialchars($row['skills']); ?></p>
-
-                    <?php if (!empty($row['avatar'])) { ?>
-                <img src="<?php echo htmlspecialchars($row['avatar']); ?>" alt="Avatar" class="user-avatar" />
-                    <?php } else { ?>
-                <img src="path/to/default-avatar.jpg" alt="Default Avatar" class="user-avatar" />
-                    <?php } ?>
-
                     <a href="profile.php?id=<?php echo $row['id']; ?>">View Profile</a>
                 </div>
             <?php } ?>
