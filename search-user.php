@@ -124,7 +124,7 @@ $totalPages = ceil($totalUsers / $usersPerPage);
         <div class="user-list">
             <?php while ($row = $result->fetch_assoc()) { ?>
                 <div class="user-box">
-                    <h3><?php echo htmlspecialchars($row['name']); ?></h3>
+                    <h3><?php echo htmlspecialchars($row['username']); ?></h3>
                     <p>Skills: <?php echo htmlspecialchars($row['skills']); ?></p>
                     <a href="user-details.php?id=<?php echo $row['id']; ?>">View Profile</a>
                 </div>
