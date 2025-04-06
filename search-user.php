@@ -292,6 +292,7 @@ $totalPages = ceil($totalUsers / $usersPerPage);
                     </div>
                 </div>
                 <button type="submit" class="btn">Apply Filter</button>
+                <button type="button" class="btn" onclick="removeFilters()">Remove Filters</button>
             </form>
         </div>
 
@@ -360,7 +361,7 @@ $totalPages = ceil($totalUsers / $usersPerPage);
         });
 
         function removeFilters() {
-            window.location.href = 'search-jobs.php'; // Simply refresh the page without filters
+            window.location.href = 'search-user.php'; // Simply refresh the page without filters
         }
     </script>
 </body>
