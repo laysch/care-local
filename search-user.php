@@ -81,7 +81,181 @@ $totalPages = ceil($totalUsers / $usersPerPage);
     <link href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css' rel='stylesheet'>
     <link href="https://cdn.jsdelivr.net/gh/echxn/yeolithm@master/src/css/pixelution.css" rel="stylesheet">
     <style>
-        /* Add your custom styles here */
+        :root {
+            --bodyFontFamily: 'Share Tech Mono', monospace;
+            --bodyFontSize: 14px;
+            --backgroundColor: #f9eedd;
+            --bordersColor: #839c99;
+            --bodyTextColor: #839c99;
+            --linksColor: #222222;
+            --linksHoverColor: #efac9a;
+        }
+
+        body {
+            background-image: url('https://example.com/background.jpg');
+            background-attachment: fixed;
+            background-repeat: repeat;
+            background-color: white;
+        }
+
+        #main-body-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #cdd8c4;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 25px 20px;
+        }
+
+        .hero h1 {
+            font-size: 1.8em;
+            color: var(--headingsColor);
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            color: var(--bodyTextColor);
+            margin-bottom: 30px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .cta-buttons a {
+            background-color: var(--accent1BgColor);
+            color: var(--accent1TextColor);
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .categories {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .category-btn {
+            background-color: #5D674C;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .category-btn.active {
+            background-color: #efac9a;
+        }
+
+        .job-box {
+            background-color: #fff;
+            color: #5D674C;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px;
+            border: 2px solid #D1D79D;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-align: center;
+        }
+
+        .job-box:hover {
+            background-color: #cdd8c4;
+        }
+
+        .job-box a {
+            text-decoration: none;
+            color: #5D674C;
+            font-weight: bold;
+        }
+
+        .job-box a:hover {
+            color: #FCEADE;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            width: auto;
+        }
+
+        .dropdown-toggle {
+            border: 1px solid #D1D79D;
+            padding: 12px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-toggle:hover {
+            background-color: #e2e6ea;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: #D1D79D;
+            border: 1px solidrgb(103, 161, 137);
+            min-width: 150px;
+            max-width: 300px;
+            width: auto;
+            max-height: 300px;
+            overflow-y: auto;
+            border-radius: 6px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            transition: opacity 0.3s ease-in-out;
+            padding: 8px;
+            white-space: nowrap;
+        }
+
+        .dropdown-menu label {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .dropdown-menu label:hover {
+            background-color: #f3e9b5;
+        }
+
+        .dropdown-menu input[type="checkbox"],
+        .dropdown-menu input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .show {
+            display: block;
+            opacity: 1;
+        }
+        .btn {
+            display: inline-block; /* Keep as inline-block */
+            padding: 10px 20px;
+            background-color: #efac9a; /* Olive green background for button */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            width: fit-content; /* Ensures the button only takes up as much width as its content */
+        }
     </style>
 </head>
 <body>
