@@ -105,6 +105,7 @@ if (isset($_SESSION['user_id'])) {
             <a href="/search-jobs.php">Search Jobs</a>
             <a href="/job-cart.php">Job Cart</a>
             <a href="/calendar.php">Calendar</a>
+            <a href="/search-user.php">Search Users</a>
             <a href="/help-center.php">Help Center</a>
             <?php 
                 if (isset($_SESSION['username'])) {
