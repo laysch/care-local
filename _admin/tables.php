@@ -1,7 +1,7 @@
 <?php
 require_once '../inc/database.php';
 
-$tables = array('users', 'messages', 'jobs', 'events', 'job_applications');
+$tables = array('users', 'messages', 'jobs', 'events', 'job_applications', 'ratings');
 $tbl = $_POST['table'] ?? $_GET['table'] ?? 'users';
 $query = "SELECT * FROM $tbl";
 $result = $conn->query($query);
