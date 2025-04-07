@@ -9,6 +9,10 @@ $currentUserId = $_SESSION['user_id'] ?? null;
 
 $user_id = $_GET['id'];
 
+if ($currentUserId == $user_id) {
+    header("Location: profile.php");
+    exit();
+}
 
 $query = "SELECT * FROM users WHERE id = $user_id";
 $result = $conn->query($query);
