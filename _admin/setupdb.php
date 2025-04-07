@@ -103,6 +103,19 @@
             }
             echo "<br>";
 
+            try{
+                $query = "CREATE TABLE ratings (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    rated_user_id INT NOT NULL,
+                    rater_user_id INT NOT NULL,
+                    rating INT NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );";
+                $conn->query($query);
+                echo "Table '<b>ratings</b>' created successfully";
+            } catch (Exception $e) {
+                echo $e->getMessage();
+            }
             $conn->close();
         ?>
         </div>

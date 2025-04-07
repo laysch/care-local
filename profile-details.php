@@ -15,10 +15,6 @@ $result = $conn->query($query);
 if (!$result) {
     die("Query failed: " . $conn->error);
 }
-if (!empty($row['skills'])) {
-    $skills = explode(',', $row['skills']); 
-    $skills = array_map('trim', $skills); 
-} else { $skills = []; }
 
 $user = $result->fetch_assoc();
 
@@ -174,6 +170,18 @@ $user = $result->fetch_assoc();
             gap: 20px; /* Space between buttons */
             padding-bottom: 20px;
         }
+        .star-rating {
+    display: flex;
+    direction: row;
+    font-size: 30px;
+    cursor: pointer;
+    color: #ccc;
+}
+.star-rating .star.selected,
+.star-rating .star:hover,
+.star-rating .star:hover ~ .star {
+    color: gold;
+}
     
         
     </style>
@@ -206,8 +214,60 @@ $user = $result->fetch_assoc();
                 </ul>
             </div>
 
+            <?php if ($currentUserId && $currentUserId != $user_id): ?>
+<div class="rating-box bio">
+    <h2>Rate <?php echo htmlspecialchars($user['username']); ?></h2>
+    <form action="submit-rating.php" method="post" id="star-rating-form">
+        <input type="hidden" name="rated_user_id" value="<?php echo $user_id; ?>">
+        <input type="hidden" name="rating" id="rating-input" value="0">
+        <div class="star-rating">
+            <?php for ($i = 1; $i <= 5; $i++): ?>
+                <span class="star" data-value="<?php echo $i; ?>">&#9733;</span>
+            <?php endfor; ?>
+        </div>
+        <button type="submit" style="margin-top:10px;">Submit Rating</button>
+    </form>
+</div>
+<?php endif; ?>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const stars = document.querySelectorAll('.star-rating .star');
+    const ratingInput = document.getElementById('rating-input');
 
+    stars.forEach(star => {
+        star.addEventListener('mouseover', function () {
+            resetStars();
+            highlightStars(this.dataset.value);
+        });
 
+        star.addEventListener('mouseout', resetStars);
+
+        star.addEventListener('click', function () {
+            ratingInput.value = this.dataset.value;
+            highlightStars(this.dataset.value, true);
+        });
+    });
+
+    function highlightStars(rating, lock = false) {
+        stars.forEach(star => {
+            if (star.dataset.value <= rating) {
+                star.classList.add('selected');
+            } else {
+                star.classList.remove('selected');
+            }
+        });
+
+        if (lock) {
+            stars.forEach(star => star.classList.add('locked'));
+        }
+    }
+
+    function resetStars() {
+        if (document.querySelector('.star.locked')) return;
+        stars.forEach(star => star.classList.remove('selected'));
+    }
+});
+</script>
         
             
 
@@ -220,3 +280,5 @@ $user = $result->fetch_assoc();
                     Send a message to <?php echo htmlspecialchars($username); ?>
                 </a></button>
             </div>
+
+            </body>
