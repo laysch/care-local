@@ -189,7 +189,21 @@ $user = $result->fetch_assoc();
         <div class="user-details">
             
             <h1><?php echo htmlspecialchars($user['username']); ?></h1>
-            <p><strong>Skills Required:</strong> <?php echo htmlspecialchars($user['skills']); ?></p>
+            <!-- Skills Section -->
+            <div class="skills">
+                <h2>Skills</h2>
+                <ul>
+                    <?php if (!empty($user['skills'])): ?>
+                        <?php foreach ($user['skills'] as $skill): ?>
+                            <li><?php echo htmlspecialchars($skill); ?></li>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <li>No skills added yet.</li>
+                    <?php endif; ?>
+                </ul>
+            </div>
+
+
 
         
             
