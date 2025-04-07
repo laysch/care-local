@@ -15,7 +15,10 @@ $result = $conn->query($query);
 if (!$result) {
     die("Query failed: " . $conn->error);
 }
-
+if (!empty($row['skills'])) {
+    $skills = explode(',', $row['skills']); 
+    $skills = array_map('trim', $skills); 
+} else { $skills = []; }
 
 $user = $result->fetch_assoc();
 
