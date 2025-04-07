@@ -304,7 +304,7 @@ $totalPages = ceil($totalUsers / $usersPerPage);
                 <div class="user-box">
                     <h3>Username: <?php echo htmlspecialchars($row['username']); ?></h3>
                     <p>Skills: <?php echo htmlspecialchars($row['skills']); ?></p>
-                    <a href="profile.php?id=<?php echo $row['id']; ?>">View Profile</a>
+                    <a href="profile-details.php?id=<?php echo $row['id']; ?>">View Profile</a>
                 </div>
             <?php } ?>
         </div>
