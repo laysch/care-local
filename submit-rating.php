@@ -15,8 +15,8 @@ if ($rating < 1 || $rating > 5) {
     die("Rating must be between 1 and 5.");
 }
 
-// Insert or update rating
-$stmt = $conn->prepare("REPLACE INTO user_ratings (rater_id, rated_id, rating) VALUES (?, ?, ?)");
+// Insert or update rating (ensure the correct table and column names are used)
+$stmt = $conn->prepare("REPLACE INTO ratings (user_id, rated_user_id, rating) VALUES (?, ?, ?)");
 $stmt->bind_param("iii", $currentUserId, $ratedUserId, $rating);
 
 if ($stmt->execute()) {
