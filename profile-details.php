@@ -22,6 +22,15 @@ if (!$result) {
 
 $user = $result->fetch_assoc();
 
+$avgRatingQuery = "SELECT AVG(rating) as avg_rating FROM ratings WHERE rated_user_id = ?";
+$stmt = $conn->prepare($avgRatingQuery);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$avgResult = $stmt->get_result();
+$avgRatingRow = $avgResult->fetch_assoc();
+$averageRating = $avgRatingRow['avg_rating'] ?? 0;
+$averageRating = round($averageRating, 2);
+$stmt->close();
 
 ?>
 
@@ -209,7 +218,12 @@ $user = $result->fetch_assoc();
 
         <div class="user-details">
             
-            <h1><?php echo htmlspecialchars($user['username']); ?></h1>
+        <h1>
+    <?php echo htmlspecialchars($user['username']); ?>
+    <small style="font-size: 0.6em; color: #666;">
+        (Avg. Rating: <?php echo $averageRating; ?> ★)
+    </small>
+</h1>
             
             <div class="rating">
     <h2>Rate this User</h2>
@@ -227,7 +241,7 @@ $user = $result->fetch_assoc();
         <button type="submit" class="btn">Submit Rating</button>
     </form>
 </div>
-<<script>
+<script>
 document.addEventListener('DOMContentLoaded', function () {
     const stars = document.querySelectorAll('.star-rating .star');
     const ratingInput = document.getElementById('rating-input');
