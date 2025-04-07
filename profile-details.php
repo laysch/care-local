@@ -194,7 +194,7 @@ $user = $result->fetch_assoc();
                 <h2>Skills</h2>
                 <ul>
                     <?php if (!empty($user['skills'])): ?>
-                        <?php foreach ($user['skills'] as $skill): ?>
+                        <?php foreach ($skills as $skill): ?>
                             <li><?php echo htmlspecialchars($skill); ?></li>
                         <?php endforeach; ?>
                     <?php else: ?>
