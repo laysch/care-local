@@ -24,7 +24,7 @@ $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
     // Rating exists – update it
-    $updateQuery = "UPDATE ratings SET rating = ?, updated_at = NOW() WHERE rater_user_id = ? AND rated_user_id = ?";
+    $updateQuery = "UPDATE ratings SET rating = ? WHERE rater_user_id = ? AND rated_user_id = ?";
     $stmt = $conn->prepare($updateQuery);
     $stmt->bind_param("iii", $rating, $currentUserId, $ratedUserId);
     $stmt->execute();
