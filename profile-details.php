@@ -22,13 +22,14 @@ if (!$result) {
 
 $user = $result->fetch_assoc();
 
-$avgRatingQuery = "SELECT AVG(rating) as avg_rating FROM ratings WHERE rated_user_id = ?";
+$avgRatingQuery = "SELECT AVG(rating) AS avg_rating, COUNT(DISTINCT rater_user_id) AS total_raters FROM ratings WHERE rated_user_id = ?";
 $stmt = $conn->prepare($avgRatingQuery);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $avgResult = $stmt->get_result();
 $avgRatingRow = $avgResult->fetch_assoc();
 $averageRating = $avgRatingRow['avg_rating'] ?? 0;
+$totalRaters = $avgRatingRow['total_raters'] ?? 0;
 $averageRating = round($averageRating, 2);
 $stmt->close();
 
