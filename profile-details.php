@@ -223,7 +223,7 @@ $user = $result->fetch_assoc();
         <button type="submit" class="btn">Submit Rating</button>
     </form>
 </div>
-<script>
+<<script>
 document.addEventListener('DOMContentLoaded', function () {
     const stars = document.querySelectorAll('.star-rating .star');
     const ratingInput = document.getElementById('rating-input');
@@ -244,28 +244,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
         star.addEventListener('click', function () {
             ratingInput.value = this.dataset.value;
-            highlightStars(this.dataset.value, true);
+            lockStars(this.dataset.value);
         });
     });
 
-    function highlightStars(rating, lock = false) {
+    function highlightStars(rating) {
         stars.forEach(star => {
-            if (star.dataset.value <= rating) {
+            if (parseInt(star.dataset.value) <= parseInt(rating)) {
                 star.classList.add('selected');
             } else {
                 star.classList.remove('selected');
             }
         });
-
-        if (lock) {
-            stars.forEach(star => star.classList.add('locked'));
-        }
     }
 
     function resetStars() {
         stars.forEach(star => {
             if (!star.classList.contains('locked')) {
                 star.classList.remove('selected');
+            }
+        });
+    }
+
+    function lockStars(rating) {
+        stars.forEach(star => {
+            star.classList.remove('locked'); // remove previous locks
+            if (parseInt(star.dataset.value) <= parseInt(rating)) {
+                star.classList.add('selected', 'locked');
+            } else {
+                star.classList.remove('selected', 'locked');
             }
         });
     }
