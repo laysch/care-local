@@ -170,16 +170,22 @@ $user = $result->fetch_assoc();
             gap: 20px; /* Space between buttons */
             padding-bottom: 20px;
         }
-        .star-rating {
-    display: flex;
-    direction: row;
-    font-size: 30px;
-    cursor: pointer;
-    color: #ccc;
+        .rating {
+    background-color: var(--cardBgColor);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
 }
+
+.star-rating {
+    font-size: 2em;
+    color: #ccc;
+    cursor: pointer;
+    user-select: none;
+}
+
 .star-rating .star.selected,
-.star-rating .star:hover,
-.star-rating .star:hover ~ .star {
+.star-rating .star.locked {
     color: gold;
 }
     
@@ -200,35 +206,23 @@ $user = $result->fetch_assoc();
         <div class="user-details">
             
             <h1><?php echo htmlspecialchars($user['username']); ?></h1>
-            <!-- Skills Section -->
-            <div class="skills">
-                <h2>Skills</h2>
-                <ul>
-                    <?php if (!empty($user['skills'])): ?>
-                        <?php foreach ($skills as $skill): ?>
-                            <li><?php echo htmlspecialchars($skill); ?></li>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <li>No skills added yet.</li>
-                    <?php endif; ?>
-                </ul>
-            </div>
-
-            <?php if ($currentUserId && $currentUserId != $user_id): ?>
-<div class="rating-box bio">
-    <h2>Rate <?php echo htmlspecialchars($user['username']); ?></h2>
-    <form action="submit-rating.php" method="post" id="star-rating-form">
-        <input type="hidden" name="rated_user_id" value="<?php echo $user_id; ?>">
-        <input type="hidden" name="rating" id="rating-input" value="0">
+            
+            <div class="rating">
+    <h2>Rate this User</h2>
+    <form action="submit-rating.php" method="post">
         <div class="star-rating">
-            <?php for ($i = 1; $i <= 5; $i++): ?>
-                <span class="star" data-value="<?php echo $i; ?>">&#9733;</span>
-            <?php endfor; ?>
+            <span class="star" data-value="1">&#9733;</span>
+            <span class="star" data-value="2">&#9733;</span>
+            <span class="star" data-value="3">&#9733;</span>
+            <span class="star" data-value="4">&#9733;</span>
+            <span class="star" data-value="5">&#9733;</span>
         </div>
-        <button type="submit" style="margin-top:10px;">Submit Rating</button>
+        <input type="hidden" name="rating" id="rating-input" value="">
+        <input type="hidden" name="rated_user_id" value="<?php echo htmlspecialchars($user['id']); ?>">
+        <input type="hidden" name="rater_user_id" value="<?php echo htmlspecialchars($currentUserId); ?>">
+        <button type="submit" class="btn">Submit Rating</button>
     </form>
 </div>
-<?php endif; ?>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const stars = document.querySelectorAll('.star-rating .star');
@@ -236,11 +230,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     stars.forEach(star => {
         star.addEventListener('mouseover', function () {
-            resetStars();
-            highlightStars(this.dataset.value);
+            if (!document.querySelector('.star.locked')) {
+                resetStars();
+                highlightStars(this.dataset.value);
+            }
         });
 
-        star.addEventListener('mouseout', resetStars);
+        star.addEventListener('mouseout', function () {
+            if (!document.querySelector('.star.locked')) {
+                resetStars();
+            }
+        });
 
         star.addEventListener('click', function () {
             ratingInput.value = this.dataset.value;
@@ -263,8 +263,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function resetStars() {
-        if (document.querySelector('.star.locked')) return;
-        stars.forEach(star => star.classList.remove('selected'));
+        stars.forEach(star => {
+            if (!star.classList.contains('locked')) {
+                star.classList.remove('selected');
+            }
+        });
     }
 });
 </script>
