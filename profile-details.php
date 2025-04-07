@@ -314,8 +314,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
               
                 <button class="btn"><a href="search-user.php" >Back to Users</a></button>
-                <button class="btn"><a href="messages.php?recipient_id=<?php echo $username; ?>&recipient_name=<?php echo urlencode($username); ?>&title=RE+<?php echo urlencode($user['username']); ?>#sendMessageForm">
-                    Send a message to <?php echo htmlspecialchars($username); ?>
+                <button class="btn"><a href="messages.php?recipient_id=<?php echo $user['username']; ?>&recipient_name=<?php echo urlencode($user['username']); ?>&title=RE+<?php echo urlencode($user['username']); ?>#sendMessageForm">
+                    Send a message to <?php echo htmlspecialchars($user['username']); ?>
                 </a></button>
             </div>
 
