@@ -1,228 +1,322 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+require_once 'inc/database.php';
+include_once 'inc/func.php';
+$currentUserId = $_SESSION['user_id'] ?? null;
+
+
+
+$user_id = $_GET['id'];
+
+if ($currentUserId == $user_id) {
+    header("Location: profile.php");
     exit();
 }
 
-include("db.php");
-
-if (isset($_GET['user_id'])) {
-    $user_id = $_GET['user_id'];
-} else {
-    echo "No user ID provided.";
-    exit();
+$query = "SELECT * FROM users WHERE id = $user_id";
+$result = $conn->query($query);
+if (!$result) {
+    die("Query failed: " . $conn->error);
 }
 
-// Get user details
-$stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
+$user = $result->fetch_assoc();
+
+$avgRatingQuery = "SELECT AVG(rating) AS avg_rating, COUNT(DISTINCT rater_user_id) AS total_raters FROM ratings WHERE rated_user_id = ?";
+$stmt = $conn->prepare($avgRatingQuery);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
-$user_result = $stmt->get_result();
-$user = $user_result->fetch_assoc();
+$avgResult = $stmt->get_result();
+$avgRatingRow = $avgResult->fetch_assoc();
+$averageRating = $avgRatingRow['avg_rating'] ?? 0;
+$totalRaters = $avgRatingRow['total_raters'] ?? 0;
+$averageRating = round($averageRating, 2);
+$stmt->close();
 
-if (!$user) {
-    echo "User not found.";
-    exit();
-}
-
-// Handle rating
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['rating'])) {
-    $rating = $_POST['rating'];
-
-    $stmt = $conn->prepare("INSERT INTO ratings (rater_id, rated_id, rating) VALUES (?, ?, ?)");
-    $stmt->bind_param("iii", $_SESSION['user_id'], $user_id, $rating);
-    $stmt->execute();
-}
-
-// Get average rating
-$stmt = $conn->prepare("SELECT AVG(rating) as avg_rating FROM ratings WHERE rated_id = ?");
+$countQuery = "SELECT COUNT(DISTINCT rater_user_id) as total_ratings FROM ratings WHERE rated_user_id = ?";
+$stmt = $conn->prepare($countQuery);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
-$rating_result = $stmt->get_result();
-$rating_data = $rating_result->fetch_assoc();
-$avg_rating = $rating_data['avg_rating'];
+$countResult = $stmt->get_result();
+$countRow = $countResult->fetch_assoc();
+$totalRatings = $countRow['total_ratings'] ?? 0;
+$stmt->close();
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title><?php echo htmlspecialchars($user['username']); ?>'s Profile</title>
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | CareLocal</title>
+    <link href="https://fonts.cdnfonts.com/css/share-techmono-2" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/ubuntu-mono" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/pt-sans" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/source-sans-pro" rel="stylesheet">
+    <link href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css' rel='stylesheet'>
+    <link href="https://cdn.jsdelivr.net/gh/echxn/yeolithm@master/src/css/pixelution.css" rel="stylesheet">
     <style>
+        :root {
+            --bodyFontFamily: 'Share Tech Mono', monospace;
+            --bodyFontSize: 14px;
+            --backgroundColor: #fff;
+            --bordersColor: #839c99;
+            --bodyTextColor: #839c99;
+            --linksColor: #222222;
+            --linksHoverColor: #efac9a;
+            --accentColor: #cdd8c4;
+            --profileBgColor: #fff5e6;
+            --cardBgColor: #f4f8f4;
+            --buttonColor: #cdd8c4;
+            --buttonHoverColor: #b9cfa6;
+        }
+
         body {
-            background-color: #cdd8c4;
-            font-family: 'Share Tech Mono', monospace;
+            background-color: var(--backgroundColor);
+            font-family: var(--bodyFontFamily);
             margin: 0;
             padding: 0;
         }
 
-        #main-body-wrapper {
-            width: 90%;
-            max-width: 900px;
-            margin: 30px auto;
-            background-color: #e9f0e6;
-            border-radius: 15px;
-            padding: 30px;
+        #container {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
-        .status-bar {
+        #sidebar {
+            width: 250px;
+            margin-right: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        #sidebar img {
+            width: 100%;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        #sidebar .title-text {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        #sidebar nav a {
+            display: block;
+            text-decoration: none;
+            color: #333;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        #sidebar nav a:hover {
+            background-color: var(--accentColor);
+            color: white;
+        }
+
+        #main-body-wrapper {
+            width: 80vw;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #cdd8c4;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-header {
             display: flex;
             align-items: center;
-            gap: 10px;
             margin-bottom: 20px;
         }
 
-        .status-bar h1 {
+        .profile-header img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right: 20px;
+        }
+
+        .profile-header h1 {
+            font-size: 2em;
             margin: 0;
-            color: #1e1e1e;
+            color: #333;
         }
 
-        .status-bar .online {
-            color: green;
-            font-weight: bold;
+        .profile-header p {
+            font-size: 1.1em;
+            color: var(--bodyTextColor);
+            margin-top: 5px;
         }
 
-        .status-bar select {
-            font-family: 'Share Tech Mono', monospace;
-        }
-
-        .section-box {
-            background: #f6f9f6;
+        .bio, .skills {
+            background-color: var(--cardBgColor);
             padding: 20px;
-            border-radius: 15px;
+            border-radius: 10px;
             margin-bottom: 20px;
         }
 
-        .section-box h2 {
-            margin-top: 0;
-            font-size: 1.3em;
-            color: #1e1e1e;
+        .bio h2, .skills h2 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #333;
         }
 
-        .section-box p, .section-box ul li {
-            color: #5e6d64;
+        .bio p, .skills ul li {
             font-size: 1em;
+            color: var(--bodyTextColor);
+            line-height: 1.6;
         }
 
         .skills ul {
             list-style: none;
             padding: 0;
-            margin: 0;
         }
 
         .skills ul li {
+            font-size: 1.1em;
+            color: var(--bodyTextColor);
             margin-bottom: 10px;
         }
-
-        .rating, .message {
-            margin-top: 30px;
-            background: #f6f9f6;
-            padding: 20px;
-            border-radius: 15px;
-        }
-
-        .rating h2, .message h2 {
-            margin-top: 0;
-            color: #1e1e1e;
-        }
-
-        form {
+        .button-container {
             display: flex;
-            flex-direction: column;
-            gap: 10px;
+            justify-content: center;
+            align-items: center; /* Center buttons horizontally */
+            gap: 20px; /* Space between buttons */
+            padding-bottom: 20px;
         }
+        .rating {
+    background-color: var(--cardBgColor);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
 
-        input[type="number"], textarea {
-            font-family: 'Share Tech Mono', monospace;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-        }
+.star-rating {
+    font-size: 2em;
+    color: #ccc;
+    cursor: pointer;
+    user-select: none;
+}
 
-        input[type="submit"] {
-            background-color: #92bfa2;
-            border: none;
-            color: white;
-            padding: 10px;
-            font-family: 'Share Tech Mono', monospace;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #7fa88f;
-        }
-
-        .user-email {
-            color: #5e6d64;
-            font-size: 0.9em;
-            margin-bottom: 10px;
-        }
+.star-rating .star.selected,
+.star-rating .star.locked {
+    color: gold;
+}
+    
+        
     </style>
 </head>
 <body>
+    <!-- Include Sidebar -->
+    <?php include 'sidebar.php'; ?>
 
-<div id="main-body-wrapper">
+    <!-- Main Body -->
+    <div id="main-body-wrapper">
+        <section class="hero">
+            <h1>User Details</h1>
+            <p>Below are the details for the selected user.</p>
+        </section>
 
-    <div class="status-bar">
+        <div class="user-details">
+            
         <h1>
-            <?php echo htmlspecialchars($user['username']); ?> 
-            <span class="online">Online</span>
-        </h1>
-        <select>
-            <option>Select Status</option>
-            <option>Online</option>
-            <option>Offline</option>
-            <option>Away</option>
-        </select>
-    </div>
-
-    <div class="user-email">
-        <?php echo htmlspecialchars($user['email']); ?>
-    </div>
-
-    <div class="section-box bio">
-        <h2>About Me</h2>
-        <p>Hello, I have a cat</p>
-    </div>
-
-    <div class="section-box skills">
-        <h2>Skills</h2>
-        <ul>
-            <li>Teamwork</li>
-            <li>Problem-Solving</li>
-            <li>Leadership</li>
-            <li>Technical Skills</li>
-            <li>Time Management</li>
-            <li>PHP</li>
-            <li>HTML/CSS</li>
-            <li>JavaScript</li>
-            <li>MySQL</li>
-        </ul>
-    </div>
-
-    <div class="rating">
-        <h2>Rate this User</h2>
-        <form method="POST">
-            <label for="rating">Rating (1-5):</label>
-            <input type="number" name="rating" min="1" max="5" required>
-            <input type="submit" value="Submit Rating">
-        </form>
-        <p>Average Rating: <?php echo number_format($avg_rating, 2); ?></p>
-    </div>
-
-    <div class="message">
-        <h2>Send a Message</h2>
-        <form action="send_message.php" method="POST">
-            <input type="hidden" name="recipient_id" value="<?php echo $user_id; ?>">
-            <textarea name="message" rows="4" cols="50" placeholder="Type your message here..."></textarea>
-            <input type="submit" value="Send">
-        </form>
-    </div>
-
+    <?php echo htmlspecialchars($user['username']); ?>
+    <small style="font-size: 0.6em; color: #666;">
+        (Avg. Rating: <?php echo $averageRating; ?> ★)
+        <p>Total Ratings: <?php echo $totalRatings; ?> people rated this user.</p>
+    </small>
+</h1>
+            
+            <div class="rating">
+    <h2>Rate this User</h2>
+    <form action="submit-rating.php" method="post">
+        <div class="star-rating">
+            <span class="star" data-value="1">&#9733;</span>
+            <span class="star" data-value="2">&#9733;</span>
+            <span class="star" data-value="3">&#9733;</span>
+            <span class="star" data-value="4">&#9733;</span>
+            <span class="star" data-value="5">&#9733;</span>
+        </div>
+        <input type="hidden" name="rating" id="rating-input" value="">
+        <input type="hidden" name="rated_user_id" value="<?php echo htmlspecialchars($user['id']); ?>">
+        <input type="hidden" name="rater_user_id" value="<?php echo htmlspecialchars($currentUserId); ?>">
+        <button type="submit" class="btn">Submit Rating</button>
+    </form>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const stars = document.querySelectorAll('.star-rating .star');
+    const ratingInput = document.getElementById('rating-input');
 
-</body>
-</html>
+    stars.forEach(star => {
+        star.addEventListener('mouseover', function () {
+            if (!document.querySelector('.star.locked')) {
+                resetStars();
+                highlightStars(this.dataset.value);
+            }
+        });
+
+        star.addEventListener('mouseout', function () {
+            if (!document.querySelector('.star.locked')) {
+                resetStars();
+            }
+        });
+
+        star.addEventListener('click', function () {
+            ratingInput.value = this.dataset.value;
+            lockStars(this.dataset.value);
+        });
+    });
+
+    function highlightStars(rating) {
+        stars.forEach(star => {
+            if (parseInt(star.dataset.value) <= parseInt(rating)) {
+                star.classList.add('selected');
+            } else {
+                star.classList.remove('selected');
+            }
+        });
+    }
+
+    function resetStars() {
+        stars.forEach(star => {
+            if (!star.classList.contains('locked')) {
+                star.classList.remove('selected');
+            }
+        });
+    }
+
+    function lockStars(rating) {
+        stars.forEach(star => {
+            star.classList.remove('locked'); // remove previous locks
+            if (parseInt(star.dataset.value) <= parseInt(rating)) {
+                star.classList.add('selected', 'locked');
+            } else {
+                star.classList.remove('selected', 'locked');
+            }
+        });
+    }
+});
+</script>
+        
+            
+
+            <div class="button-container">
+                
+
+              
+                <button class="btn"><a href="search-user.php" >Back to Users</a></button>
+                <button class="btn"><a href="messages.php?recipient_id=<?php echo $user['username']; ?>&recipient_name=<?php echo urlencode($user['username']); ?>&title=RE+<?php echo urlencode($user['username']); ?>#sendMessageForm">
+                    Send a message to <?php echo htmlspecialchars($user['username']); ?>
+                </a></button>
+            </div>
+
+            </body>
