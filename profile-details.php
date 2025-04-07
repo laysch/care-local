@@ -26,32 +26,83 @@ $user = $result->fetch_assoc();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>User Details | CareLocal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | CareLocal</title>
     <link href="https://fonts.cdnfonts.com/css/share-techmono-2" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/ubuntu-mono" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/pt-sans" rel="stylesheet">
     <link href="https://fonts.cdnfonts.com/css/source-sans-pro" rel="stylesheet">
-    <link href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css" rel="stylesheet">
+    <link href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css' rel='stylesheet'>
     <link href="https://cdn.jsdelivr.net/gh/echxn/yeolithm@master/src/css/pixelution.css" rel="stylesheet">
     <style>
         :root {
             --bodyFontFamily: 'Share Tech Mono', monospace;
             --bodyFontSize: 14px;
-            --backgroundColor: #f9eedd;
+            --backgroundColor: #fff;
             --bordersColor: #839c99;
             --bodyTextColor: #839c99;
             --linksColor: #222222;
             --linksHoverColor: #efac9a;
+            --accentColor: #cdd8c4;
+            --profileBgColor: #fff5e6;
+            --cardBgColor: #f4f8f4;
+            --buttonColor: #cdd8c4;
+            --buttonHoverColor: #b9cfa6;
         }
 
         body {
+            background-color: var(--backgroundColor);
+            font-family: var(--bodyFontFamily);
+            margin: 0;
+            padding: 0;
+        }
+
+        #container {
+            display: flex;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        #sidebar {
+            width: 250px;
+            margin-right: 20px;
             background-color: #fff;
-            font-family: 'Share Tech Mono', monospace;
-            color: #5D674C;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        #sidebar img {
+            width: 100%;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        #sidebar .title-text {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        #sidebar nav a {
+            display: block;
+            text-decoration: none;
+            color: #333;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        #sidebar nav a:hover {
+            background-color: var(--accentColor);
+            color: white;
         }
 
         #main-body-wrapper {
-            max-width: 1000px;
+            width: 80vw;
+            max-width: 800px;
             margin: 0 auto;
             padding: 20px;
             background-color: #cdd8c4;
@@ -59,42 +110,60 @@ $user = $result->fetch_assoc();
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        .hero {
-            text-align: center;
-            padding: 50px 20px;
-        }
-
-        .hero h1 {
-            font-size: 2.5em;
-            color: #5D674C;
+        .profile-header {
+            display: flex;
+            align-items: center;
             margin-bottom: 20px;
         }
 
-        .hero p {
-            font-size: 1.2em;
-            color: #839c99;
-            margin-bottom: 30px;
+        .profile-header img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right: 20px;
         }
 
-        .job-details {
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .job-details h1 {
+        .profile-header h1 {
             font-size: 2em;
-            color: #5D674C;
+            margin: 0;
+            color: #333;
+        }
+
+        .profile-header p {
+            font-size: 1.1em;
+            color: var(--bodyTextColor);
+            margin-top: 5px;
+        }
+
+        .bio, .skills {
+            background-color: var(--cardBgColor);
+            padding: 20px;
+            border-radius: 10px;
             margin-bottom: 20px;
         }
 
-        .job-details p {
-            font-size: 1.2em;
-            color: #5D674C;
+        .bio h2, .skills h2 {
+            font-size: 1.5em;
             margin-bottom: 15px;
+            color: #333;
         }
 
-        
-        /* Button Container */
+        .bio p, .skills ul li {
+            font-size: 1em;
+            color: var(--bodyTextColor);
+            line-height: 1.6;
+        }
+
+        .skills ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .skills ul li {
+            font-size: 1.1em;
+            color: var(--bodyTextColor);
+            margin-bottom: 10px;
+        }
         .button-container {
             display: flex;
             justify-content: center;
@@ -102,38 +171,7 @@ $user = $result->fetch_assoc();
             gap: 20px; /* Space between buttons */
             padding-bottom: 20px;
         }
-
-        /* Original Button */
-        .btn,
-        .btn:link,
-        .btn:visited {
-            display: inline-block; /* Keep as inline-block */
-            padding: 10px 20px;
-            background-color: #efac9a; /* Olive green background for button */
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            width: fit-content; /* Ensures the button only takes up as much width as its content */
-            cursor: pointer;
-        }
-
-        /* Smaller Button */
-        .btn-small {
-            display: inline-block; /* Keep as inline-block */
-            padding: 6px 12px; /* Smaller padding */
-            background-color: #efac9a; /* Same background color */
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 0.9em; /* Smaller font size */
-            width: fit-content; /* Ensures the button only takes up as much width as its content */
-        }
-
-        .btn:hover {
-            background-color: #efac9a; /* Light peach on hover */
-        }
+    
         
     </style>
 </head>
@@ -151,7 +189,20 @@ $user = $result->fetch_assoc();
         <div class="user-details">
             
             <h1><?php echo htmlspecialchars($user['username']); ?></h1>
-            <p><strong>Skills:</strong> <?php echo htmlspecialchars($user['skills']); ?></p>
+            <!-- Skills Section -->
+            <div class="skills">
+                <h2>Skills</h2>
+                <ul>
+                    <?php if (!empty($skills)): ?>
+                        <?php foreach ($skills as $skill): ?>
+                            <li><?php echo htmlspecialchars($skill); ?></li>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <li>No skills added yet.</li>
+                    <?php endif; ?>
+                </ul>
+            </div>
+
         
             
 
