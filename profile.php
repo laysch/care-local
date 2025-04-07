@@ -322,7 +322,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <img src="img/default-avatar.png" alt="Default User Avatar">
                 <?php endif; ?>
                 <div>
-                    <h1><?php echo htmlspecialchars($row['username']); ?> <span style="color: green;"><?php echo isUserOnline($userId) ? 'Online' : 'Offline'; ?></span></h1>
+                    <h1><?php echo htmlspecialchars($row['username']); ?> 
+                        <span id="status-text" style="color: green;">
+                            <?php echo isUserOnline($userId) ? 'Online' : 'Offline'; ?>
+                        </span>
+                        <select id="status" onchange="updateStatus()">
+                            <option value="" disabled selected>Select Status</option>
+                            <option value="Online">Online</option>
+                            <option value="Away">Away</option>
+                            <option value="Appear Offline">Appear Offline</option>
+                        </select>
+
+                    </h1>
                     <p><?php echo htmlspecialchars($row['email']); ?></p>
                 </div>
             </div>
@@ -396,10 +407,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 
     <script>
-        function toggleEditProfileForm() {
-            const form = document.getElementById('edit-profile-form');
-            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    function toggleEditProfileForm() {
+        const form = document.getElementById('edit-profile-form');
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function updateStatus() {
+        const status = document.getElementById('status').value;
+        const statusText = document.getElementById('status-text');
+        statusText.textContent = status;
+        if (status === 'Online') {
+            statusText.style.color = 'green';
+        } else if (status === 'Away') {
+            statusText.style.color = 'yellow';
+        } else {
+            statusText.style.color = 'gray';
         }
-    </script>
+    }
+</script>
 </body>
 </html>
+
+
