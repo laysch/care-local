@@ -2,7 +2,7 @@
 session_start();
 require_once 'inc/database.php';
 
-$currentUserId = $_SESSION['rater_user_id'] ?? null;
+$currentUserId = $_POST['rater_user_id'] ?? null;
 $ratedUserId = $_POST['rated_user_id'] ?? null;
 $rating = $_POST['rating'] ?? null;
 
