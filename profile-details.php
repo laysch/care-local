@@ -32,6 +32,14 @@ $averageRating = $avgRatingRow['avg_rating'] ?? 0;
 $averageRating = round($averageRating, 2);
 $stmt->close();
 
+$countQuery = "SELECT COUNT(DISTINCT rater_user_id) as total_ratings FROM ratings WHERE rated_user_id = ?";
+$stmt = $conn->prepare($countQuery);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$countResult = $stmt->get_result();
+$countRow = $countResult->fetch_assoc();
+$totalRatings = $countRow['total_ratings'] ?? 0;
+$stmt->close();
 ?>
 
 <!DOCTYPE html>
@@ -222,6 +230,7 @@ $stmt->close();
     <?php echo htmlspecialchars($user['username']); ?>
     <small style="font-size: 0.6em; color: #666;">
         (Avg. Rating: <?php echo $averageRating; ?> ★)
+        <p>Total Ratings: <?php echo $totalRatings; ?> people rated this user.</p>
     </small>
 </h1>
             
