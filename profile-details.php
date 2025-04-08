@@ -237,15 +237,12 @@ $stmt->close();
     <h2><?php echo htmlspecialchars($user['username']); ?></h2>
 </div>
 
-        <div class="user-details">
-        <h1>
+
     
-    <p style="font-size: 0.8em;"><strong>Skills:</strong> <?php echo htmlspecialchars($user['skills']); ?></p>
-    <small style="font-size: 0.6em; color: #666;">
-        (Avg. Rating: <?php echo $averageRating; ?> ★)
-        <p>Total Ratings: <?php echo $totalRatings; ?> people rated this user.</p>
-    </small>
-</h1>
+<p><strong>Skills:</strong> <?php echo htmlspecialchars($user['skills']); ?></p>
+<p>(Avg. Rating: <?php echo number_format($avgRating, 2); ?> ★)</p>
+<p>Total Ratings: <?php echo $ratingCount; ?> people rated this user.</p>
+
             
             <div class="rating">
     <h2>Rate this User</h2>
