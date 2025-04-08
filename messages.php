@@ -1,3 +1,4 @@
+<?php include 'sidebar.php'; ?>
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
@@ -75,14 +76,13 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
     <script src="script.js" defer></script>
     <style>
         :root {
-            --primary-color: #cdd8c4;
-            --secondary-color: #f0f2ee;
-            --border-color: #e0e0e0;
-            --text-color: #333333;
-            --light-text: #666666;
-            --highlight-color: #86a377;
-            --unread-bg: #e6f9e6;
-            --shadow-color: rgba(0, 0, 0, 0.1);
+            --bodyFontFamily: 'Share Tech Mono', monospace;
+            --bodyFontSize: 14px;
+            --backgroundColor: #f9eedd;
+            --bordersColor: #839c99;
+            --bodyTextColor: #839c99;
+            --linksColor: #222222;
+            --linksHoverColor: #efac9a;
         }
 
         * {
@@ -92,78 +92,28 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
             font-family: 'Share Tech Mono', monospace;
         }
 
-        body {
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            min-height: 100vh;
+       body {
+            background-image: url('https://example.com/background.jpg');
+            background-attachment: fixed;
+            background-repeat: repeat;
+            background-color: white;
         }
 
-        /* Container layout to match screenshot */
+    
         #container {
             display: flex;
             width: 100%;
         }
 
-        /* Sidebar layout based on screenshot */
-        #sidebar {
-            width: 250px;
-            background-color: white;
-            padding: 20px 0;
-            display: flex;
-            flex-direction: column;
-            border-right: 1px solid var(--border-color);
-        }
-
-        #sidebar .logo {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        #sidebar .logo img {
-            max-width: 120px;
-        }
-
-        #sidebar .welcome-text {
-            font-size: 16px;
-            font-weight: bold;
-            padding: 0 20px;
-            margin: 10px 0;
-        }
-
-        #sidebar .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 8px 20px;
-            text-decoration: none;
-            color: var(--text-color);
-        }
-
-        #sidebar .nav-item i {
-            margin-right: 10px;
-        }
-
-        #sidebar .nav-item:hover {
-            background-color: var(--primary-color);
-            opacity: 0.8;
-        }
-
-        #sidebar .slogan {
-            padding: 15px 20px;
-            font-style: italic;
-            color: var(--light-text);
-            border-top: 1px solid var(--border-color);
-            margin-top: 15px;
-        }
-
+        
         /* Main content area */
         #main-body-wrapper {
-            flex: 1;
-            display: flex;
-            background-color: var(--primary-color);
+            max-width: 800px;
+            margin: 0 auto;
             padding: 20px;
+            background-color: #cdd8c4;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         /* Message components */
