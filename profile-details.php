@@ -190,10 +190,19 @@ $stmt->close();
             padding-bottom: 20px;
         }
         .profile-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+    display: flex;
+    align-items: center;
+    gap: 20px; /* spacing between image and username */
+    margin-bottom: 20px;
+}
+
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+}
         .rating {
     background-color: var(--cardBgColor);
     padding: 20px;
@@ -223,17 +232,14 @@ $stmt->close();
     <!-- Main Body -->
     <div id="main-body-wrapper">
     <div class="profile-header">
-                <!-- Check if avatar exists -->
-                <?php if (isset($user['avatar']) && !empty($user['avatar'])): ?>
-                    <img src="<?php echo "img/avatar/" . htmlspecialchars($user['avatar']); ?>" alt="User Avatar">
-                <?php else: ?>
-                    <img src="img/default-avatar.png" alt="Default User Avatar">
-                <?php endif; ?>
-    
+    <div class="profile-header">
+    <img class="profile-avatar" src="<?php echo 'img/avatar/' . htmlspecialchars($user['avatar']); ?>" alt="User Avatar">
+    <h2><?php echo htmlspecialchars($user['username']); ?></h2>
+</div>
 
         <div class="user-details">
         <h1>
-    <?php echo htmlspecialchars($user['username']); ?>
+    
     <p style="font-size: 0.8em;"><strong>Skills:</strong> <?php echo htmlspecialchars($user['skills']); ?></p>
     <small style="font-size: 0.6em; color: #666;">
         (Avg. Rating: <?php echo $averageRating; ?> ★)
