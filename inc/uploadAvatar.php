@@ -1,11 +1,6 @@
 <?php
 require_once 'database.php';
-session_start();
-
-if (!isset($_SESSION['user_id'])) {
-    header("Location: index.php");
-    exit();
-}
+require_once 'session.php';
 
 if (isset($_POST['upload'])) {
     $userId = $_SESSION['user_id'];

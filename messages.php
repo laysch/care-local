@@ -1,12 +1,6 @@
 <?php
-session_start();
-if (!isset($_SESSION['user_id'])) {
-    header("Location: index.php");
-    exit();
-}
-
+require_once 'inc/session.php';
 include_once 'inc/func.php';
-$userId = $_SESSION['user_id'];
 
 // get messages
 $messages = getUserMessages($conn, $userId);

@@ -1,6 +1,7 @@
 <?php
 
 require_once '../inc/database.php';
+require_once 'session.php';
 
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 

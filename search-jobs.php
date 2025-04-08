@@ -1,16 +1,6 @@
 <?php include 'sidebar.php'; ?>
 <?php   
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-if (!isset($_SESSION['username'])) {
-    header('Location: /login.php');
-    exit;
-}
-
-$userId = $_SESSION['user_id'];
-
-// Connect to the database
+require_once 'inc/session.php';
 require_once 'inc/database.php';
 
 $order = "DESC";

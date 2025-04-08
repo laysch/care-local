@@ -1,13 +1,7 @@
 <?php
-session_start();
+require_once 'session.php';
 require_once 'database.php';
 
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit;
-}
-
-$userId = $_SESSION['user_id'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['application_id'], $_POST['job_id'])) {
     $applicationId = (int) $_POST['application_id'];

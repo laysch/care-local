@@ -1,14 +1,7 @@
 <?php   
-$currentPage = "Add Job";
 require_once 'inc/database.php';
 include_once 'inc/func.php';
-
-session_start();
-if (!isset($_SESSION['username'])) {
-    header('Location: /login.php');
-    exit;
-}
-$userId = $_SESSION['user_id'];
+require_once 'inc/session.php';
 
 $success_message = "";
 $jobID = ""; // Initialize jobID variable

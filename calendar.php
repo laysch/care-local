@@ -1,12 +1,5 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-if (!isset($_SESSION['username'])) {
-    header('Location: /login.php');
-    exit;
-}
-
+require_once 'inc/session.php';
 require_once 'inc/database.php';
 
 $month = isset($_GET['month']) ? (int)$_GET['month'] : date('m');

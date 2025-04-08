@@ -1,13 +1,6 @@
 <?php
-session_start();
+require_once 'session.php';
 require_once "database.php"; 
-
-// Check if user is logged in
-if (!isset($_SESSION["user_id"])) {
-    http_response_code(403);
-    echo "Unauthorized";
-    exit;
-}
 
 // Validate the ID
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
@@ -17,7 +10,6 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 }
 
 $event_id = intval($_GET['id']);
-$user_id = $_SESSION["user_id"];
 
 
 $conn->begin_transaction();
@@ -30,7 +22,7 @@ try {
         JOIN jobs ON events.job_id = jobs.id 
         WHERE events.id = ? AND jobs.poster_id = ?
     ");
-    $stmt->bind_param("ii", $event_id, $user_id);
+    $stmt->bind_param("ii", $event_id, $userId);
     $stmt->execute();
     $stmt->store_result();
 

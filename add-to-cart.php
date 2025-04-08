@@ -1,6 +1,5 @@
 <?php
-// Start the session
-session_start();
+require_once 'inc/session.php';
 
 // Check if the form is submitted
 if (isset($_POST['add_to_cart'])) {

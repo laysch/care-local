@@ -1,13 +1,8 @@
 <?php
-session_start();
-require_once "database.php"; // Make sure this contains your DB connection
+require_once 'session.php';
+require_once "database.php"; 
 
-// Check if user is logged in
-if (!isset($_SESSION["user_id"])) {
-    http_response_code(403);
-    echo "Unauthorized";
-    exit;
-}
+
 
 // Validate the job ID
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
@@ -17,7 +12,6 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 }
 
 $job_id = intval($_GET['id']);
-$user_id = $_SESSION["user_id"];
 
 // Prepare the delete query with transaction for safety
 $conn->begin_transaction();
@@ -25,7 +19,7 @@ $conn->begin_transaction();
 try {
     // Check ownership
     $stmt = $conn->prepare("SELECT id FROM jobs WHERE id = ? AND poster_id = ?");
-    $stmt->bind_param("ii", $job_id, $user_id);
+    $stmt->bind_param("ii", $job_id, $userId);
     $stmt->execute();
     $stmt->store_result();
 

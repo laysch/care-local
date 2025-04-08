@@ -1,14 +1,7 @@
 <?php   
-$currentPage = "Preferences";
+require_once 'inc/session.php';
 require_once 'inc/database.php';
 include_once 'inc/func.php';
-
-session_start();
-if (!isset($_SESSION['username'])) {
-    header('Location: /login.php');
-    exit;
-}
-$userId = $_SESSION['user_id'];
 
 // Skills and counties options 
 $skillsOptions = ['Communication', 'Teamwork', 'Problem-Solving', 'Leadership', 'Technical Skills', 'Time Management', 'Painting', 'Carpentry', 'Plumbing', 'Electrical Work', 'PHP', 'HTML/CSS', 'JavaScript', 'MySQL', 'CPR Certified', 'Coaching', 'Multitasking', 'Patience'];

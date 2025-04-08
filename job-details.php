@@ -3,8 +3,7 @@ session_start();
 
 require_once 'inc/database.php';
 include_once 'inc/func.php';
-$currentUserId = $_SESSION['user_id'] ?? null;
-
+require_once 'inc/session.php';
 
 // Get job ID from URL
 $job_id = $_GET['id'];
@@ -174,7 +173,7 @@ $posterUsername = getUsernameById($conn, $posterId);
                     Send a message to <?php echo htmlspecialchars($posterUsername); ?>
                 </a></button>
             </div>
-            <?php if ($currentUserId && $currentUserId == $posterId): ?>
+            <?php if ($userId && $userId == $posterId): ?>
                 <div class="button-container">
                     <button class="btn"><a href="create-event.php?job_id=<?= $job['id'] ?>" >Create Event</a></button>
                     <button class="btn"><a href="view-applications.php?id=<?= $job['id'] ?>" >View Applications</a></button>

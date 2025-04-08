@@ -1,5 +1,6 @@
 <?php
 require_once 'database.php';
+require_once 'session.php';
 
 
 function getUnreadMessagesCount($conn, $userId) {
@@ -81,6 +82,8 @@ function getUserMessages($conn, $userId) {
 }
 
 function toggleMessageReadStatus($conn, $messageId, $userId) {
+    global $currentStatus;
+    
     $query = "SELECT is_read FROM messages WHERE id = ? AND receiver_id = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("ii", $messageId, $userId);

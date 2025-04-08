@@ -1,10 +1,6 @@
 <?php
 require_once "../inc/database.php";
-session_start();
-if (!isset($_SESSION['username'])) {
-    header('Location: /login.php');
-    exit;
-}
+require_once 'session.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $senderId = $_POST['sender_id'];

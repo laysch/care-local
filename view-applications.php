@@ -1,9 +1,7 @@
 <?php
-session_start();
+require_once 'inc/session.php';
 require_once 'inc/database.php';
 include_once 'inc/func.php';
-
-$userId = $_SESSION['user_id'];
 
 $jobId = (int)$_GET['id'];
 

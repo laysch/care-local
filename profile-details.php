@@ -1,15 +1,12 @@
 <?php
-session_start();
-
+require_once 'inc/session.php';
 require_once 'inc/database.php';
 include_once 'inc/func.php';
-$currentUserId = $_SESSION['user_id'] ?? null;
-
 
 
 $user_id = $_GET['id'];
 
-if ($currentUserId == $user_id) {
+if ($userId == $user_id) {
     header("Location: profile.php");
     exit();
 }
@@ -247,7 +244,7 @@ $stmt->close();
         </div>
         <input type="hidden" name="rating" id="rating-input" value="">
         <input type="hidden" name="rated_user_id" value="<?php echo htmlspecialchars($user['id']); ?>">
-        <input type="hidden" name="rater_user_id" value="<?php echo htmlspecialchars($currentUserId); ?>">
+        <input type="hidden" name="rater_user_id" value="<?php echo htmlspecialchars($userId); ?>">
         <button type="submit" class="btn">Submit Rating</button>
     </form>
 </div>

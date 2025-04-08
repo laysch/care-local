@@ -1,18 +1,8 @@
 <?php include 'sidebar.php'; ?>
 <?php   
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-if (!isset($_SESSION['username'])) {
-    header('Location: /login.php');
-    exit;
-}
-
-$userId = $_SESSION['user_id'];
-
-// Connect to the database
+require_once 'inc/session.php';
 require_once 'inc/database.php';
-require_once 'inc/func.php';  // Use require_once to avoid redeclaration of functions
+require_once 'inc/func.php';  
 
 // Initialize query to get all users by default
 $query = "SELECT * FROM users WHERE 1=1 ";

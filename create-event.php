@@ -1,9 +1,5 @@
 <?php
-session_start();
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
-}
+require_once 'inc/session.php';
 require_once 'inc/database.php';
 include_once 'inc/func.php';
 

@@ -1,9 +1,7 @@
 <?php
-session_start();
-
+require_once 'inc/session.php';
 require_once 'inc/database.php';
 include_once 'inc/func.php';
-$currentUserId = $_SESSION['user_id'] ?? null;
 
 $event_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if ($event_id <= 0) {
@@ -164,7 +162,7 @@ $posterUsername = getUsernameById($conn, $posterId);
                     Send a message to <?php echo htmlspecialchars($posterUsername); ?>
                 </a></button>
             </div>
-            <?php if ($currentUserId && $currentUserId == $posterId): ?>
+            <?php if ($userId && $userId == $posterId): ?>
                 <div class="button-container">
                     <button class="btn" onclick="return confirm('Are you sure you want to delete this posting?');"><a href="inc/deleteEvent.php?id=<?= $event['id'] ?>">Delete Event</a></button>                  
                 </div>

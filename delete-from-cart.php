@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once 'inc/session.php';
 
 // Check if the job ID is provided
 if (!isset($_POST['job_id'])) {
