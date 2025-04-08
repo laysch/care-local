@@ -1,16 +1,11 @@
 <?php
-// Start session first (no changes needed here)
-session_start();
+// Include session.php FIRST - it handles session initialization with proper timeout settings
+require_once 'inc/session.php';
 
-// Check login status
-if (!isset($_SESSION['user_id'])) {
-    header("Location: index.php");
-    exit();
-}
+// No need for separate session_start() here - session.php already handles it
 
-// Include functions (make sure inc/session.php isn't trying to reconfigure sessions)
+// Include other dependencies
 include_once 'inc/func.php';
-$userId = $_SESSION['user_id'];
 
 // Get messages
 $messages = getUserMessages($conn, $userId);
