@@ -84,6 +84,10 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
             --linksColor: #222222;
             --linksHoverColor: #efac9a;
             --primary-color: #cdd8c4;
+            --secondary-color: #f0f2ee;
+            --highlight-color: #86a377;
+            --text-color: #333333;
+            --light-text: #666666;
             --unread-bg: #e6f9e6;
             --shadow-color: rgba(0, 0, 0, 0.1);
         }
@@ -92,13 +96,8 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
             font-family: var(--bodyFontFamily);
             font-size: var(--bodyFontSize);
             color: var(--bodyTextColor);
-            margin: 0;
-            padding: 0;
-        }
-
-        #container {
-            display: flex;
-            width: 100%;
+            background-attachment: fixed;
+            background-repeat: repeat;
         }
 
         #main-body-wrapper {
@@ -111,267 +110,187 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
+        /* Messages container */
         .messages-container {
-            width: 100%;
             display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
             background-color: white;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 2px 10px var(--shadow-color);
         }
 
-        /* Conversation list */
-        .conversations-list {
-            width: 340px;
-            background-color: white;
-            border-right: 1px solid var(--bordersColor);
-            overflow-y: auto;
-            max-height: 600px;
-        }
-
-        .conversations-header {
-            padding: 15px;
-            border-bottom: 1px solid var(--bordersColor);
+        .messages-header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--bordersColor);
         }
 
-        .conversations-header h2 {
-            font-size: 18px;
+        .messages-header-container h1 {
+            font-size: 1.5rem;
+            margin: 0;
+            color: var(--text-color);
+        }
+
+        .jump-to-send {
+            padding: 6px 15px;
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .jump-to-send:hover {
+            background-color: var(--highlight-color);
+        }
+
+        /* Message sections */
+        .messages-section {
+            margin-bottom: 20px;
+            border: 1px solid var(--bordersColor);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .messages-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            font-weight: bold;
+        }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .messages-list {
+            list-style: none;
+            padding: 0;
             margin: 0;
         }
 
-        .compose-btn {
-            background-color: var(--primary-color);
-            color: var(--bodyTextColor);
-            border: none;
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* Message items */
+        .message-item, .message-item-read, .message-item-unread {
+            display: block;
+            padding: 15px;
+            border-bottom: 1px solid var(--bordersColor);
             cursor: pointer;
             transition: background-color 0.3s;
         }
 
-        .compose-btn:hover {
-            background-color: var(--linksHoverColor);
+        .message-item:last-child, .message-item-read:last-child, .message-item-unread:last-child {
+            border-bottom: none;
         }
 
-        .search-container {
-            padding: 10px 15px;
-            border-bottom: 1px solid var(--bordersColor);
+        .message-item-unread {
+            background-color: var(--unread-bg);
         }
 
-        .search-input {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid var(--bordersColor);
-            border-radius: 20px;
-            font-family: 'PT Sans', sans-serif;
-            font-size: 14px;
+        .message-item:hover, .message-item-read:hover, .message-item-unread:hover {
+            background-color: var(--secondary-color);
         }
 
-        .search-input:focus {
-            outline: none;
-            border-color: var(--linksHoverColor);
-        }
-
+        /* Conversation tabs */
         .conversation-tabs {
             display: flex;
             border-bottom: 1px solid var(--bordersColor);
+            margin-bottom: 10px;
         }
 
         .tab {
             flex: 1;
             text-align: center;
-            padding: 10px;
+            padding: 10px 0;
             cursor: pointer;
             font-weight: bold;
             transition: background-color 0.3s;
         }
 
         .tab.active {
-            border-bottom: 2px solid var(--linksHoverColor);
-            color: var(--linksHoverColor);
+            border-bottom: 2px solid var(--highlight-color);
+            color: var(--highlight-color);
         }
 
         .tab:hover {
-            background-color: var(--backgroundColor);
+            background-color: var(--secondary-color);
         }
 
-        .conversation-item {
-            padding: 12px 15px;
-            border-bottom: 1px solid var(--bordersColor);
-            cursor: pointer;
-            transition: background-color 0.3s;
-            display: flex;
-            align-items: flex-start;
-        }
-
-        .conversation-item:hover {
-            background-color: var(--backgroundColor);
-        }
-
-        .unread {
-            background-color: var(--unread-bg);
-        }
-
-        .avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background-color: var(--primary-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            margin-right: 12px;
-            flex-shrink: 0;
-            font-family: 'PT Sans', sans-serif;
-        }
-
-        .conversation-info {
-            flex-grow: 1;
-            min-width: 0;
-        }
-
-        .conversation-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 4px;
-        }
-
-        .sender-name {
-            font-weight: bold;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .message-time {
-            color: #666;
-            font-size: 12px;
-            white-space: nowrap;
-            margin-left: 5px;
-        }
-
-        .message-title {
-            font-weight: bold;
-            margin-bottom: 4px;
-        }
-
-        .message-preview {
-            color: #666;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            font-size: 14px;
-            font-family: 'PT Sans', sans-serif;
-        }
-
-        /* Message view */
-        .message-view {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            background-color: white;
-        }
-
-        .message-view-header {
-            padding: 15px;
-            border-bottom: 1px solid var(--bordersColor);
-            display: flex;
-            align-items: center;
-        }
-
-        .sender-info {
-            margin-left: 12px;
-        }
-
-        .sender-info h3 {
-            font-weight: bold;
-            margin: 0 0 5px 0;
-        }
-
-        .sender-info p {
-            color: #666;
-            font-size: 14px;
-            margin: 0;
-            font-family: 'PT Sans', sans-serif;
-        }
-
-        .message-content {
-            flex-grow: 1;
+        /* Send message form */
+        #sendMessageForm {
             padding: 20px;
-            overflow-y: auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px var(--shadow-color);
         }
 
-        .message-title-view {
-            font-size: 18px;
+        #sendMessageForm label {
+            display: block;
+            margin-bottom: 5px;
             font-weight: bold;
-            margin-bottom: 15px;
+            color: var(--text-color);
         }
 
-        .message-body {
-            line-height: 1.6;
-            margin-bottom: 20px;
-            font-family: 'PT Sans', sans-serif;
-        }
-
-        .message-timestamp {
-            color: #666;
-            font-size: 14px;
-            margin-top: 20px;
-        }
-
-        .compose-message {
-            padding: 15px;
-            border-top: 1px solid var(--bordersColor);
-        }
-
-        .compose-message textarea {
+        #sendMessageForm input,
+        #sendMessageForm textarea {
             width: 100%;
             padding: 10px;
+            margin-bottom: 15px;
             border: 1px solid var(--bordersColor);
             border-radius: 5px;
-            resize: none;
-            font-size: 14px;
-            height: 80px;
             font-family: 'PT Sans', sans-serif;
         }
 
-        .compose-message textarea:focus {
-            outline: none;
-            border-color: var(--linksHoverColor);
-        }
-
-        .compose-actions {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 10px;
-        }
-
-        .send-btn {
+        #sendMessageForm button {
+            padding: 8px 20px;
             background-color: var(--primary-color);
-            color: var(--bodyTextColor);
+            color: var(--text-color);
             border: none;
             border-radius: 5px;
-            padding: 8px 16px;
-            font-weight: bold;
             cursor: pointer;
             transition: background-color 0.3s;
         }
 
-        .send-btn:hover {
-            background-color: var(--linksHoverColor);
+        #sendMessageForm button:hover {
+            background-color: var(--highlight-color);
         }
 
-        /* New message modal */
-        .new-message-modal {
+        /* User suggestions */
+        .user-suggestions {
+            background-color: white;
+            border: 1px solid var(--bordersColor);
+            border-radius: 5px;
+            max-height: 150px;
+            overflow-y: auto;
+            margin-top: -15px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px var(--shadow-color);
+        }
+
+        .user-suggestion {
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .user-suggestion:hover {
+            background-color: var(--secondary-color);
+        }
+
+        /* Modal styles */
+        .message-modal {
             display: none;
             position: fixed;
             top: 0;
@@ -386,14 +305,14 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
 
         .modal-content {
             background-color: white;
-            border-radius: 10px;
+            border-radius: 8px;
             width: 500px;
             max-width: 90%;
             box-shadow: 0 5px 15px var(--shadow-color);
         }
 
         .modal-header {
-            padding: 15px;
+            padding: 15px 20px;
             border-bottom: 1px solid var(--bordersColor);
             display: flex;
             justify-content: space-between;
@@ -401,105 +320,68 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
         }
 
         .modal-header h3 {
-            font-size: 18px;
-            font-weight: bold;
             margin: 0;
+            font-size: 1.2rem;
         }
 
         .close-modal {
             background: none;
             border: none;
-            font-size: 20px;
+            font-size: 1.5rem;
             cursor: pointer;
-            color: #666;
+            color: var(--light-text);
         }
 
-        .modal-body {
-            padding: 15px;
+        /* Message view */
+        .message-view {
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px var(--shadow-color);
+            display: none;
         }
 
-        .form-group {
+        .message-view-header {
             margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--bordersColor);
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+        .message-view-title {
+            font-size: 1.3rem;
+            margin: 0 0 10px 0;
+            color: var(--text-color);
         }
 
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid var(--bordersColor);
-            border-radius: 5px;
-            font-size: 14px;
+        .message-view-meta {
+            font-size: 0.9rem;
+            color: var(--light-text);
+        }
+
+        .message-view-content {
+            line-height: 1.6;
+            color: var(--text-color);
             font-family: 'PT Sans', sans-serif;
         }
 
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--linksHoverColor);
+        .message-view-actions {
+            margin-top: 20px;
+            text-align: right;
         }
 
-        .user-suggestions {
-            background-color: white;
-            border: 1px solid var(--bordersColor);
+        .message-view-actions button {
+            padding: 8px 20px;
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            border: none;
             border-radius: 5px;
-            max-height: 150px;
-            overflow-y: auto;
-            margin-top: 5px;
-            box-shadow: 0 3px 10px var(--shadow-color);
-        }
-
-        .user-suggestion {
-            padding: 8px 10px;
             cursor: pointer;
             transition: background-color 0.3s;
-            font-family: 'PT Sans', sans-serif;
         }
 
-        .user-suggestion:hover {
-            background-color: var(--backgroundColor);
-        }
-
-        .modal-footer {
-            padding: 15px;
-            border-top: 1px solid var(--bordersColor);
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        /* Placeholder for no messages selected */
-        .no-message-selected {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-            background-color: var(--backgroundColor);
-            color: var(--bodyTextColor);
-            padding: 20px;
-            text-align: center;
-        }
-
-        .no-message-selected h2 {
-            margin-bottom: 10px;
-        }
-
-        .no-message-selected p {
-            margin-bottom: 20px;
-            font-family: 'PT Sans', sans-serif;
-        }
-
-        /* Empty state styles */
-        .empty-state {
-            padding: 30px 20px;
-            text-align: center;
-            color: var(--bodyTextColor);
-            font-family: 'PT Sans', sans-serif;
+        .message-view-actions button:hover {
+            background-color: var(--highlight-color);
         }
 
         /* Responsive styles */
@@ -507,15 +389,6 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
             #main-body-wrapper {
                 width: 95vw;
                 padding: 10px;
-            }
-
-            .messages-container {
-                flex-direction: column;
-            }
-
-            .conversations-list {
-                width: 100%;
-                max-height: 300px;
             }
         }
     </style>
@@ -528,43 +401,299 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
         <!-- Main Body -->
         <div id="main-body-wrapper">
             <div class="messages-container">
-                <!-- Conversations list -->
-                <div class="conversations-list">
-                    <div class="conversations-header">
-                        <h2>Messaging</h2>
-                        <button class="compose-btn" id="newMessageBtn" title="New Message">
-                            <i class="fi fi-rr-pencil"></i>
-                        </button>
-                    </div>
-                    <div class="search-container">
-                        <input type="text" class="search-input" placeholder="Search messages...">
-                    </div>
-                    <div class="conversation-tabs">
-                        <div class="tab active" data-tab="received">Inbox</div>
-                        <div class="tab" data-tab="sent">Sent</div>
+                <div class="messages-header-container">
+                    <h1>Inbox</h1>
+                    <a href="#sendMessageForm" class="jump-to-send">New Message</a>
+                </div>
+
+                <div class="conversation-tabs">
+                    <div class="tab active" data-tab="received">Received</div>
+                    <div class="tab" data-tab="sent">Sent</div>
+                </div>
+
+                <!-- Received messages tab content -->
+                <div class="tab-content" id="received-tab">
+                    <div class="messages-section">
+                        <?php if (empty($receivedMessages)): ?>
+                            <p style="padding: 20px; text-align: center;">Let's connect with your community members today!</p>
+                        <?php else: ?>
+                            <ul class="messages-list">
+                                <?php foreach ($receivedMessages as $msg): ?>
+                                    <li class="<?php echo $msg['is_read'] == 0 ? 'message-item-unread' : 'message-item-read'; ?>"
+                                        data-message-id="<?php echo htmlspecialchars($msg['message_id']); ?>"
+                                        data-title="<?php echo htmlspecialchars($msg['title']); ?>"
+                                        data-sender="<?php echo htmlspecialchars($msg['sender_username']); ?>"
+                                        data-message="<?php echo htmlspecialchars($msg['message']); ?>"
+                                        data-time="<?php echo date('F j, Y, g:i a', strtotime($msg['timestamp'])); ?>">
+                                        <strong><?php echo htmlspecialchars($msg['title']); ?></strong><br>
+                                        From: <strong><?php echo htmlspecialchars($msg['sender_username']); ?></strong><br>
+                                        <span class="message-preview"><?php echo htmlspecialchars(substr($msg['message'], 0, 50)) . (strlen($msg['message']) > 50 ? '...' : ''); ?></span><br>
+                                        <small><?php echo date('F j, Y, g:i a', strtotime($msg['timestamp'])); ?></small>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php endif; ?>
                     </div>
                 </div>
-                <div class="message-view">
+
+                <!-- Sent messages tab content -->
+                <div class="tab-content" id="sent-tab" style="display: none;">
+                    <div class="messages-section">
+                        <?php if (empty($sentMessages)): ?>
+                            <p style="padding: 20px; text-align: center;">Let's connect with your community members today!</p>
+                        <?php else: ?>
+                            <ul class="messages-list">
+                                <?php foreach ($sentMessages as $msg): ?>
+                                    <li class="message-item-read"
+                                        data-message-id="<?php echo htmlspecialchars($msg['message_id']); ?>"
+                                        data-title="<?php echo htmlspecialchars($msg['title']); ?>"
+                                        data-sender="You"
+                                        data-receiver="<?php echo htmlspecialchars($msg['receiver_username']); ?>"
+                                        data-message="<?php echo htmlspecialchars($msg['message']); ?>"
+                                        data-time="<?php echo date('F j, Y, g:i a', strtotime($msg['timestamp'])); ?>">
+                                        <strong><?php echo htmlspecialchars($msg['title']); ?></strong><br>
+                                        To: <strong><?php echo htmlspecialchars($msg['receiver_username']); ?></strong><br>
+                                        <span class="message-preview"><?php echo htmlspecialchars(substr($msg['message'], 0, 50)) . (strlen($msg['message']) > 50 ? '...' : ''); ?></span><br>
+                                        <small><?php echo date('F j, Y, g:i a', strtotime($msg['timestamp'])); ?></small>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <!-- Message detail view -->
+                <div class="message-view" id="messageView">
                     <div class="message-view-header">
-                        <div class="sender-info">
-                            <h3>Sender Name</h3>
-                            <p>Sender Email</p>
-                        </div>
+                        <h2 class="message-view-title" id="viewTitle"></h2>
+                        <div class="message-view-meta" id="viewMeta"></div>
                     </div>
-                    <div class="message-content">
-                        <div class="message-title-view">Message Title</div>
-                        <div class="message-body">This is the body of the message.</div>
-                        <div class="message-timestamp">Timestamp</div>
+                    <div class="message-view-content" id="viewContent"></div>
+                    <div class="message-view-actions">
+                        <button id="closeView">Close</button>
+                        <button id="replyBtn">Reply</button>
                     </div>
-                    <div class="compose-message">
-                        <textarea placeholder="Write your reply..."></textarea>
-                        <div class="compose-actions">
-                            <button class="send-btn">Send</button>
-                        </div>
-                    </div>
+                </div>
+
+                <!-- Send message form -->
+                <div class="messages-section" id="sendMessageSection">
+                    <div class="messages-header">Send a Message</div>
+                    <form id="sendMessageForm">
+                        <label for="receiverSearch">Send to:</label>
+                        <input type="text" id="receiverSearch" placeholder="Search user..." autocomplete="off"
+                            value="<?php echo $prefilledRecipientName; ?>">
+                        <input type="hidden" id="receiverId" name="receiver_id" value="<?php echo $prefilledRecipientId; ?>">
+                        <div id="userSuggestions" class="user-suggestions"></div>
+
+                        <label for="messageTitle">Title:</label>
+                        <input type="text" id="messageTitle" name="title" value="<?php echo $prefilledMessageTitle; ?>" required>
+
+                        <label for="messageContent">Message:</label>
+                        <textarea id="messageContent" name="message" rows="4" required></textarea>
+
+                        <button type="submit">Send Message</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Toggle tabs
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+
+                    // Hide all tab contents
+                    tabContents.forEach(content => {
+                        content.style.display = 'none';
+                    });
+
+                    // Show the corresponding tab content
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId + '-tab').style.display = 'block';
+
+                    // Hide message view when switching tabs
+                    document.getElementById('messageView').style.display = 'none';
+                });
+            });
+
+            // Message item click
+            const messageItems = document.querySelectorAll('.message-item-read, .message-item-unread');
+            messageItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Mark as read if unread
+                    if (this.classList.contains('message-item-unread')) {
+                        const messageId = this.dataset.messageId;
+
+                        fetch("messages.php", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded"
+                            },
+                            body: "message_id=" + encodeURIComponent(messageId)
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === "success") {
+                                this.classList.remove('message-item-unread');
+                                this.classList.add('message-item-read');
+                            }
+                        })
+                        .catch(error => console.error("Error:", error));
+                    }
+
+                    // Show message view
+                    const messageView = document.getElementById('messageView');
+                    messageView.style.display = 'block';
+
+                    // Fill in message details
+                    document.getElementById('viewTitle').textContent = this.dataset.title;
+
+                    let metaText = '';
+                    if (this.dataset.sender === 'You') {
+                        metaText = `To: ${this.dataset.receiver} • ${this.dataset.time}`;
+                    } else {
+                        metaText = `From: ${this.dataset.sender} • ${this.dataset.time}`;
+                    }
+                    document.getElementById('viewMeta').textContent = metaText;
+                    document.getElementById('viewContent').textContent = this.dataset.message;
+
+                    // Setup reply button
+                    const replyBtn = document.getElementById('replyBtn');
+                    replyBtn.onclick = function() {
+                        const receiverSearch = document.getElementById('receiverSearch');
+                        const receiverId = document.getElementById('receiverId');
+                        const messageTitle = document.getElementById('messageTitle');
+
+                        // If we're viewing a received message, set the receiver to the sender
+                        if (item.dataset.sender !== 'You') {
+                            receiverSearch.value = item.dataset.sender;
+                            // You'll need to have the sender's ID available in your data
+                            // This is just a placeholder assuming you have it
+                            // receiverId.value = item.dataset.senderId;
+                        }
+
+                        // Set title as "Re: Original Title"
+                        messageTitle.value = "Re: " + item.dataset.title;
+
+                        // Scroll to the form
+                        document.getElementById('sendMessageSection').scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    };
+
+                    // Close button
+                    document.getElementById('closeView').onclick = function() {
+                        messageView.style.display = 'none';
+                    };
+
+                    // Scroll to message view
+                    messageView.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // User search functionality
+            const searchInput = document.getElementById("receiverSearch");
+            const receiverIdInput = document.getElementById("receiverId");
+            const suggestionsContainer = document.getElementById("userSuggestions");
+
+            searchInput.addEventListener("input", function() {
+                let query = searchInput.value.trim();
+                if (query.length < 2) {
+                    suggestionsContainer.innerHTML = "";
+                    suggestionsContainer.style.display = "none";
+                    return;
+                }
+
+                fetch("inc/searchUsers.php?search=" + encodeURIComponent(query))
+                    .then(response => response.json())
+                    .then(users => {
+                        suggestionsContainer.innerHTML = ""; // Clear old suggestions
+
+                        if (users.length > 0) {
+                            suggestionsContainer.style.display = "block";
+
+                            users.forEach(user => {
+                                let suggestion = document.createElement("div");
+                                suggestion.classList.add("user-suggestion");
+                                suggestion.textContent = user.username;
+                                suggestion.dataset.userId = user.id;
+
+                                suggestion.addEventListener("click", function() {
+                                    searchInput.value = this.textContent;
+                                    receiverIdInput.value = this.dataset.userId;
+                                    suggestionsContainer.innerHTML = "";
+                                    suggestionsContainer.style.display = "none";
+                                });
+
+                                suggestionsContainer.appendChild(suggestion);
+                            });
+                        } else {
+                            suggestionsContainer.style.display = "block";
+                            suggestionsContainer.innerHTML = "<div class='user-suggestion'>No users found</div>";
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error fetching users:", error);
+                        suggestionsContainer.style.display = "none";
+                    });
+            });
+
+            // Send message form submission
+            const form = document.getElementById("sendMessageForm");
+            form.addEventListener("submit", function(event) {
+                event.preventDefault();
+
+                const receiverIdInput = document.getElementById("receiverId");
+                if (!receiverIdInput.value) {
+                    alert("Please select a user from the search results.");
+                    return;
+                }
+
+                const formData = new FormData(form);
+
+                fetch("messages.php", {
+                    method: "POST",
+                    body: new URLSearchParams(formData),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        alert("Message sent successfully!");
+                        // Reset form
+                        form.reset();
+                        // Reload page to show new message
+                        window.location.reload();
+                    } else {
+                        alert("Failed to send message: " + (data.message || "Unknown error"));
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("Failed to send message. Network error.");
+                });
+            });
+        });
+
+        // Function to toggle sections
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section.style.display === "none") {
+                section.style.display = "block";
+            } else {
+                section.style.display = "none";
+            }
+        }
+    </script>
 </body>
 </html>
