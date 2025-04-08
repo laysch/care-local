@@ -1,13 +1,14 @@
 <?php
-// Include session.php FIRST - it handles session initialization with proper timeout settings
-require_once 'inc/session.php';
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: index.php");
+    exit();
+}
 
-// No need for separate session_start() here - session.php already handles it
-
-// Include other dependencies
 include_once 'inc/func.php';
+$userId = $_SESSION['user_id'];
 
-// Get messages
+// get messages
 $messages = getUserMessages($conn, $userId);
 $receivedMessages = [];
 $sentMessages = [];
@@ -88,7 +89,7 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'PT Sans', sans-serif;
+            font-family: 'Share Tech Mono', monospace;
         }
 
         body {
@@ -97,67 +98,82 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
             margin: 0;
             padding: 0;
             display: flex;
-            height: 100vh;
+            min-height: 100vh;
         }
 
-        .container {
+        /* Container layout to match screenshot */
+        #container {
             display: flex;
             width: 100%;
-            height: 100%;
         }
 
-        /* Sidebar */
-        .sidebar {
-            width: 240px;
+        /* Sidebar layout based on screenshot */
+        #sidebar {
+            width: 250px;
             background-color: white;
-            border-right: 1px solid var(--border-color);
             padding: 20px 0;
-            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border-color);
         }
 
-        .logo {
-            padding: 0 20px 20px;
+        #sidebar .logo {
             text-align: center;
+            margin-bottom: 20px;
         }
 
-        .logo img {
+        #sidebar .logo img {
             max-width: 120px;
         }
 
-        .nav-links {
-            list-style-type: none;
+        #sidebar .welcome-text {
+            font-size: 16px;
+            font-weight: bold;
+            padding: 0 20px;
+            margin: 10px 0;
         }
 
-        .nav-links li a {
+        #sidebar .nav-item {
             display: flex;
             align-items: center;
-            padding: 12px 20px;
-            color: var(--text-color);
+            padding: 8px 20px;
             text-decoration: none;
-            transition: background-color 0.3s;
+            color: var(--text-color);
         }
 
-        .nav-links li a:hover {
-            background-color: var(--secondary-color);
-        }
-
-        .nav-links li a i {
+        #sidebar .nav-item i {
             margin-right: 10px;
-            font-size: 18px;
         }
 
-        /* Main content */
-        .content {
-            flex-grow: 1;
+        #sidebar .nav-item:hover {
+            background-color: var(--primary-color);
+            opacity: 0.8;
+        }
+
+        #sidebar .slogan {
+            padding: 15px 20px;
+            font-style: italic;
+            color: var(--light-text);
+            border-top: 1px solid var(--border-color);
+            margin-top: 15px;
+        }
+
+        /* Main content area */
+        #main-body-wrapper {
+            flex: 1;
             display: flex;
-            height: 100%;
+            background-color: var(--primary-color);
+            padding: 20px;
         }
 
-        /* Messages container */
+        /* Message components */
         .messages-container {
             width: 100%;
             display: flex;
-            height: 100%;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px var(--shadow-color);
         }
 
         /* Conversation list */
@@ -212,6 +228,7 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
             border-radius: 20px;
             font-size: 14px;
             background-color: var(--secondary-color);
+            font-family: 'PT Sans', sans-serif;
         }
 
         .search-input:focus {
@@ -270,6 +287,7 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
             font-weight: 600;
             margin-right: 12px;
             flex-shrink: 0;
+            font-family: 'PT Sans', sans-serif;
         }
 
         .conversation-info {
@@ -308,6 +326,7 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
             overflow: hidden;
             text-overflow: ellipsis;
             font-size: 14px;
+            font-family: 'PT Sans', sans-serif;
         }
 
         /* Message view */
@@ -337,6 +356,7 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
         .sender-info p {
             color: var(--light-text);
             font-size: 14px;
+            font-family: 'PT Sans', sans-serif;
         }
 
         .message-content {
@@ -354,6 +374,7 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
         .message-body {
             line-height: 1.6;
             margin-bottom: 20px;
+            font-family: 'PT Sans', sans-serif;
         }
 
         .message-timestamp {
@@ -375,6 +396,7 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
             resize: none;
             font-size: 14px;
             height: 80px;
+            font-family: 'PT Sans', sans-serif;
         }
 
         .compose-message textarea:focus {
@@ -467,6 +489,7 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
             border: 1px solid var(--border-color);
             border-radius: 5px;
             font-size: 14px;
+            font-family: 'PT Sans', sans-serif;
         }
 
         .form-group input:focus,
@@ -489,6 +512,7 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
             padding: 10px;
             cursor: pointer;
             transition: background-color 0.3s;
+            font-family: 'PT Sans', sans-serif;
         }
 
         .user-suggestion:hover {
@@ -521,6 +545,7 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
 
         .no-message-selected p {
             margin-bottom: 20px;
+            font-family: 'PT Sans', sans-serif;
         }
 
         /* Empty state styles */
@@ -528,22 +553,27 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
             padding: 30px 20px;
             text-align: center;
             color: var(--light-text);
+            font-family: 'PT Sans', sans-serif;
         }
 
         /* Responsive styles */
         @media (max-width: 768px) {
-            .container {
+            #container {
                 flex-direction: column;
             }
 
-            .sidebar {
+            #sidebar {
                 width: 100%;
                 height: auto;
                 border-right: none;
                 border-bottom: 1px solid var(--border-color);
             }
 
-            .content {
+            #main-body-wrapper {
+                padding: 10px;
+            }
+
+            .messages-container {
                 flex-direction: column;
             }
 
@@ -552,32 +582,34 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
                 height: auto;
                 max-height: 300px;
             }
-
-            .message-view {
-                height: auto;
-            }
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <!-- Sidebar -->
-        <div class="sidebar">
+<body class="has--boxshadow" data-shape="circle" data-body-font-family="Share Tech Mono" data-body-font-size="14px" data-sidebar-position="left" data-pagination-display="mssg">
+    <div id="container">
+        <!-- Sidebar based on the screenshot -->
+        <div id="sidebar">
             <div class="logo">
-                <img src="/img/favicon.png" alt="CareLocal Logo">
+                <img src="/img/logo.png" alt="CareLocal Logo">
             </div>
-            <ul class="nav-links">
-                <li><a href="index.php"><i class="fi fi-rr-home"></i> Home</a></li>
-                <li><a href="messages.php" class="active"><i class="fi fi-rr-envelope"></i> Messages</a></li>
-                <li><a href="profile.php"><i class="fi fi-rr-user"></i> Profile</a></li>
-                <li><a href="search-jobs.php"><i class="fi fi-rr-briefcase"></i> Jobs</a></li>
-                <li><a href="search-user.php"><i class="fi fi-rr-users"></i> Community</a></li>
-                <li><a href="logout.php"><i class="fi fi-rr-sign-out"></i> Logout</a></li>
-            </ul>
+            <div class="welcome-text">
+                Welcome to CareLocal
+            </div>
+
+            <a href="index.php" class="nav-item">
+                <i class="fi fi-rr-home"></i> Home
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fi fi-rr-envelope"></i> search...
+            </a>
+
+            <div class="slogan">
+                Where Local Talent Meets Local Needs
+            </div>
         </div>
 
-        <!-- Main content -->
-        <div class="content">
+        <!-- Main content area -->
+        <div id="main-body-wrapper">
             <div class="messages-container">
                 <!-- Conversations list -->
                 <div class="conversations-list">
