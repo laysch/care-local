@@ -23,7 +23,14 @@ if (isset($_GET['skills']) && is_array($_GET['skills']) && !empty($_GET['skills'
     }
     $query .= " AND (" . implode(" OR ", $skillFilters) . ")";
 }
-
+if (isset($_GET['rating_sort'])) {
+    $ratingSort = $_GET['rating_sort'];
+    if ($ratingSort == 'high_to_low') {
+        $query .= " ORDER BY avg_rating DESC";
+    } elseif ($ratingSort == 'low_to_high') {
+        $query .= " ORDER BY avg_rating ASC";
+    }
+}
 $query .= " LIMIT ?, ?";
 $params[] = $offset;
 $params[] = $usersPerPage;
@@ -296,19 +303,7 @@ $totalPages = ceil($totalUsers / $usersPerPage);
                 <button type="button" class="btn" onclick="removeFilters()">Remove Filters</button>
             </form>
         </div>
-        <?php
-
-if (isset($_GET['rating_sort'])) {
-    $ratingSort = $_GET['rating_sort'];
-    if ($ratingSort == 'high_to_low') {
-        $query .= " ORDER BY avg_rating DESC";
-    } elseif ($ratingSort == 'low_to_high') {
-        $query .= " ORDER BY avg_rating ASC";
-    }
-}
-
-
-?>
+        
         <?php
     
     $ratingStmt = $conn->prepare("SELECT AVG(rating) as avg_rating FROM ratings WHERE rated_user_id = ?");
