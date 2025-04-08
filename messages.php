@@ -535,28 +535,6 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
         }
     </style>
 </head>
-<body class="has--boxshadow" data-shape="circle" data-body-font-family="Share Tech Mono" data-body-font-size="14px" data-sidebar-position="left" data-pagination-display="mssg">
-    <div id="container">
-        <!-- Sidebar based on the screenshot -->
-        <div id="sidebar">
-            <div class="logo">
-                <img src="/img/logo.png" alt="CareLocal Logo">
-            </div>
-            <div class="welcome-text">
-                Welcome to CareLocal
-            </div>
-
-            <a href="index.php" class="nav-item">
-                <i class="fi fi-rr-home"></i> Home
-            </a>
-            <a href="#" class="nav-item">
-                <i class="fi fi-rr-envelope"></i> search...
-            </a>
-
-            <div class="slogan">
-                Where Local Talent Meets Local Needs
-            </div>
-        </div>
 
         <!-- Main content area -->
         <div id="main-body-wrapper">
