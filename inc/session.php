@@ -14,4 +14,17 @@ if (!isset($_SESSION['user_id'])) {
 
 $userId = $_SESSION['user_id'];
 $userName = $_SESSION['username'];
+
+if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $timeout)) {
+    if (isset($_SESSION['user_id'])) {
+        require_once 'database.php';
+        $stmt = $conn->prepare("UPDATE users SET status = 'offline' WHERE id = ?");
+        $stmt->bind_param("i", $_SESSION['user_id']);
+        $stmt->execute();
+    }
+    session_unset();
+    session_destroy();
+    header("Location: login.php");
+    exit;
+}
 ?>
