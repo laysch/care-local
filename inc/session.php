@@ -12,9 +12,6 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-$userId = $_SESSION['user_id'];
-$userName = $_SESSION['username'];
-
 if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $timeout)) {
     if (isset($_SESSION['user_id'])) {
         require_once 'database.php';
@@ -27,4 +24,10 @@ if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 
     header("Location: login.php");
     exit;
 }
+
+$_SESSION['LAST_ACTIVITY'] = time();
+
+$userId = $_SESSION['user_id'];
+$userName = $_SESSION['username'];
+
 ?>

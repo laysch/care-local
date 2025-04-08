@@ -22,6 +22,7 @@ if (isset($_POST['login'])) {
                 session_regenerate_id(true);
                 $_SESSION['user_id'] = $row['id'];
                 $_SESSION['username'] = $row['username'];
+                $_SESSION['LAST_ACTIVITY'] = time();
                 header("Location: index.php");
                 exit();
             } else {
