@@ -167,7 +167,7 @@ $stmt->close();
 <label for="skills">Select Skills:</label>
 <div class="tags-container">
     <?php 
-    $available_skills = ['Communication', 'Teamwork', 'Problem-Solving', 'Leadership', 'Technical Skills', 'Time Management'];
+    $available_skills = ['Communication', 'Teamwork', 'Problem-Solving', 'Leadership', 'Technical Skills', 'Time Management', 'Painting', 'Carpentry', 'Plumbing', 'Electrical Work', 'PHP', 'HTML/CSS', 'JavaScript', 'MySQL', 'CPR Certified', 'Coaching', 'Multitasking', 'Patience'];
     $selected_skills = isset($_POST['skills']) ? $_POST['skills'] : $notify_preferences['skills'];
     foreach ($available_skills as $skill) {
         $isSelected = in_array($skill, $selected_skills) ? 'selected' : '';
