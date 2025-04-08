@@ -189,6 +189,11 @@ $stmt->close();
             gap: 20px; /* Space between buttons */
             padding-bottom: 20px;
         }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
         .rating {
     background-color: var(--cardBgColor);
     padding: 20px;
@@ -217,10 +222,14 @@ $stmt->close();
 
     <!-- Main Body -->
     <div id="main-body-wrapper">
-        <section class="hero">
-            <h1>User Details</h1>
-            <p>Below are the details for the selected user.</p>
-        </section>
+    <div class="profile-header">
+                <!-- Check if avatar exists -->
+                <?php if (isset($row['avatar']) && !empty($row['avatar'])): ?>
+                    <img src="<?php echo "img/avatar/" . htmlspecialchars($row['avatar']); ?>" alt="User Avatar">
+                <?php else: ?>
+                    <img src="img/default-avatar.png" alt="Default User Avatar">
+                <?php endif; ?>
+    
 
         <div class="user-details">
         <h1>
