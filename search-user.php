@@ -284,10 +284,31 @@ $totalPages = ceil($totalUsers / $usersPerPage);
                         <label><input type="checkbox" name="skills[]" value="Coaching"> Coaching</label>
                     </div>
                 </div>
+                <div class="dropdown">
+            <div class="dropdown-toggle" onclick="toggleRatingSort()">Sort by Rating</div>
+            <div class="dropdown-menu" id="dropdown-rating-sort">
+                <label><input type="checkbox" name="rating_sort" value="high_to_low"> High to Low</label>
+                <label><input type="checkbox" name="rating_sort" value="low_to_high"> Low to High</label>
+            </div>
+        </div>
+
                 <button type="submit" class="btn">Apply Filter</button>
                 <button type="button" class="btn" onclick="removeFilters()">Remove Filters</button>
             </form>
         </div>
+        <?php
+
+if (isset($_GET['rating_sort'])) {
+    $ratingSort = $_GET['rating_sort'];
+    if ($ratingSort == 'high_to_low') {
+        $query .= " ORDER BY avg_rating DESC";
+    } elseif ($ratingSort == 'low_to_high') {
+        $query .= " ORDER BY avg_rating ASC";
+    }
+}
+
+
+?>
         <?php
     
     $ratingStmt = $conn->prepare("SELECT AVG(rating) as avg_rating FROM ratings WHERE rated_user_id = ?");
