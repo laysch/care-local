@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 $userId = $_SESSION['user_id'];
 
 require_once 'inc/database.php';
-include_once 'inc/func.php';
+require_once 'inc/func.php';
 
 $query = "SELECT * FROM users WHERE id = ?";
 $stmt = $conn->prepare($query);
@@ -21,10 +21,12 @@ if (!empty($row['skills'])) {
     $skills = array_map('trim', $skills); 
 } else { $skills = []; }
 
-//check if user is online (probably temp)
-function isUserOnline($userId) {
-    return isset($_SESSION['user_id']);
-}
+$statusColor = match ($row['status']) {
+    'online' => 'green',
+    'away' => 'orange',
+    'offline' => 'gray',
+    default => 'black'
+};
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $updates = [];
@@ -323,15 +325,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endif; ?>
                 <div>
                     <h1><?php echo htmlspecialchars($row['username']); ?> 
-                        <span id="status-text" style="color: green;">
-                            <?php echo isUserOnline($userId) ? 'Online' : 'Offline'; ?>
+                        <span id="status-text" style="color: <?php echo $statusColor; ?>;">
+                            <?php echo $row['status']; ?>
                         </span>
-                        <select id="status" onchange="updateStatus()">
-                            <option value="" disabled selected>Select Status</option>
-                            <option value="Online">Online</option>
-                            <option value="Away">Away</option>
-                            <option value="Appear Offline">Appear Offline</option>
-                        </select>
+                        <form method="POST" action="inc/updateOnlineStatus.php" style="display: inline;">
+                            <select name="status" onchange="this.form.submit()">
+                                <option value="" disabled>Select Status</option>
+                                <option value="online" <?php if ($row['status'] === 'online') echo 'selected'; ?>>Online</option>
+                                <option value="away" <?php if ($row['status'] === 'away') echo 'selected'; ?>>Away</option>
+                                <option value="offline" <?php if ($row['status'] === 'offline') echo 'selected'; ?>>Appear Offline</option>
+                            </select>
+                        </form>
 
                     </h1>
                     <p><?php echo htmlspecialchars($row['email']); ?></p>
@@ -410,19 +414,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     function toggleEditProfileForm() {
         const form = document.getElementById('edit-profile-form');
         form.style.display = form.style.display === 'none' ? 'block' : 'none';
-    }
-
-    function updateStatus() {
-        const status = document.getElementById('status').value;
-        const statusText = document.getElementById('status-text');
-        statusText.textContent = status;
-        if (status === 'Online') {
-            statusText.style.color = 'green';
-        } else if (status === 'Away') {
-            statusText.style.color = 'yellow';
-        } else {
-            statusText.style.color = 'gray';
-        }
     }
 </script>
 </body>

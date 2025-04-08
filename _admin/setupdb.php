@@ -36,6 +36,7 @@
                     password VARCHAR(255) NOT NULL,
                     avatar VARCHAR(255) NULL,
                     skills TEXT,
+                    status ENUM('online', 'away', 'offline') DEFAULT 'offline',
                     bio TEXT
                 )";
                 $conn->query($query);
