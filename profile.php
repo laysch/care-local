@@ -311,6 +311,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Profile Header -->
             <div class="profile-header">
                 <!-- Check if avatar exists -->
+                
                 <?php if (isset($row['avatar']) && !empty($row['avatar'])): ?>
                     <img src="<?php echo "img/avatar/" . htmlspecialchars($row['avatar']); ?>" alt="User Avatar">
                 <?php else: ?>
@@ -331,6 +332,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </form>
 
                     </h1>
+                    
+        <?php
+        $userId = $row['id']; // assuming this row is for the profile user
+        $ratingStmt = $conn->prepare("SELECT AVG(rating) as avg_rating FROM ratings WHERE rated_user_id = ?");
+        $ratingStmt->bind_param("i", $userId);
+        $ratingStmt->execute();
+        $ratingResult = $ratingStmt->get_result();
+        $ratingData = $ratingResult->fetch_assoc();
+        $avgRating = $ratingData['avg_rating'];
+        ?>
+
+        <div style="font-size: 1.1em; color: #FFA500; margin-bottom: 4px;">
+            <?php 
+                if ($avgRating === null) {
+                    echo "No ratings yet";
+                } else {
+                    $stars = round($avgRating * 2) / 2; // round to nearest 0.5
+                    for ($i = 1; $i <= 5; $i++) {
+                        if ($stars >= $i) {
+                            echo "★"; // full star
+                        } elseif ($stars == $i - 0.5) {
+                            echo "☆"; // half star (can replace this with an icon later)
+                        } else {
+                            echo "☆"; // empty star
+                        }
+                    }
+                    echo " (" . number_format($avgRating, 1) . ")";
+                }
+            ?>
+        </div>
                     <p><?php echo htmlspecialchars($row['email']); ?></p>
                 </div>
             </div>
