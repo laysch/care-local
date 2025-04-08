@@ -1,6 +1,6 @@
 <?php
 require_once 'session.php';
-require 'database.php';
+require_once 'database.php';
 
 if (isset($_SESSION['user_id']) && isset($_POST['status'])) {
     $status = $_POST['status'];
