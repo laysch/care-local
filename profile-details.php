@@ -238,11 +238,11 @@ $stmt->close();
 </div>
 
 
-    
+    <div id = "user-details">
 <p><strong>Skills:</strong> <?php echo htmlspecialchars($user['skills']); ?></p>
 <p>(Avg. Rating: <?php echo number_format($avgRating, 2); ?> ★)</p>
 <p>Total Ratings: <?php echo $ratingCount; ?> people rated this user.</p>
-
+</div>
             
             <div class="rating">
     <h2>Rate this User</h2>
