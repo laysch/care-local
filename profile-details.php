@@ -224,8 +224,8 @@ $stmt->close();
     <div id="main-body-wrapper">
     <div class="profile-header">
                 <!-- Check if avatar exists -->
-                <?php if (isset($row['avatar']) && !empty($row['avatar'])): ?>
-                    <img src="<?php echo "img/avatar/" . htmlspecialchars($row['avatar']); ?>" alt="User Avatar">
+                <?php if (isset($user['avatar']) && !empty($user['avatar'])): ?>
+                    <img src="<?php echo "img/avatar/" . htmlspecialchars($user['avatar']); ?>" alt="User Avatar">
                 <?php else: ?>
                     <img src="img/default-avatar.png" alt="Default User Avatar">
                 <?php endif; ?>
