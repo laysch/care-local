@@ -564,7 +564,7 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="logo">
-                <img src="/img/logo.png" alt="CareLocal Logo">
+                <img src="/img/favicon.png" alt="CareLocal Logo">
             </div>
             <ul class="nav-links">
                 <li><a href="index.php"><i class="fi fi-rr-home"></i> Home</a></li>
