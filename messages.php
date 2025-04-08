@@ -77,6 +77,7 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
     <link rel="icon" type="image/x-icon" href="/img/favicon.png">
     <script src="script.js" defer></script>
     <script>
+        // Fetching new message statuses (read/unread toggle)
         document.addEventListener("DOMContentLoaded", function () {
             document.querySelectorAll(".message-item").forEach(item => {
                 item.addEventListener("click", function () {
@@ -90,7 +91,6 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
                     .then(response => response.json())
                     .then(data => {
                         if (data.status === "success") {
-                            // Toggle class based on read/unread state
                             if (this.classList.contains("message-item-unread")) {
                                 this.classList.remove("message-item-unread");
                                 this.classList.add("message-item-read");
@@ -104,212 +104,215 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
                 });
             });
         });
-        document.addEventListener("DOMContentLoaded", function () {
-            const searchInput = document.getElementById("receiverSearch");
-            const receiverIdInput = document.getElementById("receiverId");
-            const suggestionsContainer = document.getElementById("userSuggestions");
-
-            if (receiverIdInput.value) {
-                searchInput.value = searchInput.value.trim(); 
-            }
-
-            searchInput.addEventListener("input", function () {
-                let query = searchInput.value.trim();
-                if (query.length < 2) {
-                    suggestionsContainer.innerHTML = "";
-                    return;
-                }
-
-                fetch("inc/searchUsers.php?search=" + encodeURIComponent(query))
-                    .then(response => response.json())
-                    .then(users => {
-                        suggestionsContainer.innerHTML = ""; // Clear old suggestions
-                        users.forEach(user => {
-                            let suggestion = document.createElement("div");
-                            suggestion.classList.add("user-suggestion");
-                            suggestion.textContent = user.username;
-                            suggestion.dataset.userId = user.id;
-
-                            suggestion.addEventListener("click", function () {
-                                searchInput.value = this.textContent;
-                                receiverIdInput.value = this.dataset.userId;
-                                suggestionsContainer.innerHTML = "";
-                            });
-
-                            suggestionsContainer.appendChild(suggestion);
-                        });
-
-                        if (users.length === 0) {
-                            suggestionsContainer.innerHTML = "<div class='user-suggestion'>No users found</div>";
-                        }
-                    })
-                    .catch(error => console.error("Error fetching users:", error));
-             });
-
-            
-            const form = document.getElementById("sendMessageForm");
-
-                form.addEventListener("submit", function (event) {
-                    event.preventDefault();
-                    const receiverIdInput = document.getElementById("receiverId");
-
-                    if (!receiverIdInput.value) {
-                        alert("Please select a user from the search results.");
-                        return;
-                    }
-
-                    const formData = new FormData(form);
-                    fetch("messages.php", {
-                        method: "POST",
-                        body: new URLSearchParams(formData),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log("Server Response:", data); 
-                        if (data.status === "success") {
-                            alert("Message sent successfully!");
-                            window.location.reload(); 
-                        } else {
-                            alert("Failed to send message: " + data.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error:", error);
-                        alert("Failed to send message. Network error.");
-                    });
-                });
-            });
-    function toggleSection(sectionId) {
-        let section = document.getElementById(sectionId);
-        if (section.style.display === "none") {
-            section.style.display = "block";
-        } else {
-            section.style.display = "none";
-        }
-    }
     </script>
     <style>
-        :root {
-            --bodyFontFamily: 'Share Tech Mono', monospace;
-            --bodyFontSize: 14px;
-            --backgroundColor: #ffffff; /* White background */
-            --bordersColor: #e0e0e0; /* Light gray borders */
-            --bodyTextColor: #333333; /* Dark gray text */
-            --linksColor: #222222;
-            --linksHoverColor: #cdd8c4;
-        }
-
+        /* Base styles */
         body {
-            background-color: var(--backgroundColor); /* White background */
-            font-family: var(--bodyFontFamily);
-            color: var(--bodyTextColor);
+            font-family: 'Source Sans Pro', sans-serif;
+            background-color: #f4f5f7;
             margin: 0;
             padding: 0;
             display: flex;
+            flex-direction: row;
         }
 
-        /* Sidebar */
+        /* Sidebar with profile picture and contacts */
         #sidebar {
-            width: 250px;
-            background-color: #fff; /* Light gray background */
+            width: 300px;
+            background-color: #fff;
             padding: 20px;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            border-right: 1px solid #e0e0e0;
+            overflow-y: auto;
         }
 
-        #sidebar a {
-            color: #000000; /* Black text for sidebar links */
-            text-decoration: none;
-            display: block;
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 5px;
+        .sidebar-header {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 20px;
         }
 
-        #sidebar a:hover {
-            background-color: #fff; 
+        .contact-list {
+            list-style: none;
+            padding: 0;
         }
 
+        .contact-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+        }
+
+        .contact-item img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-right: 15px;
+        }
+
+        .contact-item .name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .contact-item .status {
+            color: #8c8c8c;
+            font-size: 12px;
+        }
+
+        .contact-item.online .status {
+            color: #4caf50;
+        }
+
+        .contact-item.offline .status {
+            color: #f44336;
+        }
+
+        /* Main conversation area */
         #main-body-wrapper {
-            width: 80vw;
+            flex-grow: 1;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #cdd8c4;
+            background-color: #ffffff;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .messages-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .messages-header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .messages-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .message-item {
+            padding: 10px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+        }
+
+        .message-item-unread {
+            background-color: #e1f5fe;
+        }
+
+        .message-item-read {
+            background-color: #f5f5f5;
+        }
+
+        .message-item .sender-info {
+            font-weight: bold;
+        }
+
+        .message-item .timestamp {
+            font-size: 12px;
+            color: #888;
+        }
+
+        /* Styling the message form */
+        .message-form {
+            display: flex;
+            flex-direction: column;
+            padding-top: 20px;
+        }
+
+        .message-form input, .message-form textarea {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .message-form button {
+            padding: 10px;
+            background-color: #0073b1;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .message-form button:hover {
+            background-color: #005a8e;
         }
     </style>
 </head>
-<body class="has--boxshadow" data-shape="circle" data-body-font-family="Share Tech Mono" data-body-font-size="14px" data-sidebar-position="left" data-pagination-display="mssg">
+<body>
     <div id="container">
         <!-- Sidebar -->
-        <?php include('sidebar.php'); ?>
+        <div id="sidebar">
+            <div class="sidebar-header">Contacts</div>
+            <ul class="contact-list">
+                <!-- Dynamically load contacts from your database -->
+                <li class="contact-item online">
+                    <img src="profile-pic.jpg" alt="Contact Image">
+                    <div class="contact-info">
+                        <div class="name">John Doe</div>
+                        <div class="status">Online</div>
+                    </div>
+                </li>
+                <li class="contact-item offline">
+                    <img src="profile-pic2.jpg" alt="Contact Image">
+                    <div class="contact-info">
+                        <div class="name">Jane Smith</div>
+                        <div class="status">Offline</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
 
         <!-- Main Body -->
         <div id="main-body-wrapper">
             <div class="messages-container">
                 <div class="messages-header-container">
                     <h1>Inbox</h1>
-                    <a href="#sendMessageForm" class="jump-to-send">Send Message</a>
                 </div>
+
                 <div class="messages-section">
                     <div class="messages-header">
                         <span>Received Messages</span>
-                        <button class="toggle-btn" onclick="toggleSection('receivedMessages')">=</button>
                     </div>
                     <div id="receivedMessages">
                         <?php if (empty($receivedMessages)) {
-                            echo "<p>Lets connect with your community members today!</p>";
+                            echo "<p>No messages yet. Start a conversation!</p>";
                         } else {
                             echo "<ul class=\"messages-list\">";
                             foreach ($receivedMessages as $msg) {
                                 $messageClass = $msg['is_read'] == 0 ? "message-item-unread" : "message-item-read";
-                                echo "<i class=\"message-item $messageClass\" data-message-id=\"" . htmlspecialchars($msg['message_id']) . "\">";
-                                echo htmlspecialchars($msg['title']) . "<br>";
-                                echo "<strong>" . htmlspecialchars($msg['sender_username']) . "</strong> to 
-                                    <strong>" . htmlspecialchars($msg['receiver_username']) . "</strong>";
+                                echo "<li class=\"message-item $messageClass\" data-message-id=\"" . htmlspecialchars($msg['message_id']) . "\">";
+                                echo "<div class=\"sender-info\">" . htmlspecialchars($msg['sender_username']) . "</div>";
                                 echo "<p>" . nl2br(htmlspecialchars($msg['message'])) . "</p>";
-                                echo "<small>" . date("F j, Y, g:i a", strtotime($msg['timestamp'])) . "</small>";
-                                echo "</i>";
+                                echo "<small class=\"timestamp\">" . date("F j, Y, g:i a", strtotime($msg['timestamp'])) . "</small>";
+                                echo "</li>";
                             }
                             echo "</ul>";
                         } ?>       
-                    </div>       
-                </div>
-                <div class="messages-section">
-                    <div class="messages-header">
-                        <span>Sent Messages</span>
-                        <button class="toggle-btn" onclick="toggleSection('sentMessages')">=</button>
-                    </div>
-                    <div id="sentMessages">
-                        <?php if (empty($sentMessages)) {
-                            echo "<p>Lets connect with your community members today!</p>";
-                        } else {
-                            echo "<ul class=\"messages-list\">";
-                            foreach ($sentMessages as $msg) {
-                                echo "<i class=\"message-item-read\">";
-                                echo "<strong>You</strong> to <strong>" . htmlspecialchars($msg['receiver_username']) . "</strong>";
-                                echo "<p>" . nl2br(htmlspecialchars($msg['message'])) . "</p>";
-                                echo "<small>" . date("F j, Y, g:i a", strtotime($msg['timestamp'])) . "</small>";
-                                echo "</i>";
-                            }
-                            echo "</ul>";
-                        } ?>
                     </div>
                 </div>
-                <div class="messages-section">
-                    <div class="messages-header">Send a Message</div>
-                    <form id="sendMessageForm">
-                        <label for="receiverSearch">Send to:</label>
-                        <input type="text" id="receiverSearch" placeholder="Search user..." autocomplete="off"
-                            value="<?php echo $prefilledRecipientName; ?>">
-                        <input type="hidden" id="receiverId" name="receiver_id" value="<?php echo $prefilledRecipientId; ?>">
-                        <div id="userSuggestions"></div> 
-                        <label for="messageTitle">Title:</label>
-                        <input type="text" id="messageTitle" name="title" value="<?php echo $prefilledMessageTitle; ?>" required>
 
-                        <label for="messageContent">Message:</label>
-                        <textarea id="messageContent" name="message" rows="3" required></textarea>
+                <div class="message-form">
+                    <form id="sendMessageForm">
+                        <input type="text" id="receiverSearch" placeholder="Search user..." autocomplete="off" value="<?php echo $prefilledRecipientName; ?>" required>
+                        <input type="hidden" id="receiverId" name="receiver_id" value="<?php echo $prefilledRecipientId; ?>" required>
+
+                        <input type="text" name="title" placeholder="Message Title" value="<?php echo $prefilledMessageTitle; ?>" required>
+
+                        <textarea name="message" placeholder="Write your message..." required></textarea>
 
                         <button type="submit">Send</button>
                     </form>
