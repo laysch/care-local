@@ -5,7 +5,10 @@ require_once 'inc/database.php';
 require_once 'inc/func.php';  
 
 // Initialize query to get all users by default
-$query = "SELECT * FROM users WHERE 1=1 ";
+$query = "SELECT users.*, 
+                 (SELECT AVG(rating) FROM ratings WHERE rated_user_id = users.id) AS avg_rating
+          FROM users 
+          WHERE 1=1 ";
 $params = [];
 $types = "";
 
@@ -54,6 +57,7 @@ if (!$result) {
 
 // Fetch the user's skills 
 $userSkills = getUserSkills($conn, $userId);
+
 
 $totalQuery = "SELECT COUNT(*) AS total FROM users WHERE 1=1";
 $totalResult = $conn->query($totalQuery);
