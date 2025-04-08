@@ -223,7 +223,7 @@ $stmt->close();
         </section>
 
         <div class="user-details">
-            
+        <p><strong>Skills Required:</strong> <?php echo htmlspecialchars($job['skills']); ?></p>
         <h1>
     <?php echo htmlspecialchars($user['username']); ?>
     <small style="font-size: 0.6em; color: #666;">
