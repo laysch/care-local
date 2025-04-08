@@ -225,7 +225,7 @@ $stmt->close();
         <div class="user-details">
         <h1>
     <?php echo htmlspecialchars($user['username']); ?>
-    <p><strong>Skills:</strong> <?php echo htmlspecialchars($job['skills']); ?></p>
+    <p style="font-size: 0.8em;"><strong>Skills:</strong> <?php echo htmlspecialchars($user['skills']); ?></p>
     <small style="font-size: 0.6em; color: #666;">
         (Avg. Rating: <?php echo $averageRating; ?> ★)
         <p>Total Ratings: <?php echo $totalRatings; ?> people rated this user.</p>
