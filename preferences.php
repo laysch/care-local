@@ -185,7 +185,8 @@ $stmt->close();
     function toggleCountySelection(button, county) {
         button.classList.toggle('selected');
         let countyInput = document.getElementById('county-input');
-        let selectedCounties = Array.from(document.querySelectorAll('.tags-container button.selected')).map(el => el.textContent);
+        let container = button.closest('.tags-container'); // restrict to county container
+        let selectedCounties = Array.from(container.querySelectorAll('button.selected')).map(el => el.textContent);
         countyInput.value = selectedCounties.join(',');
     }
 
@@ -193,7 +194,8 @@ $stmt->close();
     function toggleSkillSelection(button, skill) {
         button.classList.toggle('selected');
         let skillsInput = document.getElementById('skills-input');
-        let selectedSkills = Array.from(document.querySelectorAll('.tags-container button.selected')).map(el => el.textContent);
+        let container = button.closest('.tags-container'); // restrict to skills container
+        let selectedSkills = Array.from(container.querySelectorAll('button.selected')).map(el => el.textContent);
         skillsInput.value = selectedSkills.join(',');
     }
 </script>

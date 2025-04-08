@@ -37,6 +37,7 @@
                     avatar VARCHAR(255) NULL,
                     skills TEXT,
                     status ENUM('online', 'away', 'offline') DEFAULT 'offline',
+                    notify_preferences TEXT,
                     bio TEXT
                 )";
                 $conn->query($query);

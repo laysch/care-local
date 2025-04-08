@@ -33,6 +33,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($stmt->execute()) {
         $success_message = "Job posted successfully!";
         $jobID = $stmt->insert_id;
+
+        // Send message to notify users with matching preferences.
+        $jobSkills = explode(',', $skills);
+        $jobCounty = $county;
+        $result = $conn->query("SELECT id, notify_preferences FROM users WHERE notify_preferences IS NOT NULL");
+
+        while ($row = $result->fetch_assoc()) {
+            $prefs = json_decode($row['notify_preferences'], true);
+
+            if (!$prefs || !isset($prefs['skills'], $prefs['county'])) continue;
+
+            $userSkills = $prefs['skills'];
+            $userCounties = $prefs['county'];
+
+            $skillMatch = count(array_intersect($jobSkills, $userSkills)) > 0;
+            $countyMatch = in_array($jobCounty, $userCounties);
+
+            if ($skillMatch && $countyMatch) {
+                $message = "A new job that matches your preferences has been posted in $jobCounty.<br><a href='job-details.php?id=123'>View Job</a>";
+                $title = "New Job Alert";
+
+                $stmt = $conn->prepare("INSERT INTO messages (sender_id, receiver_id, message, title) VALUES (?, ?, ?, ?)");
+                $systemId = 1;
+                $stmt->bind_param("iiss", $systemId, $row['id'], $message, $title);
+                $stmt->execute();
+                $stmt->close();
+            }
+        }
+
         header("Location: search-jobs.php");
         exit; // Ensure no further code is executed
     } else {

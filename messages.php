@@ -1,12 +1,7 @@
 <?php
-session_start();
-if (!isset($_SESSION['user_id'])) {
-    header("Location: index.php");
-    exit();
-}
-
+require_once 'inc/session.php';
 include_once 'inc/func.php';
-$userId = $_SESSION['user_id'];
+
 
 // get messages
 $messages = getUserMessages($conn, $userId);
@@ -615,7 +610,9 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
                                      data-title="<?php echo htmlspecialchars($msg['title']); ?>"
                                      data-sender="You"
                                      data-receiver="<?php echo htmlspecialchars($msg['receiver_username']); ?>"
-                                     data-message="<?php echo htmlspecialchars($msg['message']); ?>"
+                                     data-message="<?php echo ($msg['sender_id'] == 0)
+                                        ? htmlspecialchars($msg['message'], ENT_QUOTES)
+                                        : htmlspecialchars(strip_tags($msg['message']), ENT_QUOTES); ?>"
                                      data-time="<?php echo date("F j, Y, g:i a", strtotime($msg['timestamp'])); ?>">
                                     <div class="avatar">
                                         <?php echo strtoupper(substr($msg['receiver_username'], 0, 1)); ?>
@@ -763,7 +760,7 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
                     }
 
                     document.getElementById('message-title').textContent = this.dataset.title;
-                    document.getElementById('message-body').textContent = this.dataset.message;
+                    document.getElementById('message-body').innerHTML = this.dataset.message;
                     document.getElementById('message-timestamp').textContent = this.dataset.time;
                 });
             });
