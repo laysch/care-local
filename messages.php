@@ -1,14 +1,18 @@
 <?php
+// Start session first (no changes needed here)
 session_start();
+
+// Check login status
 if (!isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit();
 }
 
+// Include functions (make sure inc/session.php isn't trying to reconfigure sessions)
 include_once 'inc/func.php';
 $userId = $_SESSION['user_id'];
 
-// get messages
+// Get messages
 $messages = getUserMessages($conn, $userId);
 $receivedMessages = [];
 $sentMessages = [];
