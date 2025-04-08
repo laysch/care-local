@@ -289,7 +289,7 @@ $totalPages = ceil($totalUsers / $usersPerPage);
             </form>
         </div>
         <?php
-    $userId = $row['id'];
+    
     $ratingStmt = $conn->prepare("SELECT AVG(rating) as avg_rating FROM ratings WHERE rated_user_id = ?");
     $ratingStmt->bind_param("i", $userId);
     $ratingStmt->execute();
@@ -299,7 +299,13 @@ $totalPages = ceil($totalUsers / $usersPerPage);
 ?>
         <div class="user-list">
             <?php while ($row = $result->fetch_assoc()) { 
-                $userId = $row['id'];?>
+                $userId = $row['id'];
+                $ratingStmt = $conn->prepare("SELECT AVG(rating) as avg_rating FROM ratings WHERE rated_user_id = ?");
+        $ratingStmt->bind_param("i", $userId);
+        $ratingStmt->execute();
+        $ratingResult = $ratingStmt->get_result();
+        $ratingData = $ratingResult->fetch_assoc();
+        $avgRating = $ratingData['avg_rating'];?>
                 <div class="user-box">
     <div style="display: flex; justify-content: space-between; align-items: center;">
         <h3>Username: <?php echo htmlspecialchars($row['username']); ?></h3>
