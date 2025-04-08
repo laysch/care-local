@@ -524,6 +524,13 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
             margin-bottom: 20px;
         }
 
+        /* Empty state styles */
+        .empty-state {
+            padding: 30px 20px;
+            text-align: center;
+            color: var(--light-text);
+        }
+
         /* Responsive styles */
         @media (max-width: 768px) {
             .container {
