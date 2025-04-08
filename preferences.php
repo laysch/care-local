@@ -148,7 +148,7 @@ $stmt->close();
         </section>
 
         <div class="form-container">
-            <form action="select-preferences.php" method="POST">
+            <form action="inc/updateNotificationPreference.php" method="POST">
                 <!-- Modify the County Selection Section to be Clickable Like Skills -->
 <label for="county">Select County:</label>
 <div class="tags-container">
