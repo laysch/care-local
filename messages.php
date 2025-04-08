@@ -570,8 +570,8 @@ $prefilledMessageTitle = isset($_GET['title']) ? htmlspecialchars($_GET['title']
                 <li><a href="index.php"><i class="fi fi-rr-home"></i> Home</a></li>
                 <li><a href="messages.php" class="active"><i class="fi fi-rr-envelope"></i> Messages</a></li>
                 <li><a href="profile.php"><i class="fi fi-rr-user"></i> Profile</a></li>
-                <li><a href="jobs.php"><i class="fi fi-rr-briefcase"></i> Jobs</a></li>
-                <li><a href="community.php"><i class="fi fi-rr-users"></i> Community</a></li>
+                <li><a href="search-jobs.php"><i class="fi fi-rr-briefcase"></i> Jobs</a></li>
+                <li><a href="search-user.php"><i class="fi fi-rr-users"></i> Community</a></li>
                 <li><a href="logout.php"><i class="fi fi-rr-sign-out"></i> Logout</a></li>
             </ul>
         </div>
