@@ -355,6 +355,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                     echo " (" . number_format($avgRating, 1) . ")";
                 }
+            }
             ?>
         </div>
                     <h1><?php echo htmlspecialchars($row['username']); ?> 
