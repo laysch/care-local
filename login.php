@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-require_once 'inc/session.php';
+session_start();
 require_once 'inc/database.php';
 
 if (isset($_POST['login'])) {
