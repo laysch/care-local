@@ -288,14 +288,43 @@ $totalPages = ceil($totalUsers / $usersPerPage);
                 <button type="button" class="btn" onclick="removeFilters()">Remove Filters</button>
             </form>
         </div>
-
+        <?php
+    $userId = $row['id'];
+    $ratingStmt = $conn->prepare("SELECT AVG(rating) as avg_rating FROM ratings WHERE user_id = ?");
+    $ratingStmt->bind_param("i", $userId);
+    $ratingStmt->execute();
+    $ratingResult = $ratingStmt->get_result();
+    $ratingData = $ratingResult->fetch_assoc();
+    $avgRating = $ratingData['avg_rating'];
+?>
         <div class="user-list">
             <?php while ($row = $result->fetch_assoc()) { ?>
                 <div class="user-box">
-                    <h3>Username: <?php echo htmlspecialchars($row['username']); ?></h3>
-                    <p>Skills: <?php echo htmlspecialchars($row['skills']); ?></p>
-                    <a href="profile-details.php?id=<?php echo $row['id']; ?>">View Profile</a>
-                </div>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3>Username: <?php echo htmlspecialchars($row['username']); ?></h3>
+        <div style="font-size: 0.9em; color: #FFA500;">
+            <?php 
+                if ($avgRating === null) {
+                    echo "No ratings yet";
+                } else {
+                    $stars = round($avgRating * 2) / 2; // Round to nearest 0.5
+                    for ($i = 1; $i <= 5; $i++) {
+                        if ($stars >= $i) {
+                            echo "★"; // full star
+                        } elseif ($stars == $i - 0.5) {
+                            echo "☆"; // half star could be replaced with actual half-star character/image
+                        } else {
+                            echo "☆"; // empty star
+                        }
+                    }
+                    echo " (" . number_format($avgRating, 1) . ")";
+                }
+            ?>
+        </div>
+    </div>
+    <p>Skills: <?php echo htmlspecialchars($row['skills']); ?></p>
+    <a href="profile-details.php?id=<?php echo $row['id']; ?>">View Profile</a>
+</div>
             <?php } ?>
         </div>
 
