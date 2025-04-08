@@ -317,17 +317,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <img src="img/default-avatar.png" alt="Default User Avatar">
                 <?php endif; ?>
                 <div>
-                <?php
-    
-    $ratingStmt = $conn->prepare("SELECT AVG(rating) as avg_rating FROM ratings WHERE rated_user_id = ?");
-    $ratingStmt->bind_param("i", $userId);
-    $ratingStmt->execute();
-    $ratingResult = $ratingStmt->get_result();
-    $ratingData = $ratingResult->fetch_assoc();
-    $avgRating = $ratingData['avg_rating'];
-?>
-        <div class="user-list">
-           
                     <h1><?php echo htmlspecialchars($row['username']); ?> 
                         <span id="status-text" style="color: <?php echo $statusColor; ?>;">
                             <?php echo $row['status']; ?>
@@ -422,5 +411,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </script>
 </body>
 </html>
-
-
