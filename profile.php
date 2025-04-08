@@ -327,37 +327,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $avgRating = $ratingData['avg_rating'];
 ?>
         <div class="user-list">
-            <?php while ($row = $result->fetch_assoc()) { 
-                $userId = $row['id'];
-                $ratingStmt = $conn->prepare("SELECT AVG(rating) as avg_rating FROM ratings WHERE rated_user_id = ?");
-        $ratingStmt->bind_param("i", $userId);
-        $ratingStmt->execute();
-        $ratingResult = $ratingStmt->get_result();
-        $ratingData = $ratingResult->fetch_assoc();
-        $avgRating = $ratingData['avg_rating'];?>
-                <div class="user-box">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-        <h3>Username: <?php echo htmlspecialchars($row['username']); ?></h3>
-        <div style="font-size: 0.9em; color: #FFA500;">
-            <?php 
-                if ($avgRating === null) {
-                    echo "No ratings yet";
-                } else {
-                    $stars = round($avgRating * 2) / 2; // Round to nearest 0.5
-                    for ($i = 1; $i <= 5; $i++) {
-                        if ($stars >= $i) {
-                            echo "★"; // full star
-                        } elseif ($stars == $i - 0.5) {
-                            echo "☆"; // half star could be replaced with actual half-star character/image
-                        } else {
-                            echo "☆"; // empty star
-                        }
-                    }
-                    echo " (" . number_format($avgRating, 1) . ")";
-                }
-            }
-            ?>
-        </div>
+           
                     <h1><?php echo htmlspecialchars($row['username']); ?> 
                         <span id="status-text" style="color: <?php echo $statusColor; ?>;">
                             <?php echo $row['status']; ?>
