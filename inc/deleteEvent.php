@@ -43,7 +43,7 @@ try {
     if ($stmt->execute()) {
         $conn->commit();
         echo "Event deleted successfully.";
-        header("Location: search-jobs.php");
+        header("Location: /search-jobs.php");
     } else {
         $conn->rollback();
         echo "Failed to delete event.";

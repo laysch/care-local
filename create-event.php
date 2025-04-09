@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($stmt->execute()) {
         $new_event_id = $conn->insert_id;
         echo "Event created successfully!";
-        header("Location: event-details.php?id=" . $new_event_id);
+        header("Location: /event-details.php?id=" . $new_event_id);
         exit();
     } else {
         echo "Error: " . $stmt->error;
