@@ -235,6 +235,7 @@ $stmt->close();
     <div class="profile-header">
     <img class="profile-avatar" src="<?php echo 'img/avatar/' . htmlspecialchars($user['avatar']); ?>" alt="User Avatar">
     <h2><?php echo htmlspecialchars($user['username']); ?></h2>
+    <p><?php echo htmlspecialchars($user['bio']); ?></p>
 </div>
 
 
