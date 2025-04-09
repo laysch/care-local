@@ -26,7 +26,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $stmt->bind_param("issss", $job_id, $title, $date, $location, $description);
 
     if ($stmt->execute()) {
+        $new_event_id = $conn->insert_id;
         echo "Event created successfully!";
+        header("Location: event-details.php?id=" . $new_event_id);
+        exit();
     } else {
         echo "Error: " . $stmt->error;
     }
